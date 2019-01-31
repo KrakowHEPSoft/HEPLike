@@ -21,19 +21,8 @@ ROOTCONFIG   = root-config
 ROOTCXXFLAGS = $(shell $(ROOTCONFIG) --cflags)
 ROOTLIBS     = $(shell $(ROOTCONFIG) --libs) -lTreePlayer -lTMVA -lMinuit -lXMLIO -lMLP -lRIO -lRooFit -lRooStats -lRooFitCore
 
-# boost and GSL -- either from lcg places or local
-ifdef LCG_external_area
-LCGBOOST = /cvmfs/lhcb.cern.ch/lib/lcg/releases/Boost/1.55.0_python2.7-f9e91/x86_64-slc6-gcc48-opt/
-BOOST_INC_DIR  = $(LCGBOOST)/include/boost-1_55/
-BOOST_LIB_OPT  = -L$(LCGBOOST)/lib/  -lboost_program_options-gcc48-mt-1_55
-LCGGSL      = $(LCG_external_area)/GSL/1.10/$(CMTCONFIG)
-else
-#LCGBOOST = /cvmfs/lhcb.cern.ch/lib/lcg/releases/Boost/1.55.0_python2.7-f9e91/x86_64-slc6-gcc48-opt/
-#BOOST_INC_DIR  = $(LCGBOOST)/include/boost-1_55/
-BOOST_LIB_OPT  =  -lboost_program_options
-#LCGGSL      = $(LCG_external_area)/GSL/1.10/$(CMTCONFIG)
-endif
 
+BOOST_LIB_OPT  =  -lboost_program_options
 
 # GSL
 GSL_INC_DIR = $(LCGGSL)/include
