@@ -52,7 +52,6 @@ SRCS=$(filter-out $(wildcard $(SRC_DIR)/*/_*), $(wildcard $(SRC_DIR)/*/*.cpp))
 OBJS_SRC=$(subst $(SRC_DIR), $(OBJ_DIR), $(subst .cpp,.o,$(SRCS)))
 OBJS_SRC+=$(LIB_DIR)/eventdict.o # also make the TObject crap using cint
 ##OBJS_SRC+=$(SHLIB)
-INCS_CINT=$(filter-out $(wildcard $(INC_DIR)/*/_*), $(wildcard $(INC_DIR)/pdfs/*.hpp)) # to be included in the cint comands
 
 EXES=$(filter-out $(wildcard $(MAIN_DIR)/_*), $(wildcard $(MAIN_DIR)/*.cpp))
 OBJS_EXE=$(subst $(MAIN_DIR), $(OBJ_DIR), $(subst .cpp,.o,$(EXES)))
@@ -65,7 +64,8 @@ TESTS=$(filter-out $(wildcard $(TEST_DIR)_*), $(wildcard $(TEST_DIR)/*.cpp))
 
 #-----------------------------------------------------------------------------
 # Main targets
-all : $(SRCS) $(OBJS_SRC) $(OBJS_EXE) $(BINS) $(SHLIB)
+all : $(SRCS) $(OBJS_SRC)
+#$(OBJS_EXE) $(BINS) $(SHLIB)
 
 # connect classes, namespaces, libraries
 $(SRC_DIR)/%.cc : $(INC_DIR)/%.hpp
@@ -73,12 +73,6 @@ $(SRC_DIR)/%.cc : $(INC_DIR)/%.hpp
 # build all objects (classes, namespaces, libraries) i.e. everything in src
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c $^ -o $@
-
-# $(INCS_CINT)
-lib/eventdict.o : $(INCS_CINT)
-	@echo -e "\nBuilt objects, now generating dictionary ..."
-	rootcint -f $(LIB_DIR)/eventdict.cc -c $(INCS_CINT) include/pdfs/LinkDef.h
-	$(CXX) $(CXXFLAGS) -c -I ./ -o lib/eventdict.o lib/eventdict.cc
 
 ###$(CXX) $(CXXFLAGS) -o $(LIB_DIR)/eventdict.o $(LIB_DIR)/eventdict.cc
 #$(CXX) $(CXXFLAGS) -I$(INC_DIR) -o $(LIB_DIR)/eventdict.o $(LIB_DIR)/eventdict.cc
