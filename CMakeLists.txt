@@ -12,7 +12,7 @@ find_package(Yaml-cpp)
 include_directories(${CMAKE_SOURCE_DIR}/yaml-cpp/include)
 # looking for boost
 find_package(Boost 1.41)
-
+find_package(GSL REQUIRED) 
 
 include_directories (include)
 
@@ -32,4 +32,5 @@ target_link_libraries(HEPLike HEPBRLimit HEPData HEPStatistics)
 
 #############################################
 # Linking external libraries:
-target_link_libraries(${PROJECT_NAME} yaml-cpp)
+target_link_libraries(${PROJECT_NAME} yaml-cpp GSL::gsl)
+

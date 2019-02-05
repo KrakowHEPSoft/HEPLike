@@ -18,9 +18,12 @@
 #include "HEPStats.h"
 #include "HEPData.h"
 
+//external:
 #include "yaml-cpp/yaml.h"
-
-
+#include "gsl/gsl_cdf.h"
+#include "gsl/gsl_sf_erf.h"
+#include "gsl/gsl_math.h"
+#include "gsl/gsl_sf_exp.h"
 class HEPBRLimit: public HEPData
 {
 
@@ -29,33 +32,18 @@ class HEPBRLimit: public HEPData
   explicit HEPBRLimit() :  HEPData() {};
   explicit HEPBRLimit(std::string s) :  HEPData(s) { };
   
-  //HEPBRLimit();
-  //HEPBRLimit(std::string);
   
-  //std::string HFile;
   void read();
-  
-  
+  double GetLogLikelihood(double);
+  double GetLikelihood(double);   
 
  protected:
   std::vector<double> CLs;
   std::vector<double> BR;
   
-
- /*
-  std::string HEPDOI;
-  std::string HEPBibCite;
-  std::string HEPBibEntry;
-  std::string HEPFileName;
-  std::string HEPHFAG;
-  std::string HEPSource;
-  std::string HEPYear;
-  std::string HEPName;
-
-      
-  bool initialized;
-  */
-
+ private:
+  double getCLs(double val);//, std::vector<double> br, std::vector<double> cls);
+  
 
   
 };
