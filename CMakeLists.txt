@@ -21,13 +21,13 @@ include_directories (include)
 add_library(HEPStatistics src/HEPStats.cc)
 add_library(HEPData src/HEPData.cc)
 add_library(HEPBRLimit src/HEPBRLimit.cc) #
-
+add_library(HEPBR_Gaussian src/HEPBR_Gaussian.cc)
 
 
 #############################################
 # the executables:
 add_executable(HEPLike main/main.cc)
-target_link_libraries(HEPLike HEPBRLimit HEPData HEPStatistics)
+target_link_libraries(HEPLike HEPBRLimit HEPData HEPStatistics HEPBR_Gaussian)
 
 
 #############################################
