@@ -4,7 +4,8 @@
 //
 //   author: Marcin Chrzaszcz
 //////////////////////////////////////////////////
-
+#ifndef STATS_H
+#define STATS_H
 
 #include <cmath>
 #include <limits>
@@ -22,3 +23,5 @@ namespace HEPStats
   
 
 }
+
+#endif

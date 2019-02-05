@@ -18,14 +18,16 @@ include_directories (include)
 
 
 # creating own libraries:
-add_library(Statistics src/stats.cc)
-add_library(HEPData src/HepData.cc)
-#
-add_library(Limits src/stats.cc)      
+add_library(HEPStatistics src/HEPStats.cc)
+add_library(HEPData src/HEPData.cc)
+add_library(HEPBRLimit src/HEPBRLimit.cc) #
+
+
 
 #############################################
 # the executables:
 add_executable(HEPLike main/main.cc)
+target_link_libraries(HEPLike HEPBRLimit HEPData HEPStatistics)
 
 
 #############################################

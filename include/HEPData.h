@@ -4,7 +4,8 @@
 //
 //   author: Marcin Chrzaszcz
 //////////////////////////////////////////////////
-
+#ifndef HEPDATA_H
+#define HEPDATA_H
 
 #include <cmath>
 #include <limits>
@@ -13,8 +14,9 @@
 
 
 
-#include "stats.h"
+#include "HEPStats.h"
 
+#include "yaml-cpp/yaml.h"
 
 
 class HEPData
@@ -39,9 +41,12 @@ class HEPData
   std::string HEPHFAG;
   std::string HEPSource;
   std::string HEPYear;
-  std::string HEPname;
+  std::string HEPName;
 
       
   bool initialized;
   
-}
+};
+
+
+#endif

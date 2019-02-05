@@ -12,8 +12,8 @@
 #include <iomanip>
 #include <iostream>
 
-#include "stats.h"
-#include "constants.h"
+#include "HEPStats.h"
+#include "HEPConstants.h"
 namespace HEPStats
 {
     
