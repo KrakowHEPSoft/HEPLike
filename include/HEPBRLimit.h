@@ -34,6 +34,7 @@ class HEPBRLimit: public HEPData
   
   
   void read();
+  double GetChi2(double);     
   double GetLogLikelihood(double);
   double GetLikelihood(double);   
 
