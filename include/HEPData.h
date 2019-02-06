@@ -34,6 +34,9 @@ class HEPData
   
  protected:
 
+  YAML::Node config;
+    
+  
   std::string HEPDOI;
   std::string HEPBibCite;
   std::string HEPBibEntry;
@@ -45,6 +48,9 @@ class HEPData
   std::string HEPDecay;
       
   bool initialized;
+
+  void read_standard();
+
   
 };
 

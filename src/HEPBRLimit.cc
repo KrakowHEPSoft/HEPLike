@@ -25,19 +25,7 @@ void HEPBRLimit::read()
       std::cout << "TRYING TO READ WITHOUT GIVING ANY FILE!" << std::endl;
       return;
     }
-  YAML::Node config = YAML::LoadFile(HFile);
-  HEPDOI=config["DOI"].as<std::string>();
-  
-  HEPBibCite=config["BibCite"].as<std::string>();
-  HEPBibEntry=config["BibEntry"].as<std::string>();
-  HEPFileName=config["FileName"].as<std::string>();
-  
-  HEPHFLAV=config["HFLAV"].as<std::string>();
-  HEPSource=config["Source"].as<std::string>();
-  HEPYear=config["Year"].as<std::string>();
-  HEPName=config["Name"].as<std::string>();
-
-  HEPDecay=config["Decay"].as<std::string>();
+  read_standard();
   
   YAML::Node node  = config["Cls"];
   for(YAML::const_iterator it = node.begin(); it != node.end();  ++it )

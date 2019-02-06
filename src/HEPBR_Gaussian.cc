@@ -1,6 +1,6 @@
 //   HEPLike: High Energy Physics Likelihoods
 //
-//   Module to read yaml files
+//   Module to construck likelihoods for gaussian distribution
 //
 //   author: Marcin Chrzaszcz
 //////////////////////////////////////////////////
@@ -25,50 +25,35 @@ void HEPBR_Gaussian::read()
       std::cout << "TRYING TO READ WITHOUT GIVING ANY FILE!" << std::endl;
       return;
     }
-  YAML::Node config = YAML::LoadFile(HFile);
 
-  HEPDOI=config["DOI"].as<std::string>();
-  HEPBibCite=config["BibCite"].as<std::string>();
-  HEPBibEntry=config["BibEntry"].as<std::string>();
-  HEPFileName=config["FileName"].as<std::string>();
-  HEPHFLAV=config["HFLAV"].as<std::string>();
-  HEPSource=config["Source"].as<std::string>();
-  HEPYear=config["Year"].as<std::string>();
-  HEPName=config["Name"].as<std::string>();
-  HEPDecay=config["Decay"].as<std::string>();
+  read_standard();
   
-  HEPCentral=config["BR"].as<double>();
+  HEPCentral=config["Br"].as<double>();
   HEPSigma_stat=config["Stat"].as<double>();
   HEPSigma_syst=config["Syst"].as<double>();
   
-  
 }
-/*
-double HEPBR_Gaussian::GetLogLikelihood(double br)
+double HEPBR_Gaussian::GetChi2(double theory, double theory_err)
 {
-  double cls=getCLs(br) ;
-  //std::cout<<gsl_cdf_gaussian_P(1., 1)-gsl_cdf_gaussian_P(-1., 1.)<<std::endl;
-  double nsigma=0.001;
-  double dsigma=0.0001;
+  double err2=HEPSigma_stat*HEPSigma_stat+ HEPSigma_syst*HEPSigma_syst+theory_err*theory_err;
+  double chi2=(HEPCentral-theory)*(HEPCentral-theory)/err2;
+  return chi2;
+}
 
-  double p=0;
-  while (p<1.- cls) {
-    p= gsl_sf_erf(nsigma/M_SQRT2);
-    nsigma+=dsigma;
-  }
-  //std::cout<<"n of sigmas= "<<nsigma<<"  "<<cls<<std::endl;
-  double chi2=nsigma*nsigma;
-  //double loglikelihood=gsl_sf_exp(chi2);
+
+double HEPBR_Gaussian::GetLogLikelihood(double theory, double theory_err)  
+{
+
+  double chi2=GetChi2(theory,theory_err);
   
   return -0.5*chi2;
 }
-double HEPBR_Gaussian::GetLikelihood(double br)
+double HEPBR_Gaussian::GetLikelihood(double theory, double theory_err) 
 {
-  double log_likelihood=GetLogLikelihood(br);
+  double log_likelihood=GetLogLikelihood(theory,theory_err);
   return gsl_sf_exp(log_likelihood);  
 }
 
-*/
 
 
 

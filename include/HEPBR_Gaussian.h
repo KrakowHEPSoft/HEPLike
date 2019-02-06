@@ -35,8 +35,9 @@ class HEPBR_Gaussian: public HEPData
   
   
   void read();
-  double GetLogLikelihood(double);
-  double GetLikelihood(double);   
+  double GetChi2(double theory, double theory_err=0);
+  double GetLikelihood(double theory, double theory_err=0);
+  double GetLogLikelihood(double theory, double theory_err=0);  
 
  private:
   
