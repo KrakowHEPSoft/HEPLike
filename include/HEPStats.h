@@ -20,7 +20,7 @@ namespace HEPStats
   double lognormal_loglikelihood_relerror(double theory, double obs, double reltheoryerr, double relobserr, bool profile_systematics);
   double gaussian_upper_limit(double theory, double obs, double theoryerr, double obserr, bool profile_systematics);
   double gaussian_lower_limit(double theory, double obs, double theoryerr, double obserr, bool profile_systematics);
-  double get_Likelihood_from_Cls(double cls);
+  double get_sigma_from_pval(double p);
 
 }
 

@@ -37,13 +37,14 @@ class HEPBRLimit: public HEPData
   double GetChi2(double);     
   double GetLogLikelihood(double);
   double GetLikelihood(double);   
-
+  double GetCLs(double val);
+  
  protected:
   std::vector<double> CLs;
   std::vector<double> BR;
   
- private:
-  double getCLs(double val);//, std::vector<double> br, std::vector<double> cls);
+  //private:
+  //double GetCLs(double val);//, std::vector<double> br, std::vector<double> cls);
   
 
   

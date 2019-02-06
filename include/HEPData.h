@@ -38,11 +38,11 @@ class HEPData
   std::string HEPBibCite;
   std::string HEPBibEntry;
   std::string HEPFileName;
-  std::string HEPHFAG;
+  std::string HEPHFLAV;
   std::string HEPSource;
   std::string HEPYear;
   std::string HEPName;
-
+  std::string HEPDecay;
       
   bool initialized;
   

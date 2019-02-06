@@ -27,13 +27,18 @@ void HEPBRLimit::read()
     }
   YAML::Node config = YAML::LoadFile(HFile);
   HEPDOI=config["DOI"].as<std::string>();
+  
   HEPBibCite=config["BibCite"].as<std::string>();
   HEPBibEntry=config["BibEntry"].as<std::string>();
   HEPFileName=config["FileName"].as<std::string>();
-  HEPHFAG=config["HFAG"].as<std::string>();
-  HEPSource=config["HFAG"].as<std::string>();
+  
+  HEPHFLAV=config["HFLAV"].as<std::string>();
+  HEPSource=config["Source"].as<std::string>();
   HEPYear=config["Year"].as<std::string>();
   HEPName=config["Name"].as<std::string>();
+
+  HEPDecay=config["Decay"].as<std::string>();
+  
   YAML::Node node  = config["Cls"];
   for(YAML::const_iterator it = node.begin(); it != node.end();  ++it )
     {
@@ -44,31 +49,40 @@ void HEPBRLimit::read()
     }
 
 }
-double HEPBRLimit::GetLogLikelihood(double br)
+double HEPBRLimit::GetChi2(double br)
 {
-  double cls=getCLs(br) ;
+  double cls=GetCLs(br) ;
   //std::cout<<gsl_cdf_gaussian_P(1., 1)-gsl_cdf_gaussian_P(-1., 1.)<<std::endl;
-  double nsigma=0.001;
-  double dsigma=0.0001;
-
-  double p=0;
+  //double nsigma=0.001;
+  //double dsigma=0.0001;
+  //double p=0;
+  double nsigma=HEPStats::get_sigma_from_pval(1-cls);
+  /*
   while (p<1.- cls) {
     p= gsl_sf_erf(nsigma/M_SQRT2);
     nsigma+=dsigma;
   }
-  //std::cout<<"n of sigmas= "<<nsigma<<"  "<<cls<<std::endl;
+  */
+  std::cout<<"n of sigmas= "<<nsigma<<"  "<<cls<<std::endl;
   double chi2=nsigma*nsigma;
   //double loglikelihood=gsl_sf_exp(chi2);
   
-  return -0.5*chi2;
+  return chi2;
 }
+double HEPBRLimit::GetLogLikelihood(double br)
+{
+  double chi2=GetChi2(br);
+  return -0.5*chi2;
+  
+}
+
 double HEPBRLimit::GetLikelihood(double br)
 {
   double log_likelihood=GetLogLikelihood(br);
   return gsl_sf_exp(log_likelihood);  
 }
 // this algorithm is O(log n) fast:
-double  HEPBRLimit::getCLs(double value)//, std::vector<double> a, std::vector<double> cls)
+double  HEPBRLimit::GetCLs(double value)//, std::vector<double> a, std::vector<double> cls)
 {
   int length =BR.size();
   if(value < BR[0]) {

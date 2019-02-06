@@ -45,11 +45,11 @@ void HEPData::read()
   HEPBibCite=config["BibCite"].as<std::string>();
   HEPBibEntry=config["BibEntry"].as<std::string>();
   HEPFileName=config["FileName"].as<std::string>();
-  HEPHFAG=config["HFAG"].as<std::string>();
-  HEPSource=config["HFAG"].as<std::string>();
+  HEPHFLAV=config["HFLAV"].as<std::string>();
+  HEPSource=config["Source"].as<std::string>();
   HEPYear=config["Year"].as<std::string>();
   HEPName=config["Name"].as<std::string>();
-  
+  HEPDecay=config["Decay"].as<std::string>();     
 }
     
 
