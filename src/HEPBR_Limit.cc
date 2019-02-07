@@ -14,7 +14,7 @@
 
 #include "HEPStats.h"
 #include "HEPConstants.h"
-#include "HEPBRLimit.h"
+#include "HEPBR_Limit.h"
 
 using namespace std;
 
