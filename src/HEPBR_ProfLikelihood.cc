@@ -27,31 +27,43 @@ void HEPBR_ProfLikelihood::read()
     }
 
   read_standard();
-  HEPRootFile=config["ROOTData"].as<std::string>();
-  HEPPATH=config["TGraphPath"].as<std::string>();
+
+  //cout<<HEPBibEntry<<endl;
+
+  if( config["ROOTData"])  HEPRootFile=config["ROOTData"].as<std::string>();
+  else
+    {
+      std::cout<<"You didn't profice a root file!!! HEPBR_ProfLikelihood class is protesting!"<<std::endl;
+    }
+  
+  if(config["TGraphPath"]) HEPPATH=config["TGraphPath"].as<std::string>();
   
   // now opening files
   f= new TFile(HEPRootFile.c_str(), "READ");
   likelihood=dynamic_cast<TGraph*>(f->Get(HEPPATH.c_str()));
-
-  
+  xmin=likelihood->GetXaxis()->GetXmin () ;
+  xmax=likelihood->GetXaxis()->GetXmax () ;
+  cout<<xmin<<" "<<xmax<<endl;
 }
 /*
 double HEPBR_ProfLikelihood::GetChi2(double theory, double theory_err)
 {
+  double loglikelihood=(-1.)*likelihood->Eval
+
   double err2=HEPSigma_stat*HEPSigma_stat+ HEPSigma_syst*HEPSigma_syst+theory_err*theory_err;
   double chi2=(HEPCentral-theory)*(HEPCentral-theory)/err2;
   return chi2;
 }
-
-
-double HEPBR_ProfLikelihood::GetLogLikelihood(double theory, double theory_err)  
+*/
+double HEPBR_ProfLikelihood::GetLogLikelihood(double theory)
 {
-
-  double chi2=GetChi2(theory,theory_err);
+  if(theory < xmin || theory > xmax) return 1e10;
   
-  return -0.5*chi2;
+  double loglikelihood=(-1.)*likelihood->Eval(theory,0, "S" );
+  return loglikelihood;
+
 }
+/*
 double HEPBR_ProfLikelihood::GetLikelihood(double theory, double theory_err) 
 {
   double log_likelihood=GetLogLikelihood(theory,theory_err);
