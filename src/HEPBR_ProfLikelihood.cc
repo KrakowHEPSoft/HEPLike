@@ -43,33 +43,56 @@ void HEPBR_ProfLikelihood::read()
   likelihood=dynamic_cast<TGraph*>(f->Get(HEPPATH.c_str()));
   xmin=likelihood->GetXaxis()->GetXmin () ;
   xmax=likelihood->GetXaxis()->GetXmax () ;
-  cout<<xmin<<" "<<xmax<<endl;
-}
-/*
-double HEPBR_ProfLikelihood::GetChi2(double theory, double theory_err)
-{
-  double loglikelihood=(-1.)*likelihood->Eval
+  int N=likelihood->GetN();
+  Double_t* x=likelihood->GetX();
+  Double_t* y=likelihood->GetY();
+  double minX=0;
+  double minY=10e10;
+  for(int i=2;i<N-2;i++) // exclude the last points
+    {
+      if(y[i]<minY)
+        {
+          minY=y[i];
+          minX=x[i];
+        }
+    }
+  central_mes_val=minX;
 
-  double err2=HEPSigma_stat*HEPSigma_stat+ HEPSigma_syst*HEPSigma_syst+theory_err*theory_err;
-  double chi2=(HEPCentral-theory)*(HEPCentral-theory)/err2;
+
+}
+
+double HEPBR_ProfLikelihood::GetChi2(double theory, double theory_err=-1.)
+{
+  double log_likelihood=GetLogLikelihood(theory,theory_err); 
+  double chi2=-2.*log_likelihood; 
   return chi2;
 }
-*/
-double HEPBR_ProfLikelihood::GetLogLikelihood(double theory)
-{
-  if(theory < xmin || theory > xmax) return 1e10;
-  
-  double loglikelihood=(-1.)*likelihood->Eval(theory,0, "S" );
-  return loglikelihood;
 
+double HEPBR_ProfLikelihood::GetLogLikelihood(double theory, double theory_error=-1.)
+{
+  if(theory < xmin || theory > xmax) return -1.e10;
+  if(theory_error<0.){
+    double loglikelihood=(-1.)*likelihood->Eval(theory,0, "S" );
+    return loglikelihood;
+  }
+  double loglikelihood=(-1.)*likelihood->Eval(theory,0, "S" );
+  double chi2=-2.*loglikelihood;
+  // now this is nasty, you should always profile over the theory error but if you want to inflate the chi2:
+  double delta=theory-central_mes_val;
+  double experimental_err2=chi2/(delta*delta);
+  double err2=experimental_err2+theory_error*theory_error;
+  chi2=delta*delta/(err2);
+  loglikelihood=-0.5*chi2;
+
+  return loglikelihood;
+  
 }
-/*
-double HEPBR_ProfLikelihood::GetLikelihood(double theory, double theory_err) 
+double HEPBR_ProfLikelihood::GetLikelihood(double theory, double theory_err=-1.) 
 {
   double log_likelihood=GetLogLikelihood(theory,theory_err);
   return gsl_sf_exp(log_likelihood);  
 }
 
-*/
+
 
 

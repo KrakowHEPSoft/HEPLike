@@ -27,6 +27,8 @@
 #include "TFile.h"
 #include "TGraph.h"
 #include "TAxis.h"
+#include "TMath.h"
+#include "TH1D.h"
 
 class HEPBR_ProfLikelihood: public HEPData
 {
@@ -38,14 +40,16 @@ class HEPBR_ProfLikelihood: public HEPData
   
   
   void read();
-  //double GetChi2(double theory, double theory_err=0);
-  double GetLogLikelihood(double theory);//, double theory_err=0);
-  //double GetLogLikelihood(double theory, double theory_err=0);  
-
+  double GetChi2(double theory, double theory_err);
+  double GetLogLikelihood(double theory, double theory_err);
+  double GetLikelihood(double theory, double theory_err);  
+  
  private:
   
   double xmin;
   double xmax;
+  double central_mes_val;
+
   
   std::string HEPRootFile;
   std::string HEPPATH;
