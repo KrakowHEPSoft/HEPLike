@@ -64,6 +64,7 @@ void HEPData::read_standard()
   if(config["ExperimentalDataSet"]) HEPExperimentalDataSet=config["ExperimentalDataSet"].as<std::string>();
   if(config["ExperimentalDataYears"]) HEPExperimentalDataYears=config["ExperimentalDataYears"].as<std::string>();
   if(config["Decay"]) HEPDecay=config["Decay"].as<std::string>(); 
+  /*
   if(config["Observables"])
     {
       YAML::Node node  = config["Observables"];
@@ -73,6 +74,7 @@ void HEPData::read_standard()
         }
       
     }
+  */
   if(config["Kinematics"]) HEPKinematics=config["Kinematics"].as<std::string>(); 
 
   

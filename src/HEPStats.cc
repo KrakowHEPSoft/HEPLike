@@ -18,11 +18,14 @@
 
 //external:
 #include "yaml-cpp/yaml.h"
+
 #include "gsl/gsl_cdf.h"
 #include "gsl/gsl_sf_erf.h"
 #include "gsl/gsl_math.h"
 #include "gsl/gsl_sf_exp.h"
 
+#include <boost/numeric/ublas/lu.hpp>
+#include <boost/numeric/ublas/matrix.hpp>
 
 
 namespace HEPStats
@@ -53,7 +56,29 @@ namespace HEPStats
     return nsigma;
     
   }
+  bool InvertMatrix (const ublas::matrix<double>& input, ublas::matrix<double>& inverse)
+  {
+    using namespace boost::numeric::ublas;
+    typedef permutation_matrix<std::size_t> pmatrix;
 
+    // create a working copy of the input
+    matrix<double> A(input);
+    // create a permutation matrix for the LU-factorization
+    pmatrix pm(A.size1());
+
+    // perform LU-factorization
+    int res = lu_factorize(A,pm);
+    if ( res != 0 ) return false;
+
+    // create identity matrix of "inverse"
+    inverse.assign(identity_matrix<double>(A.size1()));
+
+    // backsubstitute to get the inverse
+    lu_substitute(A, pm, inverse);
+
+    return true;
+  }
+  
 
 }
   
