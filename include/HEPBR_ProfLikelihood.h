@@ -2,7 +2,7 @@
 //
 //   Header for PROFLIKELIHOOD class
 //
-//   author: Marcin Chrzaszcz
+//   author: Jihyun Bhom, Marcin Chrzaszcz
 //////////////////////////////////////////////////
 #ifndef HEPBR_PROFLIKELIHOOD_H
 #define HEPBR_PROFLIKELIHOOD_H

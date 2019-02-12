@@ -1,8 +1,8 @@
 //   HEPLike: High Energy Physics Likelihoods
 //
-//   Header for limit class
+//   Header for baseic class
 //
-//   author: Marcin Chrzaszcz
+//   author: Jihyun Bhom, Marcin Chrzaszcz
 //////////////////////////////////////////////////
 #ifndef HEPDATA_H
 #define HEPDATA_H

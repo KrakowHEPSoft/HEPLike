@@ -2,7 +2,7 @@
 //
 //   Header with statistic functions
 //
-//   author: Marcin Chrzaszcz
+//   author: Jihyun Bhom, Marcin Chrzaszcz
 //////////////////////////////////////////////////
 #ifndef STATS_H
 #define STATS_H

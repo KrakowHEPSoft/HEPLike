@@ -1,8 +1,8 @@
 //   HEPLike: High Energy Physics Likelihoods
 //
-//   Header for limit class
+//   Header for Gaussian likelihood
 //
-//   author: Marcin Chrzaszcz
+//   author: Jihyun Bhom, Marcin Chrzaszcz
 //////////////////////////////////////////////////
 #ifndef HEPBR_GAUSSIAN_H
 #define HEPBR_GAUSSIAN_H

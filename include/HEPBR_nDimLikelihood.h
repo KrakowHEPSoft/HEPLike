@@ -2,7 +2,7 @@
 //
 //   Header for ndim Likelihood
 //
-//   author: Marcin Chrzaszcz
+//   author: Jihyun Bhom, Marcin Chrzaszcz
 //////////////////////////////////////////////////
 
 

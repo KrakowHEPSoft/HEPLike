@@ -2,7 +2,7 @@
 //
 //   Module with statistic functions
 //
-//   author: Marcin Chrzaszcz
+//   author: Jihyun Bhom, Marcin Chrzaszcz
 //////////////////////////////////////////////////
 
 

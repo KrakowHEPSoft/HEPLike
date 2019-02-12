@@ -2,7 +2,7 @@
 //
 //   Header for construck likelihoods for Bifurcated gaussian distribution
 //
-//   author: Marcin Chrzaszcz
+//   author: Jihyun Bhom, Marcin Chrzaszcz
 //////////////////////////////////////////////////
 #ifndef HEPBR_BIFURGAUSSIAN_H
 #define HEPBR_BIFURGAUSSIAN_H

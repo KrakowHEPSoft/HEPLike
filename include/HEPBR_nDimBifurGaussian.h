@@ -2,7 +2,7 @@
 //
 //   Header for ndim bifurcated gaussian distribution    
 //
-//   author: Marcin Chrzaszcz
+//   author: Jihyun Bhom, Marcin Chrzaszcz
 //////////////////////////////////////////////////
 #ifndef HEPBR_NDIMBIFURGAUSSIAN_H
 #define HEPBR_NDIMBIFURGAUSSIAN_H         

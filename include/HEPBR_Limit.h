@@ -2,7 +2,7 @@
 //
 //   Header for limit class
 //
-//   author: Marcin Chrzaszcz
+//   author: Jihyun Bhom, Marcin Chrzaszcz
 //////////////////////////////////////////////////
 #ifndef HEPBRLIMIT_H
 #define HEPBRLIMIT_H

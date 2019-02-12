@@ -2,7 +2,7 @@
 //
 //   Module to construck likelihoods for ndim bifurcated gaussian distribution
 //
-//   author: Marcin Chrzaszcz
+//   author: Jihyun Bhom, Marcin Chrzaszcz
 //////////////////////////////////////////////////
 
 

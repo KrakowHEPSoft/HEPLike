@@ -2,7 +2,7 @@
 //
 //   Module to read yaml files
 //
-//   author: Marcin Chrzaszcz
+//   author: Jihyun Bhom, Marcin Chrzaszcz
 //////////////////////////////////////////////////
 
 

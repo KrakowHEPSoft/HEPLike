@@ -2,7 +2,7 @@
 //
 //   Module to construck PROFLIKELIHOOD
 //
-//   author: Marcin Chrzaszcz
+//   author: Jihyun Bhom, Marcin Chrzaszcz
 //////////////////////////////////////////////////
 
 
