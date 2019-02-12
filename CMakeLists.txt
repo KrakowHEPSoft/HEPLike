@@ -41,12 +41,12 @@ add_library(HEPBR_BifurGaussian src/HEPBR_BifurGaussian.cc)
 add_library(HEPBR_ProfLikelihood src/HEPBR_ProfLikelihood.cc)
 add_library(HEPBR_nDimGaussian src/HEPBR_nDimGaussian.cc)
 add_library(HEPBR_nDimBifurGaussian src/HEPBR_nDimBifurGaussian.cc) 
-
+add_library(HEPBR_nDimLikelihood src/HEPBR_nDimLikelihood.cc)
 
 #############################################
 # the executables:
 add_executable(HEPLike main/main.cc)
-target_link_libraries(${PROJECT_NAME} HEPBR_Limit HEPData HEPStatistics HEPBR_Gaussian HEPBR_BifurGaussian HEPBR_ProfLikelihood HEPBR_nDimGaussian HEPBR_nDimBifurGaussian )
+target_link_libraries(${PROJECT_NAME} HEPBR_Limit HEPData HEPStatistics HEPBR_Gaussian HEPBR_BifurGaussian HEPBR_ProfLikelihood HEPBR_nDimGaussian HEPBR_nDimBifurGaussian HEPBR_nDimLikelihood )
 
 
 #############################################

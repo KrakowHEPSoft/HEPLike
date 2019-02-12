@@ -1,11 +1,13 @@
 //   HEPLike: High Energy Physics Likelihoods
 //
-//   Header for limit class
+//   Header for ndim Likelihood
 //
 //   author: Marcin Chrzaszcz
 //////////////////////////////////////////////////
-#ifndef HEPBR_NDIMGAUSSIAN_H
-#define HEPBR_NDIMGAUSSIAN_H         
+
+
+#ifndef HEPBR_NDIMLIKELIHOOOD_H
+#define HEPBR_NDIMLIKELIHOOOD_H
 
 //C++ headers
 #include <cmath>
@@ -19,6 +21,13 @@
 #include "HEPData.h"
 
 //external:
+#include "TFile.h"
+#include "TGraph.h"
+#include "TAxis.h"
+#include "TMath.h"
+#include "TH1D.h"
+#include "TH2D.h"
+#include "TH3D.h"
 #include "yaml-cpp/yaml.h"
 #include "gsl/gsl_cdf.h"
 #include "gsl/gsl_sf_erf.h"
@@ -30,13 +39,13 @@
 //#include <boost/qvm/mat_operations.hpp>
 
 
-class HEPBR_nDimGaussian: public HEPData
+class HEPBR_nDimLikelihood: public HEPData
 {
 
  public:
 
-  explicit HEPBR_nDimGaussian() :  HEPData() {};
-  explicit HEPBR_nDimGaussian(std::string s) :  HEPData(s) { };
+  explicit HEPBR_nDimLikelihood() :  HEPData() {};
+  explicit HEPBR_nDimLikelihood(std::string s) :  HEPData(s) { };
   
   
   void read();
@@ -46,26 +55,29 @@ class HEPBR_nDimGaussian: public HEPData
   bool Restrict(std::vector<std::string>);
   
  private:
+
+
+  std::string HEPRootFile;
+  std::string HEPPATH;
+  std::vector<std::string> Observables;
+
+   
   
   int NoOfObservables;
   int size_restricted;
 
-  std::vector<double> central;
-  std::vector<double> stat_error;
-  std::vector<double> syst_error;
-  std::vector<std::string> Observables;
+  TH2D *hist2D;
+  TH3D *hist3D;  
 
-  boost::numeric::ublas::matrix<double> HEP_cov;
-  boost::numeric::ublas::matrix<double> HEP_correlation;  
-  boost::numeric::ublas::matrix<double> HEP_cov_inv;
-
-  std::vector<double> central_restricted;   
-  boost::numeric::ublas::matrix<double> HEP_cov_restricted;
-  boost::numeric::ublas::matrix<double> HEP_correlation_restricted;
-  boost::numeric::ublas::matrix<double> HEP_cov_inv_restricted;
-  
-  
-  bool restricted;
+  double xmin;
+  double xmax;
+  double ymin;
+  double ymax;
+  double zmin;
+  double zmax;
+    
+  std::vector<double> central_mes_val;
+  int dim;
   
   
 };
