@@ -28,19 +28,19 @@ void HL_ProfLikelihood::read()
 
   read_standard();
 
-  //cout<<HEPBibEntry<<endl;
+  //cout<<HL_BibEntry<<endl;
 
-  if( config["ROOTData"])  HEPRootFile=config["ROOTData"].as<std::string>();
+  if( config["ROOTData"])  HL_RootFile=config["ROOTData"].as<std::string>();
   else
     {
       std::cout<<"You didn't profice a root file!!! HL_ProfLikelihood class is protesting!"<<std::endl;
     }
   
-  if(config["TGraphPath"]) HEPPATH=config["TGraphPath"].as<std::string>();
+  if(config["TGraphPath"]) HL_PATH=config["TGraphPath"].as<std::string>();
   
   // now opening files
-  f= new TFile(HEPRootFile.c_str(), "READ");
-  likelihood=dynamic_cast<TGraph*>(f->Get(HEPPATH.c_str()));
+  f= new TFile(HL_RootFile.c_str(), "READ");
+  likelihood=dynamic_cast<TGraph*>(f->Get(HL_PATH.c_str()));
   xmin=likelihood->GetXaxis()->GetXmin () ;
   xmax=likelihood->GetXaxis()->GetXmax () ;
   int N=likelihood->GetN();

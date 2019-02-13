@@ -12,8 +12,8 @@
 #include <iomanip>
 #include <iostream>
 
-#include "HEPStats.h"
-#include "HEPConstants.h"
+#include "HL_Stats.h"
+#include "HL_Constants.h"
 #include "HL_nDimLikelihood.h"
 
 

@@ -14,7 +14,7 @@
 
 
 
-#include "HEPStats.h"
+#include "HL_Stats.h"
 
 #include "yaml-cpp/yaml.h"
 

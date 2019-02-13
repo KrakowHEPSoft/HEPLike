@@ -15,8 +15,8 @@
 
 
 //HEPLike headers
-#include "HEPStats.h"
-#include "HEPData.h"
+#include "HL_Stats.h"
+#include "HL_Data.h"
 
 //external:
 #include "yaml-cpp/yaml.h"
@@ -30,13 +30,13 @@
 #include "TMath.h"
 #include "TH1D.h"
 
-class HL_ProfLikelihood: public HEPData
+class HL_ProfLikelihood: public HL_Data
 {
 
  public:
 
-  explicit HL_ProfLikelihood() :  HEPData() {};
-  explicit HL_ProfLikelihood(std::string s) :  HEPData(s) { };
+  explicit HL_ProfLikelihood() :  HL_Data() {};
+  explicit HL_ProfLikelihood(std::string s) :  HL_Data(s) { };
   
   
   void read();
@@ -51,8 +51,8 @@ class HL_ProfLikelihood: public HEPData
   double central_mes_val;
 
   
-  std::string HEPRootFile;
-  std::string HEPPATH;
+  std::string HL_RootFile;
+  std::string HL_PATH;
   TGraph *likelihood;
   
   TFile *f;
