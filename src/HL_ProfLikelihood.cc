@@ -12,13 +12,13 @@
 #include <iomanip>
 #include <iostream>
 
-#include "HEPStats.h"
-#include "HEPConstants.h"
-#include "HEPBR_ProfLikelihood.h"
+#include "HL_Stats.h"
+#include "HL_Constants.h"
+#include "HL_ProfLikelihood.h"
 
 using namespace std;
 
-void HEPBR_ProfLikelihood::read()
+void HL_ProfLikelihood::read()
 {
   if(! initialized)
     {
@@ -33,7 +33,7 @@ void HEPBR_ProfLikelihood::read()
   if( config["ROOTData"])  HEPRootFile=config["ROOTData"].as<std::string>();
   else
     {
-      std::cout<<"You didn't profice a root file!!! HEPBR_ProfLikelihood class is protesting!"<<std::endl;
+      std::cout<<"You didn't profice a root file!!! HL_ProfLikelihood class is protesting!"<<std::endl;
     }
   
   if(config["TGraphPath"]) HEPPATH=config["TGraphPath"].as<std::string>();
@@ -61,14 +61,14 @@ void HEPBR_ProfLikelihood::read()
 
 }
 
-double HEPBR_ProfLikelihood::GetChi2(double theory, double theory_err=-1.)
+double HL_ProfLikelihood::GetChi2(double theory, double theory_err=-1.)
 {
   double log_likelihood=GetLogLikelihood(theory,theory_err); 
   double chi2=-2.*log_likelihood; 
   return chi2;
 }
 
-double HEPBR_ProfLikelihood::GetLogLikelihood(double theory, double theory_error=-1.)
+double HL_ProfLikelihood::GetLogLikelihood(double theory, double theory_error=-1.)
 {
   if(theory < xmin || theory > xmax) return -1.e10;
   if(theory_error<0.){
@@ -87,7 +87,7 @@ double HEPBR_ProfLikelihood::GetLogLikelihood(double theory, double theory_error
   return loglikelihood;
   
 }
-double HEPBR_ProfLikelihood::GetLikelihood(double theory, double theory_err=-1.) 
+double HL_ProfLikelihood::GetLikelihood(double theory, double theory_err=-1.) 
 {
   double log_likelihood=GetLogLikelihood(theory,theory_err);
   return gsl_sf_exp(log_likelihood);  

@@ -4,8 +4,8 @@
 //
 //   author: Jihyun Bhom, Marcin Chrzaszcz
 //////////////////////////////////////////////////
-#ifndef HEPBR_GAUSSIAN_H
-#define HEPBR_GAUSSIAN_H
+#ifndef HL_GAUSSIAN_H
+#define HL_GAUSSIAN_H
 
 //C++ headers
 #include <cmath>
@@ -14,9 +14,9 @@
 #include <iomanip>
 
 
-//HEPLike headers
-#include "HEPStats.h"
-#include "HEPData.h"
+//HL_Like headers
+#include "HL_Stats.h"
+#include "HL_Data.h"
 
 //external:
 #include "yaml-cpp/yaml.h"
@@ -25,13 +25,13 @@
 #include "gsl/gsl_math.h"
 #include "gsl/gsl_sf_exp.h"
 
-class HEPBR_Gaussian: public HEPData
+class HL_Gaussian: public HL_Data
 {
 
  public:
 
-  explicit HEPBR_Gaussian() :  HEPData() {};
-  explicit HEPBR_Gaussian(std::string s) :  HEPData(s) { };
+  explicit HL_Gaussian() :  HL_Data() {};
+  explicit HL_Gaussian(std::string s) :  HL_Data(s) { };
   
   
   void read();
@@ -41,11 +41,11 @@ class HEPBR_Gaussian: public HEPData
 
  private:
   
-  double HEPCentral;
-  double HEPSigma_stat;
-  double HEPSigma_syst;
-    
-
+  double HL_Central;
+  double HL_Sigma_stat;
+  double HL_Sigma_syst;
+  std::string ObsName;
+  
   
 
   

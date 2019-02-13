@@ -1,4 +1,4 @@
-//   HEPLike: High Energy Physics Likelihoods
+//   HL_Like: High Energy Physics Likelihoods
 //
 //   Module to construck likelihoods for ndim bifurcated gaussian distribution
 //
@@ -12,16 +12,16 @@
 #include <iomanip>
 #include <iostream>
 
-#include "HEPStats.h"
-#include "HEPConstants.h"
-#include "HEPBR_nDimBifurGaussian.h"
+#include "HL_Stats.h"
+#include "HL_Constants.h"
+#include "HL_nDimBifurGaussian.h"
 
 
 using namespace std;
 
 
 
-void HEPBR_nDimBifurGaussian::read()
+void HL_nDimBifurGaussian::read()
 {
   if(! initialized)
     {
@@ -67,9 +67,9 @@ void HEPBR_nDimBifurGaussian::read()
       YAML::Node node  = config["Correlation"];
       int row=0;
       
-      HEP_correlation= boost::numeric::ublas::matrix<double>(NoOfObservables,NoOfObservables);
-      HEP_cov = boost::numeric::ublas::matrix<double>(NoOfObservables,NoOfObservables);
-      HEP_cov_inv = boost::numeric::ublas::matrix<double>(NoOfObservables,NoOfObservables);
+      HL_correlation= boost::numeric::ublas::matrix<double>(NoOfObservables,NoOfObservables);
+      HL_cov = boost::numeric::ublas::matrix<double>(NoOfObservables,NoOfObservables);
+      HL_cov_inv = boost::numeric::ublas::matrix<double>(NoOfObservables,NoOfObservables);
       for(YAML::const_iterator it = node.begin(); it != node.end();  ++it )
         {
           if(row==0)
@@ -78,14 +78,14 @@ void HEPBR_nDimBifurGaussian::read()
                 {
                   if(Observables[i] != ((*it)[i]).as<std::string>()  )
                     {
-                      cout<<"Error in HEPBR_nDimBifurGaussian, wrong ordering of names in correlation matrix"<<endl;
+                      cout<<"Error in HL_nDimBifurGaussian, wrong ordering of names in correlation matrix"<<endl;
                       return;
                     }}}// row=0
           else
             {
               for(int i=0;i<NoOfObservables; i++)
                 {
-                  HEP_correlation(row-1,i)= ((*it)[i]).as<double>();
+                  HL_correlation(row-1,i)= ((*it)[i]).as<double>();
                 }
             }
           
@@ -94,9 +94,9 @@ void HEPBR_nDimBifurGaussian::read()
     }
   else // no correlation
     {
-      HEP_correlation= boost::numeric::ublas::matrix<double>(NoOfObservables,NoOfObservables);
-      HEP_cov = boost::numeric::ublas::matrix<double>(NoOfObservables,NoOfObservables);
-      HEP_cov_inv = boost::numeric::ublas::matrix<double>(NoOfObservables,NoOfObservables);
+      HL_correlation= boost::numeric::ublas::matrix<double>(NoOfObservables,NoOfObservables);
+      HL_cov = boost::numeric::ublas::matrix<double>(NoOfObservables,NoOfObservables);
+      HL_cov_inv = boost::numeric::ublas::matrix<double>(NoOfObservables,NoOfObservables);
       
       
       for(int i=0;i<NoOfObservables; i++)
@@ -105,25 +105,25 @@ void HEPBR_nDimBifurGaussian::read()
             {
               if(i==j)
                 {
-                  HEP_correlation(i,j) =1.;
-                  HEP_cov(i,j) =1.;  
-                  HEP_cov_inv(i,j)=1.;   
+                  HL_correlation(i,j) =1.;
+                  HL_cov(i,j) =1.;  
+                  HL_cov_inv(i,j)=1.;   
                 }//diagonal
               else
                 {
-                  HEP_correlation(i,j) =0.;
-                  HEP_cov(i,j) =0.;
-                  HEP_cov_inv(i,j)=0.;
+                  HL_correlation(i,j) =0.;
+                  HL_cov(i,j) =0.;
+                  HL_cov_inv(i,j)=0.;
                 }//ofdiagonal
             }// j
         }// i
       
     }//no corrlation case
 
-  cout<<HEP_correlation<<endl;
-  //cout<<HEP_cov<<endl;
+  cout<<HL_correlation<<endl;
+  //cout<<HL_cov<<endl;
 }
-bool HEPBR_nDimBifurGaussian::Restrict(std::vector<std::string> names)
+bool HL_nDimBifurGaussian::Restrict(std::vector<std::string> names)
 {
   size_restricted=  names.size();
   std::vector<int> indexes;
@@ -135,9 +135,9 @@ bool HEPBR_nDimBifurGaussian::Restrict(std::vector<std::string> names)
         indexes.push_back(i);
       }
     }
-  HEP_cov_restricted= boost::numeric::ublas::matrix<double>(size_restricted, size_restricted);
-  HEP_correlation_restricted=  boost::numeric::ublas::matrix<double>(size_restricted, size_restricted);
-  HEP_cov_inv_restricted=  boost::numeric::ublas::matrix<double>(size_restricted, size_restricted);
+  HL_cov_restricted= boost::numeric::ublas::matrix<double>(size_restricted, size_restricted);
+  HL_correlation_restricted=  boost::numeric::ublas::matrix<double>(size_restricted, size_restricted);
+  HL_cov_inv_restricted=  boost::numeric::ublas::matrix<double>(size_restricted, size_restricted);
 
   for(int i=0; i< size_restricted; i++)
     {
@@ -146,24 +146,24 @@ bool HEPBR_nDimBifurGaussian::Restrict(std::vector<std::string> names)
         {
           int i_index=indexes[i];
           int j_index=indexes[j];
-          HEP_correlation_restricted(i,j)=HEP_correlation(i_index, j_index); 
+          HL_correlation_restricted(i,j)=HL_correlation(i_index, j_index); 
         }
     }
-  cout<<HEP_correlation_restricted<<endl;
+  cout<<HL_correlation_restricted<<endl;
   restricted=true;
   
   return true;
 }
 
 
-double HEPBR_nDimBifurGaussian::GetChi2(std::vector<double> theory)  //, double theory_err)
+double HL_nDimBifurGaussian::GetChi2(std::vector<double> theory)  //, double theory_err)
 {
   if(!restricted) // if we don't resctric and use whole matrix
     {
-      HEP_correlation_restricted=HEP_correlation;
-      //HEPStats::inverse(HEP_correlation_restricted, size_restricted);   
+      HL_correlation_restricted=HL_correlation;
+      //HL_Stats::inverse(HL_correlation_restricted, size_restricted);   
       size_restricted=NoOfObservables;
-      HEPStats::InvertMatrix(HEP_cov_restricted,HEP_cov_inv_restricted);
+      HL_Stats::InvertMatrix(HL_cov_restricted,HL_cov_inv_restricted);
       restricted=true; 
     }
   // now calculating chi2
@@ -171,47 +171,47 @@ double HEPBR_nDimBifurGaussian::GetChi2(std::vector<double> theory)  //, double 
   vector<double> diff;
   if(theory.size() !=  central_restricted.size())
     {
-      std::cout<<"Error in HEPBR_nDimBifurGaussian::GetChi2, you had different dimensions in theory and experiment"<<std::endl;
+      std::cout<<"Error in HL_nDimBifurGaussian::GetChi2, you had different dimensions in theory and experiment"<<std::endl;
       return -1e10;
     }
   for(int i=0;i<central_restricted.size(); i++) { diff.push_back(central_restricted[i] - theory[i] );}
 
 
-  HEP_cov_restricted=  boost::numeric::ublas::matrix<double>(size_restricted, size_restricted);
-  HEP_cov_inv_restricted=  boost::numeric::ublas::matrix<double>(size_restricted, size_restricted);
+  HL_cov_restricted=  boost::numeric::ublas::matrix<double>(size_restricted, size_restricted);
+  HL_cov_inv_restricted=  boost::numeric::ublas::matrix<double>(size_restricted, size_restricted);
 
   for(int i=0; i< size_restricted; i++)
     {
       for(int j=0; j< size_restricted; j++)
         {
           cout<<diff[i]<<" "<<diff[j]<<endl;
-          if(diff[i] >= 0. && diff[j] >= 0.)      HEP_cov_restricted(i,j)=error_right[i]*error_right[j]*HEP_correlation_restricted(i,j);
-          if(diff[i] >= 0. && diff[j] < 0.)      HEP_cov_restricted(i,j)=error_right[i]*error_left[j]*HEP_correlation_restricted(i,j);
-          if(diff[i] < 0. && diff[j] >= 0.)      HEP_cov_restricted(i,j)=error_left[i]*error_right[j]*HEP_correlation_restricted(i,j);
-          if(diff[i] < 0. && diff[j] < 0.)      HEP_cov_restricted(i,j)=error_left[i]*error_left[j]*HEP_correlation_restricted(i,j);
+          if(diff[i] >= 0. && diff[j] >= 0.)      HL_cov_restricted(i,j)=error_right[i]*error_right[j]*HL_correlation_restricted(i,j);
+          if(diff[i] >= 0. && diff[j] < 0.)      HL_cov_restricted(i,j)=error_right[i]*error_left[j]*HL_correlation_restricted(i,j);
+          if(diff[i] < 0. && diff[j] >= 0.)      HL_cov_restricted(i,j)=error_left[i]*error_right[j]*HL_correlation_restricted(i,j);
+          if(diff[i] < 0. && diff[j] < 0.)      HL_cov_restricted(i,j)=error_left[i]*error_left[j]*HL_correlation_restricted(i,j);
         }
     }
-  cout<<HEP_cov_restricted<<endl;
-  HEPStats::InvertMatrix(HEP_cov_restricted,HEP_cov_inv_restricted);
-  cout<<HEP_cov_restricted<<endl;
-  cout<<HEP_cov_inv_restricted<<endl;
-  for (int i=0; i < HEP_cov_inv_restricted.size1(); ++i)
+  cout<<HL_cov_restricted<<endl;
+  HL_Stats::InvertMatrix(HL_cov_restricted,HL_cov_inv_restricted);
+  cout<<HL_cov_restricted<<endl;
+  cout<<HL_cov_inv_restricted<<endl;
+  for (int i=0; i < HL_cov_inv_restricted.size1(); ++i)
     {
-      for (int j=0; j<HEP_cov_inv_restricted.size2(); ++j)
+      for (int j=0; j<HL_cov_inv_restricted.size2(); ++j)
         {
-          chi2+= diff[i] * HEP_cov_inv_restricted(i,j)*diff[j] ;
+          chi2+= diff[i] * HL_cov_inv_restricted(i,j)*diff[j] ;
         }
     }
   return chi2;
 }
-double HEPBR_nDimBifurGaussian::GetLogLikelihood(std::vector<double> theory)
+double HL_nDimBifurGaussian::GetLogLikelihood(std::vector<double> theory)
 {
 
   double chi2=GetChi2(theory);
   
   return -0.5*chi2;
 }
-double HEPBR_nDimBifurGaussian::GetLikelihood(std::vector<double> theory)
+double HL_nDimBifurGaussian::GetLikelihood(std::vector<double> theory)
 {
   double log_likelihood=GetLogLikelihood(theory);
   return gsl_sf_exp(log_likelihood);  

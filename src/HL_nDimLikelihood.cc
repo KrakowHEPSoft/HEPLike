@@ -14,14 +14,14 @@
 
 #include "HEPStats.h"
 #include "HEPConstants.h"
-#include "HEPBR_nDimLikelihood.h"
+#include "HL_nDimLikelihood.h"
 
 
 using namespace std;
 
 
 
-void HEPBR_nDimLikelihood::read()
+void HL_nDimLikelihood::read()
 {
   if(! initialized)
     {
@@ -29,25 +29,25 @@ void HEPBR_nDimLikelihood::read()
       return;
     }
   read_standard();
-  if( config["ROOTData"])  HEPRootFile=config["ROOTData"].as<std::string>();
+  if( config["ROOTData"])  HL_RootFile=config["ROOTData"].as<std::string>();
   else
     {
-      std::cout<<"You didn't profice a root file!!! HEPBR_ProfLikelihood class is protesting!"<<std::endl;
+      std::cout<<"You didn't profice a root file!!! HL_ProfLikelihood class is protesting!"<<std::endl;
     }
   if(config["TH2Path"])
     {
-      HEPPATH=config["TH2Path"].as<std::string>();
+      HL_PATH=config["TH2Path"].as<std::string>();
       dim=2;
     }
   else if(config["TH3Path"])
     {
-      HEPPATH=config["TH3Path"].as<std::string>(); 
+      HL_PATH=config["TH3Path"].as<std::string>(); 
       dim=3;
     }
       
-  TFile *f= new TFile(HEPRootFile.c_str(), "READ");
-  if(dim==2) hist2D=dynamic_cast<TH2D*>(f->Get(HEPPATH.c_str()));
-  else if(dim==3)  hist3D=dynamic_cast<TH3D*>(f->Get(HEPPATH.c_str()));
+  TFile *f= new TFile(HL_RootFile.c_str(), "READ");
+  if(dim==2) hist2D=dynamic_cast<TH2D*>(f->Get(HL_PATH.c_str()));
+  else if(dim==3)  hist3D=dynamic_cast<TH3D*>(f->Get(HL_PATH.c_str()));
   if(config["Observables"])
     {
       YAML::Node node  = config["Observables"];
@@ -63,13 +63,13 @@ void HEPBR_nDimLikelihood::read()
 
   
 }
-double HEPBR_nDimLikelihood::GetChi2(std::vector<double> theory)  //, double theory_err)
+double HL_nDimLikelihood::GetChi2(std::vector<double> theory)  //, double theory_err)
 {
   double log_likelihood=GetLogLikelihood(theory);
   return -2.*log_likelihood;
 
 }
-double HEPBR_nDimLikelihood::GetLogLikelihood(std::vector<double> theory)
+double HL_nDimLikelihood::GetLogLikelihood(std::vector<double> theory)
 {
   int bin;
   if(theory.size() ==2)
@@ -82,7 +82,7 @@ double HEPBR_nDimLikelihood::GetLogLikelihood(std::vector<double> theory)
 
   
 }
-double HEPBR_nDimLikelihood::GetLikelihood(std::vector<double> theory)
+double HL_nDimLikelihood::GetLikelihood(std::vector<double> theory)
 {
   double log_likelihood=GetLogLikelihood(theory);
   return gsl_sf_exp(log_likelihood);  

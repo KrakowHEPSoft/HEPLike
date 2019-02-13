@@ -4,8 +4,8 @@
 //
 //   author: Jihyun Bhom, Marcin Chrzaszcz
 //////////////////////////////////////////////////
-#ifndef HEPBR_PROFLIKELIHOOD_H
-#define HEPBR_PROFLIKELIHOOD_H
+#ifndef HL_PROFLIKELIHOOD_H
+#define HL_PROFLIKELIHOOD_H
 
 //C++ headers
 #include <cmath>
@@ -30,13 +30,13 @@
 #include "TMath.h"
 #include "TH1D.h"
 
-class HEPBR_ProfLikelihood: public HEPData
+class HL_ProfLikelihood: public HEPData
 {
 
  public:
 
-  explicit HEPBR_ProfLikelihood() :  HEPData() {};
-  explicit HEPBR_ProfLikelihood(std::string s) :  HEPData(s) { };
+  explicit HL_ProfLikelihood() :  HEPData() {};
+  explicit HL_ProfLikelihood(std::string s) :  HEPData(s) { };
   
   
   void read();

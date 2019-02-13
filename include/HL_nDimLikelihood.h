@@ -6,8 +6,8 @@
 //////////////////////////////////////////////////
 
 
-#ifndef HEPBR_NDIMLIKELIHOOOD_H
-#define HEPBR_NDIMLIKELIHOOOD_H
+#ifndef HL_NDIMLIKELIHOOOD_H
+#define HL_NDIMLIKELIHOOOD_H
 
 //C++ headers
 #include <cmath>
@@ -16,9 +16,9 @@
 #include <iomanip>
 
 
-//HEPLike headers
-#include "HEPStats.h"
-#include "HEPData.h"
+//HL_Like headers
+#include "HL_Stats.h"
+#include "HL_Data.h"
 
 //external:
 #include "TFile.h"
@@ -39,13 +39,13 @@
 //#include <boost/qvm/mat_operations.hpp>
 
 
-class HEPBR_nDimLikelihood: public HEPData
+class HL_nDimLikelihood: public HL_Data
 {
 
  public:
 
-  explicit HEPBR_nDimLikelihood() :  HEPData() {};
-  explicit HEPBR_nDimLikelihood(std::string s) :  HEPData(s) { };
+  explicit HL_nDimLikelihood() :  HL_Data() {};
+  explicit HL_nDimLikelihood(std::string s) :  HL_Data(s) { };
   
   
   void read();
@@ -57,8 +57,8 @@ class HEPBR_nDimLikelihood: public HEPData
  private:
 
 
-  std::string HEPRootFile;
-  std::string HEPPATH;
+  std::string HL_RootFile;
+  std::string HL_PATH;
   std::vector<std::string> Observables;
 
    

@@ -1,4 +1,4 @@
-//   HEPLike: High Energy Physics Likelihoods
+//   HL_Like: High Energy Physics Likelihoods
 //
 //   Module to read yaml files
 //
@@ -12,13 +12,13 @@
 #include <iomanip>
 #include <iostream>
 
-#include "HEPStats.h"
-#include "HEPConstants.h"
-#include "HEPBR_Limit.h"
+#include "HL_Stats.h"
+#include "HL_Constants.h"
+#include "HL_Limit.h"
 
 using namespace std;
 
-void HEPBRLimit::read()
+void HL_BRLimit::read()
 {
   if(! initialized)
     {
@@ -37,14 +37,14 @@ void HEPBRLimit::read()
     }
 
 }
-double HEPBRLimit::GetChi2(double br)
+double HL_BRLimit::GetChi2(double br)
 {
   double cls=GetCLs(br) ;
   //std::cout<<gsl_cdf_gaussian_P(1., 1)-gsl_cdf_gaussian_P(-1., 1.)<<std::endl;
   //double nsigma=0.001;
   //double dsigma=0.0001;
   //double p=0;
-  double nsigma=HEPStats::get_sigma_from_pval(1-cls);
+  double nsigma=HL_Stats::get_sigma_from_pval(1-cls);
   /*
   while (p<1.- cls) {
     p= gsl_sf_erf(nsigma/M_SQRT2);
@@ -57,20 +57,20 @@ double HEPBRLimit::GetChi2(double br)
   
   return chi2;
 }
-double HEPBRLimit::GetLogLikelihood(double br)
+double HL_BRLimit::GetLogLikelihood(double br)
 {
   double chi2=GetChi2(br);
   return -0.5*chi2;
   
 }
 
-double HEPBRLimit::GetLikelihood(double br)
+double HL_BRLimit::GetLikelihood(double br)
 {
   double log_likelihood=GetLogLikelihood(br);
   return gsl_sf_exp(log_likelihood);  
 }
 // this algorithm is O(log n) fast:
-double  HEPBRLimit::GetCLs(double value)//, std::vector<double> a, std::vector<double> cls)
+double  HL_BRLimit::GetCLs(double value)//, std::vector<double> a, std::vector<double> cls)
 {
   int length =BR.size();
   if(value < BR[0]) {

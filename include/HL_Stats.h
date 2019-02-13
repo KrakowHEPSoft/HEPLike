@@ -15,7 +15,7 @@
 #include <boost/numeric/ublas/matrix.hpp>
 using namespace std;
 
-namespace HEPStats
+namespace HL_Stats
 {
   namespace ublas = boost::numeric::ublas;
   
@@ -41,7 +41,7 @@ namespace HEPStats
       int res = lu_factorize(A,pm);
       if ( res != 0 )
         {
-          std::cout<<"The matrix inversion failed in HEPStats::InvertMatrix"<<std::endl;
+          std::cout<<"The matrix inversion failed in HL_Stats::InvertMatrix"<<std::endl;
           return false;
         }
       // create identity matrix of "inverse"

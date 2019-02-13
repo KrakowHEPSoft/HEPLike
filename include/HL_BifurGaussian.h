@@ -1,11 +1,11 @@
-//   HEPLike: High Energy Physics Likelihoods
+//   HL_Like: High Energy Physics Likelihoods
 //
 //   Header for construck likelihoods for Bifurcated gaussian distribution
 //
 //   author: Jihyun Bhom, Marcin Chrzaszcz
 //////////////////////////////////////////////////
-#ifndef HEPBR_BIFURGAUSSIAN_H
-#define HEPBR_BIFURGAUSSIAN_H
+#ifndef HL_BIFURGAUSSIAN_H
+#define HL_BIFURGAUSSIAN_H
 
 //C++ headers
 #include <cmath>
@@ -14,9 +14,9 @@
 #include <iomanip>
 
 
-//HEPLike headers
-#include "HEPStats.h"
-#include "HEPBR_Gaussian.h"
+//HL_Like headers
+#include "HL_Stats.h"
+#include "HL_Gaussian.h"
 
 //external:
 #include "yaml-cpp/yaml.h"
@@ -25,13 +25,13 @@
 #include "gsl/gsl_math.h"
 #include "gsl/gsl_sf_exp.h"
 
-class HEPBR_BifurGaussian: public HEPBR_Gaussian
+class HL_BifurGaussian: public HL_Gaussian
 {
 
  public:
 
-  explicit HEPBR_BifurGaussian() :  HEPBR_Gaussian() {};
-  explicit HEPBR_BifurGaussian(std::string s) :  HEPBR_Gaussian(s) { };
+  explicit HL_BifurGaussian() :  HL_Gaussian() {};
+  explicit HL_BifurGaussian(std::string s) :  HL_Gaussian(s) { };
   
   
   void read();
@@ -41,11 +41,11 @@ class HEPBR_BifurGaussian: public HEPBR_Gaussian
 
  private:
   
-  double HEPCentral;
-  double HEPSigma_stat_R;
-  double HEPSigma_stat_L;
-  double HEPSigma_syst_R;
-  double HEPSigma_syst_L;
+  double HL_Central;
+  double HL_Sigma_stat_R;
+  double HL_Sigma_stat_L;
+  double HL_Sigma_syst_R;
+  double HL_Sigma_syst_L;
 
   
     

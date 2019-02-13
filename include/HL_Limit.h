@@ -1,11 +1,11 @@
-//   HEPLike: High Energy Physics Likelihoods
+//   HL_Like: High Energy Physics Likelihoods
 //
 //   Header for limit class
 //
 //   author: Jihyun Bhom, Marcin Chrzaszcz
 //////////////////////////////////////////////////
-#ifndef HEPBRLIMIT_H
-#define HEPBRLIMIT_H
+#ifndef HL_BRLIMIT_H
+#define HL_BRLIMIT_H
 
 //C++ headers
 #include <cmath>
@@ -14,9 +14,9 @@
 #include <iomanip>
 
 
-//HEPLike headers
-#include "HEPStats.h"
-#include "HEPData.h"
+//HL_Like headers
+#include "HL_Stats.h"
+#include "HL_Data.h"
 
 //external:
 #include "yaml-cpp/yaml.h"
@@ -24,13 +24,13 @@
 #include "gsl/gsl_sf_erf.h"
 #include "gsl/gsl_math.h"
 #include "gsl/gsl_sf_exp.h"
-class HEPBRLimit: public HEPData
+class HL_BRLimit: public HL_Data
 {
 
  public:
 
-  explicit HEPBRLimit() :  HEPData() {};
-  explicit HEPBRLimit(std::string s) :  HEPData(s) { };
+  explicit HL_BRLimit() :  HL_Data() {};
+  explicit HL_BRLimit(std::string s) :  HL_Data(s) { };
   
   
   void read();

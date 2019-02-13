@@ -12,7 +12,7 @@
 
 
 
-namespace HEPConst
+namespace HL_Const
 {
   const double pi=3.141592653589793238462643;
   const double e= 2.718281828459045235360287;

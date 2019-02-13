@@ -1,11 +1,11 @@
 //   HEPLike: High Energy Physics Likelihoods
 //
-//   Header for ndim bifurcated gaussian distribution    
+//   Header for nDimGaussian
 //
 //   author: Jihyun Bhom, Marcin Chrzaszcz
 //////////////////////////////////////////////////
-#ifndef HEPBR_NDIMBIFURGAUSSIAN_H
-#define HEPBR_NDIMBIFURGAUSSIAN_H         
+#ifndef HL_NDIMGAUSSIAN_H
+#define HL_NDIMGAUSSIAN_H         
 
 //C++ headers
 #include <cmath>
@@ -14,10 +14,9 @@
 #include <iomanip>
 
 
-//HEPLike headers
-#include "HEPStats.h"
-#include "HEPData.h"
-//#include "HEPBR_nDimGaussian.h"         
+//HL_Like headers
+#include "HL_Stats.h"
+#include "HL_Data.h"
 
 //external:
 #include "yaml-cpp/yaml.h"
@@ -31,13 +30,13 @@
 //#include <boost/qvm/mat_operations.hpp>
 
 
-class HEPBR_nDimBifurGaussian: public HEPData
+class HL_nDimGaussian: public HL_Data
 {
 
  public:
 
-  explicit HEPBR_nDimBifurGaussian() :  HEPData() {};
-  explicit HEPBR_nDimBifurGaussian(std::string s) :  HEPData(s) { };
+  explicit HL_nDimGaussian() :  HL_Data() {};
+  explicit HL_nDimGaussian(std::string s) :  HL_Data(s) { };
   
   
   void read();
@@ -52,24 +51,18 @@ class HEPBR_nDimBifurGaussian: public HEPData
   int size_restricted;
 
   std::vector<double> central;
-  std::vector<double> stat_error_right;
-  std::vector<double> stat_error_left; 
-  std::vector<double> syst_error_right;
-  std::vector<double> syst_error_left;
-  
-  std::vector<double>  error_right;
-  std::vector<double>  error_left; 
-
+  std::vector<double> stat_error;
+  std::vector<double> syst_error;
   std::vector<std::string> Observables;
 
-  boost::numeric::ublas::matrix<double> HEP_cov;
-  boost::numeric::ublas::matrix<double> HEP_correlation;  
-  boost::numeric::ublas::matrix<double> HEP_cov_inv;
+  boost::numeric::ublas::matrix<double> HL_cov;
+  boost::numeric::ublas::matrix<double> HL_correlation;  
+  boost::numeric::ublas::matrix<double> HL_cov_inv;
 
   std::vector<double> central_restricted;   
-  boost::numeric::ublas::matrix<double> HEP_cov_restricted;
-  boost::numeric::ublas::matrix<double> HEP_correlation_restricted;
-  boost::numeric::ublas::matrix<double> HEP_cov_inv_restricted;
+  boost::numeric::ublas::matrix<double> HL_cov_restricted;
+  boost::numeric::ublas::matrix<double> HL_correlation_restricted;
+  boost::numeric::ublas::matrix<double> HL_cov_inv_restricted;
   
   
   bool restricted;

@@ -12,8 +12,8 @@
 #include <iomanip>
 #include <iostream>
 
-#include "HEPStats.h"
-#include "HEPConstants.h"
+#include "HL_Stats.h"
+#include "HL_Constants.h"
 
 
 //external:
@@ -28,7 +28,7 @@
 #include <boost/numeric/ublas/matrix.hpp>
 
 
-namespace HEPStats
+namespace HL_Stats
 {
     
   /// Use a detection to compute a simple chi-square-like log likelihood, for the case when obs is Gaussian distributed. 
