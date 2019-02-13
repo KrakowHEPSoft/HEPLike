@@ -53,6 +53,9 @@ class HL_nDimLikelihood: public HL_Data
   double GetLikelihood( std::vector<double> theory) ;  
   double GetLogLikelihood(  std::vector<double> theory) ;  
   bool Restrict(std::vector<std::string>);
+
+  void Profile();
+    
   
  private:
 
@@ -61,7 +64,6 @@ class HL_nDimLikelihood: public HL_Data
   std::string HL_PATH;
   std::vector<std::string> Observables;
 
-   
   
   int NoOfObservables;
   int size_restricted;
@@ -69,6 +71,8 @@ class HL_nDimLikelihood: public HL_Data
   TH2D *hist2D;
   TH3D *hist3D;  
 
+  TH1 *hist;
+  
   double xmin;
   double xmax;
   double ymin;
@@ -78,6 +82,16 @@ class HL_nDimLikelihood: public HL_Data
     
   std::vector<double> central_mes_val;
   int dim;
+
+  TH1D *hist_profileX;
+  TH1D *hist_profileY;  
+  TH1D *hist_profileZ;
+
+    
+  int n_binsX;  
+  int n_binsY;
+  int n_binsZ;  
+  
   
   
 };

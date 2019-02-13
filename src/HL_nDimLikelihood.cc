@@ -41,13 +41,42 @@ void HL_nDimLikelihood::read()
     }
   else if(config["TH3Path"])
     {
-      HL_PATH=config["TH3Path"].as<std::string>(); 
+      HL_PATH=config["TH3Path"].as<std::string>();
       dim=3;
     }
-      
+
   TFile *f= new TFile(HL_RootFile.c_str(), "READ");
-  if(dim==2) hist2D=dynamic_cast<TH2D*>(f->Get(HL_PATH.c_str()));
-  else if(dim==3)  hist3D=dynamic_cast<TH3D*>(f->Get(HL_PATH.c_str()));
+  if(dim==2)
+    {
+      hist2D=dynamic_cast<TH2D*>(f->Get(HL_PATH.c_str()));
+      n_binsX=hist2D->GetNbinsX();
+      n_binsY=hist2D->GetNbinsY();
+      n_binsZ=hist2D->GetNbinsZ();
+      hist=hist2D;
+
+    }
+  else if(dim==3)
+    {
+      hist3D=dynamic_cast<TH3D*>(f->Get(HL_PATH.c_str()));
+
+      n_binsX=hist3D->GetNbinsX();
+      n_binsY=hist3D->GetNbinsY();
+      n_binsZ=hist3D->GetNbinsZ();
+      hist=hist3D;
+
+    }
+  xmin=hist->GetXaxis()->GetXmin();
+  xmax=hist->GetXaxis()->GetXmax();
+  ymin=hist->GetYaxis()->GetXmin();
+  ymax=hist->GetYaxis()->GetXmax();
+  zmin=0.;
+  zmax=0.;
+  if(dim==3)
+    {
+      zmin=hist->GetZaxis()->GetXmin();
+      zmax=hist->GetZaxis()->GetXmax();
+    }
+
   if(config["Observables"])
     {
       YAML::Node node  = config["Observables"];
@@ -56,12 +85,12 @@ void HL_nDimLikelihood::read()
           Observables.push_back( ((*it)[0]).as<std::string>()  );
           central_mes_val.push_back( ((*it)[1]).as<double>()  );
         }
-      
-      
+
+
     }
   cout<<central_mes_val[0]<<" "<<central_mes_val[1]<<endl;
 
-  
+
 }
 double HL_nDimLikelihood::GetChi2(std::vector<double> theory)  //, double theory_err)
 {
@@ -75,20 +104,107 @@ double HL_nDimLikelihood::GetLogLikelihood(std::vector<double> theory)
   if(theory.size() ==2)
     {
       bin=hist2D->FindBin(theory[0], theory[1]);
-      
+
     }
   double log_likelihood=hist2D->GetBinContent(bin);
   return -log_likelihood;
 
-  
+
 }
 double HL_nDimLikelihood::GetLikelihood(std::vector<double> theory)
 {
   double log_likelihood=GetLogLikelihood(theory);
-  return gsl_sf_exp(log_likelihood);  
+  return gsl_sf_exp(log_likelihood);
 }
 
 
+void HL_nDimLikelihood::Profile()
+{
+  //profiling over X:
+  hist_profileX=new TH1D("profX", "profX", n_binsX,xmin, xmax);
 
 
+  if(dim==2){
+    for(int ix=1 ; ix < n_binsX ; ++ix)
+      {
+        double min=1.e10;
 
+        for(int iy=1 ; iy < n_binsY ; ++iy)
+          {
+            if(hist->GetBinContent(ix,iy)<min) min=hist->GetBinContent(ix,iy);
+
+          }//
+        hist_profileX->SetBinContent(ix, min);
+      }
+  }
+  else if(dim==3)
+    {
+      for(int ix=1 ; ix < n_binsX ; ++ix)
+        {
+          double min=1.e10;
+
+          for(int iy=1 ; iy < n_binsY ; ++iy)
+            {
+              for(int iz=1 ; iz< n_binsZ ; ++iz)
+                {
+                  if(hist->GetBinContent(ix,iy,iz)<min) min=hist->GetBinContent(ix,iy,iz);
+                }
+            }
+          hist_profileX->SetBinContent(ix, min);
+        }
+    }
+  // profile Y:
+  hist_profileY=new TH1D("profY", "profY", n_binsY,ymin, ymax);
+
+  if(dim==2){
+    for(int iy=1 ; iy < n_binsY ; ++iy)
+      {
+        double min=1.e10;
+
+        for(int ix=1 ; ix < n_binsX ; ++ix)
+          {
+            if(hist->GetBinContent(ix,iy)<min) min=hist->GetBinContent(ix,iy);
+
+          }//
+        hist_profileY->SetBinContent(iy, min);
+      }
+  }
+  else if(dim==3)
+    {
+      for(int iy=1 ; iy < n_binsY ; ++iy)
+        {
+          double min=1.e10;
+
+          for(int ix=1 ; ix < n_binsX ; ++ix)
+            {
+              for(int iz=1 ; iz< n_binsZ ; ++iz)
+                {
+                  if(hist->GetBinContent(ix,iy,iz)<min) min=hist->GetBinContent(ix,iy,iz);
+                }
+            }
+          hist_profileY->SetBinContent(iy, min);
+        }
+    }
+  cout<<"?"<<endl;
+  TFile *ftmp=new TFile("tmp.root", "RECREATE");
+  hist_profileY->Write();
+  hist_profileX->Write();
+  if(dim==2) return;
+
+  hist_profileZ=new TH1D("profZ", "profZ", n_binsZ,zmin, zmax);       
+  for(int iz=1 ; iz < n_binsZ ; ++iz)
+    {
+      double min=1.e10;
+
+      for(int iy=1 ; iy < n_binsY ; ++iy)
+        {
+          for(int ix=1 ; ix< n_binsX ; ++ix)
+            {
+              if(hist->GetBinContent(ix,iy,iz)<min) min=hist->GetBinContent(ix,iy,iz);
+            }
+        }
+      hist_profileZ->SetBinContent(iz, min);
+    }
+  
+
+}
