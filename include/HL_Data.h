@@ -47,22 +47,17 @@ class HL_Data
   std::string HL_Arxiv;
   std::string HL_SubmissionYear;
   std::string HL_PublicationYear;
-  
-  
-  
+    
   // Collaborations numbers
-  std::string HL_HFLAV;
-  std::string HL_Source;
   std::string HL_Collaborations;
-
+  std::string HL_Collaboration_number;
   
   // addition data
-  std::string HL_ExperimentalDataSet; // 1fb for example
+  std::string HL_ExperimentalDataLumi; // 1fb for example
   std::string HL_ExperimentalDataYears;
   std::string HL_Decay;
-  std::vector<std::string> HL_Observables;
   std::string HL_Kinematics;
-
+  
   
 
 
