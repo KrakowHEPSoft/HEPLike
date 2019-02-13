@@ -45,11 +45,25 @@ add_library(HL_nDimLikelihood src/HL_nDimLikelihood.cc)
 
 #############################################
 # the executables:
-add_executable(HL_Like main/main.cc)
-target_link_libraries(${PROJECT_NAME} HL_Limit HL_Data HL_Statistics HL_Gaussian HL_BifurGaussian HL_ProfLikelihood HL_nDimGaussian HL_nDimBifurGaussian HL_nDimLikelihood )
+add_executable(Br_example main/Br_example.cc)
+add_executable(BrBifurGaussian_example main/BrBifurGaussian_example.cc)
+add_executable(Limit_example main/Limit_example.cc)
+
+
+target_link_libraries(Br_example HL_Limit HL_Data HL_Statistics HL_Gaussian HL_BifurGaussian HL_ProfLikelihood HL_nDimGaussian HL_nDimBifurGaussian HL_nDimLikelihood yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )                         
+
+target_link_libraries(BrBifurGaussian_example HL_Limit HL_Data HL_Statistics HL_Gaussian HL_BifurGaussian HL_ProfLikelihood HL_nDimGaussian HL_nDimBifurGaussian HL_nDimLikelihood yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
+
+target_link_libraries(Limit_example HL_Limit HL_Data HL_Statistics HL_Gaussian HL_BifurGaussian HL_ProfLikelihood HL_nDimGaussian HL_nDimBifurGaussian HL_nDimLikelihood yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
+
+
+
+
+#target_link_libraries(${PROJECT_NAME} HL_Limit HL_Data HL_Statistics HL_Gaussian HL_BifurGaussian HL_ProfLikelihood HL_nDimGaussian HL_nDimBifurGaussian HL_nDimLikelihood )
 
 
 #############################################
 # Linking external libraries:
-target_link_libraries(${PROJECT_NAME} yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES})
+
+#target_link_libraries(${PROJECT_NAME} yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES})
 

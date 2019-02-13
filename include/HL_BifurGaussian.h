@@ -46,7 +46,8 @@ class HL_BifurGaussian: public HL_Gaussian
   double HL_Sigma_stat_L;
   double HL_Sigma_syst_R;
   double HL_Sigma_syst_L;
-
+  std::string ObsName;
+  
   
     
 

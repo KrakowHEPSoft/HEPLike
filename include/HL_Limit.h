@@ -4,8 +4,8 @@
 //
 //   author: Jihyun Bhom, Marcin Chrzaszcz
 //////////////////////////////////////////////////
-#ifndef HL_BRLIMIT_H
-#define HL_BRLIMIT_H
+#ifndef HL_LIMIT_H
+#define HL_LIMIT_H
 
 //C++ headers
 #include <cmath>
@@ -24,13 +24,13 @@
 #include "gsl/gsl_sf_erf.h"
 #include "gsl/gsl_math.h"
 #include "gsl/gsl_sf_exp.h"
-class HL_BRLimit: public HL_Data
+class HL_Limit: public HL_Data
 {
 
  public:
 
-  explicit HL_BRLimit() :  HL_Data() {};
-  explicit HL_BRLimit(std::string s) :  HL_Data(s) { };
+  explicit HL_Limit() :  HL_Data() {};
+  explicit HL_Limit(std::string s) :  HL_Data(s) { };
   
   
   void read();

@@ -18,7 +18,7 @@
 
 using namespace std;
 
-void HL_BRLimit::read()
+void HL_Limit::read()
 {
   if(! initialized)
     {
@@ -37,7 +37,7 @@ void HL_BRLimit::read()
     }
 
 }
-double HL_BRLimit::GetChi2(double br)
+double HL_Limit::GetChi2(double br)
 {
   double cls=GetCLs(br) ;
   //std::cout<<gsl_cdf_gaussian_P(1., 1)-gsl_cdf_gaussian_P(-1., 1.)<<std::endl;
@@ -57,20 +57,20 @@ double HL_BRLimit::GetChi2(double br)
   
   return chi2;
 }
-double HL_BRLimit::GetLogLikelihood(double br)
+double HL_Limit::GetLogLikelihood(double br)
 {
   double chi2=GetChi2(br);
   return -0.5*chi2;
   
 }
 
-double HL_BRLimit::GetLikelihood(double br)
+double HL_Limit::GetLikelihood(double br)
 {
   double log_likelihood=GetLogLikelihood(br);
   return gsl_sf_exp(log_likelihood);  
 }
 // this algorithm is O(log n) fast:
-double  HL_BRLimit::GetCLs(double value)//, std::vector<double> a, std::vector<double> cls)
+double  HL_Limit::GetCLs(double value)//, std::vector<double> a, std::vector<double> cls)
 {
   int length =BR.size();
   if(value < BR[0]) {

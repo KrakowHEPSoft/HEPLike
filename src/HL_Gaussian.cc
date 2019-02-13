@@ -2,7 +2,7 @@
 //
 //   Module to construck likelihoods for gaussian distribution
 //
-//   author: Jihyun Bhom,  Marcin Chrzaszcz
+//   author: Jihyun Bhom, Marcin Chrzaszcz
 //////////////////////////////////////////////////
 
 
