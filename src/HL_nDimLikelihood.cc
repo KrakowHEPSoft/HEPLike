@@ -88,6 +88,8 @@ void HL_nDimLikelihood::read()
 
 
     }
+  profiled=false;
+
   cout<<central_mes_val[0]<<" "<<central_mes_val[1]<<endl;
 
 
@@ -108,8 +110,6 @@ double HL_nDimLikelihood::GetLogLikelihood(std::vector<double> theory)
     }
   double log_likelihood=hist2D->GetBinContent(bin);
   return -log_likelihood;
-
-
 }
 double HL_nDimLikelihood::GetLikelihood(std::vector<double> theory)
 {
@@ -122,7 +122,8 @@ void HL_nDimLikelihood::Profile()
 {
   //profiling over X:
   hist_profileX=new TH1D("profX", "profX", n_binsX,xmin, xmax);
-
+  
+  profiled=true;
 
   if(dim==2){
     for(int ix=1 ; ix < n_binsX ; ++ix)
@@ -208,3 +209,45 @@ void HL_nDimLikelihood::Profile()
   
 
 }
+double HL_nDimLikelihood::GetLogLikelihood_profile(  double theory, std::string X)
+{
+
+  if(X==Observables[0])
+    {
+      int bin= hist_profileX->FindBin(theory);
+      double log_likelihood=hist_profileX->GetBinContent(bin);
+      return -log_likelihood;
+    }
+  else if(X==Observables[1])
+    {
+      int  bin= hist_profileY->FindBin(theory);
+      double log_likelihood=hist_profileY->GetBinContent(bin);
+      return -log_likelihood;
+    }
+  else if(X==Observables[2])
+    {
+      int bin= hist_profileZ->FindBin(theory);
+      double log_likelihood=hist_profileZ->GetBinContent(bin);
+      return -log_likelihood;
+    }
+  else
+    {
+      std::cout<<"WRONG observable NAME!! in HL_nDimLikelihood profiling"<<std::endl;
+      return 1.e20;
+    }
+
+}
+double HL_nDimLikelihood::GetLikelihood_profile(double theory, std::string X)
+{
+  double log_likelihood=GetLogLikelihood_profile(theory, X);
+  return gsl_sf_exp(log_likelihood);
+}
+double HL_nDimLikelihood::GetChi2_profile(double theory, std::string X)
+{
+  double log_likelihood=GetLogLikelihood_profile(theory, X);
+  return -2.*log_likelihood;
+
+}
+
+
+

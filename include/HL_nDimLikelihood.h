@@ -55,7 +55,13 @@ class HL_nDimLikelihood: public HL_Data
   bool Restrict(std::vector<std::string>);
 
   void Profile();
-    
+  double GetChi2_profile( double theory, std::string);
+  double GetLikelihood_profile( double theory, std::string axis) ;
+  double GetLogLikelihood_profile(  double theory, std::string X);
+
+  
+  
+
   
  private:
 
@@ -91,7 +97,12 @@ class HL_nDimLikelihood: public HL_Data
   int n_binsX;  
   int n_binsY;
   int n_binsZ;  
-  
+
+
+  bool profiled;
+
+
+
   
   
 };
