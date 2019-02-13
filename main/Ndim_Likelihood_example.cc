@@ -31,6 +31,8 @@ int main (int argc, char *argv[])
 
   HL_nDimLikelihood *br = new HL_nDimLikelihood("data/examples/b2mumu.yaml");
   br->read();  
+  br->Profile();
+  
   
   return 0;
 }
