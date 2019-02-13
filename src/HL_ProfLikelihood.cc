@@ -41,26 +41,22 @@ void HL_ProfLikelihood::read()
   // now opening files
   f= new TFile(HL_RootFile.c_str(), "READ");
   likelihood=dynamic_cast<TGraph*>(f->Get(HL_PATH.c_str()));
+  
+
+
+
   xmin=likelihood->GetXaxis()->GetXmin () ;
   xmax=likelihood->GetXaxis()->GetXmax () ;
-  int N=likelihood->GetN();
-  Double_t* x=likelihood->GetX();
-  Double_t* y=likelihood->GetY();
-  double minX=0;
-  double minY=10e10;
-  for(int i=2;i<N-2;i++) // exclude the last points
-    {
-      if(y[i]<minY)
-        {
-          minY=y[i];
-          minX=x[i];
-        }
-    }
-  central_mes_val=minX;
 
+  if(config["Observables"] )
+    {
+      YAML::Node node  = config["Observables"];
+      ObsName=node[0][0].as<std::string>();
+      central_mes_val=node[0][1].as<double>();
+
+    }
 
 }
-
 double HL_ProfLikelihood::GetChi2(double theory, double theory_err=-1.)
 {
   double log_likelihood=GetLogLikelihood(theory,theory_err); 

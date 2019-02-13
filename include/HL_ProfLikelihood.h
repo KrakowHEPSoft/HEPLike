@@ -49,11 +49,12 @@ class HL_ProfLikelihood: public HL_Data
   double xmin;
   double xmax;
   double central_mes_val;
-
+  std::string ObsName;   
   
   std::string HL_RootFile;
   std::string HL_PATH;
   TGraph *likelihood;
+
   
   TFile *f;
   

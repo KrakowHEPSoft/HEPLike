@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 2.8.11)
-project (HL_Like)
+project (HEPLike)
 list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS}/build)
 
 
@@ -10,14 +10,8 @@ list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS}/build)
 ###########################
 # looking for yaml-cpp
 find_package(Yaml-cpp)
-# including yaml-cpp headers
-#include_directories(${CMAKE_SOURCE_DIR}/yaml-cpp/include)
 # looking for boost
-#include_directories(/opt/pkgs/boost_1_69/include)
-#link_directories(/opt/pkgs/boost_1_69/lib)
-#find_package(Boost 1.69 REQUIRED)
 find_package(Boost REQUIRED)   
-#include_directories(${Boost_INCLUDE_DIR})
 # GLS
 find_package(GSL REQUIRED) 
 # ROOT:
@@ -43,11 +37,18 @@ add_library(HL_nDimGaussian src/HL_nDimGaussian.cc)
 add_library(HL_nDimBifurGaussian src/HL_nDimBifurGaussian.cc) 
 add_library(HL_nDimLikelihood src/HL_nDimLikelihood.cc)
 
+
+  
 #############################################
 # the executables:
 add_executable(Br_example main/Br_example.cc)
 add_executable(BrBifurGaussian_example main/BrBifurGaussian_example.cc)
 add_executable(Limit_example main/Limit_example.cc)
+add_executable(Ndim_Gaussian main/Ndim_Gaussian.cc)
+add_executable(ProfLikelihood_example main/ProfLikelihood_example.cc)
+add_executable(Ndim_BifurGaussian_example main/Ndim_BifurGaussian_example.cc)
+add_executable(Ndim_Likelihood_example main/Ndim_Likelihood_example.cc)
+
 
 
 target_link_libraries(Br_example HL_Limit HL_Data HL_Statistics HL_Gaussian HL_BifurGaussian HL_ProfLikelihood HL_nDimGaussian HL_nDimBifurGaussian HL_nDimLikelihood yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )                         
@@ -56,7 +57,13 @@ target_link_libraries(BrBifurGaussian_example HL_Limit HL_Data HL_Statistics HL_
 
 target_link_libraries(Limit_example HL_Limit HL_Data HL_Statistics HL_Gaussian HL_BifurGaussian HL_ProfLikelihood HL_nDimGaussian HL_nDimBifurGaussian HL_nDimLikelihood yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
 
+target_link_libraries(Ndim_Gaussian HL_Limit HL_Data HL_Statistics HL_Gaussian HL_BifurGaussian HL_ProfLikelihood HL_nDimGaussian HL_nDimBifurGaussian HL_nDimLikelihood yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )     
 
+target_link_libraries(ProfLikelihood_example HL_Limit HL_Data HL_Statistics HL_Gaussian HL_BifurGaussian HL_ProfLikelihood HL_nDimGaussian HL_nDimBifurGaussian HL_nDimLikelihood yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )     
+
+target_link_libraries(Ndim_BifurGaussian_example HL_Limit HL_Data HL_Statistics HL_Gaussian HL_BifurGaussian HL_ProfLikelihood HL_nDimGaussian HL_nDimBifurGaussian HL_nDimLikelihood yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )  
+
+target_link_libraries(Ndim_Likelihood_example  HL_Limit HL_Data HL_Statistics HL_Gaussian HL_BifurGaussian HL_ProfLikelihood HL_nDimGaussian HL_nDimBifurGaussian HL_nDimLikelihood yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )  
 
 
 #target_link_libraries(${PROJECT_NAME} HL_Limit HL_Data HL_Statistics HL_Gaussian HL_BifurGaussian HL_ProfLikelihood HL_nDimGaussian HL_nDimBifurGaussian HL_nDimLikelihood )
