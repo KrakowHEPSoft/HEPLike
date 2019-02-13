@@ -33,6 +33,6 @@ int main (int argc, char *argv[])
   br->read();  
   br->Profile();
   
-  
+  int a;
   return 0;
 }

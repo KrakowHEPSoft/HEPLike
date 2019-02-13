@@ -1,0 +1,16 @@
+FileName: test.yaml
+Name: test
+DOI: NON_YET3
+BibCite: NON_YET1
+BibEntry: NON_YET2
+Arxiv: "1233.2312"
+SubmissionYear: 2018
+PublicationYear: 2019
+Collaborations: "LHCb CMS ATLAS"
+ExperimentalDataLumi: 400
+ExperimentalDataYears: "2011,2012,2015"
+Decay: "A -> B C"
+Kinematics: "q2> 1.2 && q2< 5"
+Observables:
+- [ "Br_A2BC", 0.1, 0.05, 0.01 ] 
+

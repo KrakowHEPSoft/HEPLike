@@ -1,0 +1,34 @@
+FileName: RKstar_lowq2.yaml
+Name: RKstar_lowq2
+DOI: 10.1007/JHEP08(2017)055     
+BibCite: Aaij:2017vbb
+BibEntry: '@article{Aaij:2017vbb,
+      author         = "Aaij, R. and others",
+      title          = "{Test of lepton universality with $B^{0} \rightarrow
+                        K^{*0}\ell^{+}\ell^{-}$ decays}",
+      collaboration  = "LHCb",
+      journal        = "JHEP",
+      volume         = "08",
+      year           = "2017",
+      pages          = "055",
+      doi            = "10.1007/JHEP08(2017)055",
+      eprint         = "1705.05802",
+      archivePrefix  = "arXiv",
+      primaryClass   = "hep-ex",
+      reportNumber   = "LHCB-PAPER-2017-013, CERN-EP-2017-100",
+      SLACcitation   = "%%CITATION = ARXIV:1705.05802;%%"
+      }     
+Arxiv: "1705.05802"
+SubmissionYear: 2017
+PublicationYear: 2017
+Collaborations: "LHCb"
+ExperimentalDataLumi: 3
+ExperimentalDataYears: "2011,2012"
+Decay: "Bu -> K+ ell ell"
+Kinematics: "q2< 1.1 && q2 > 0.045"
+Observables:
+- ["RKstar",  0.66]
+
+ROOTData: data/examples/HEPData-ins1599846-v1-Table_1.root
+TGraphPath: "Table 1/Graph1D_y1"
+

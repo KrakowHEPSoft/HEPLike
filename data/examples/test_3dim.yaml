@@ -1,0 +1,23 @@
+FileName: test_bi.yaml
+Name: test_bi
+DOI: NON_YET3
+BibCite: NON_YET1
+BibEntry: NON_YET2
+Arxiv: "1233.2312"
+SubmissionYear: 2018
+PublicationYear: 2019
+Collaborations: "LHCb CMS ATLAS"
+ExperimentalDataLumi: 400
+ExperimentalDataYears: "2011,2012,2015"
+Decay: "A -> B C Z"
+Kinematics: "q2> 1.2 && q2< 5"
+Observables:
+- [ "BR1", 0.1, 0.02]
+- [ "BR2", 0.2, 0.01]
+- [ "BR3", 0.4, 0.04]
+Correlation:
+-  [ "BR1", "BR2", "BR3"]
+-  [ 1. ,  0.2 ,  0   ]
+-  [ 0.2,   1.,   0. ]
+-  [ 0 ,   0.,  1.  ]
+

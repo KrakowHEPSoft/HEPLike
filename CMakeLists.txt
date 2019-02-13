@@ -2,6 +2,21 @@ cmake_minimum_required (VERSION 2.8.11)
 project (HEPLike)
 list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS}/build)
 
+###########################
+# 
+#    Compile seetings
+#
+###########################
+# Add -fPIC for 64 bit systems
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+endif()
+if(COMPILER_SUPPORTS_CXX11)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+endif()
+
+
 
 ###########################
 #
@@ -12,7 +27,7 @@ list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS}/build)
 find_package(Yaml-cpp)
 # looking for boost
 find_package(Boost REQUIRED)   
-# GLS
+# GSL
 find_package(GSL REQUIRED) 
 # ROOT:
 find_package(ROOT REQUIRED COMPONENTS MathCore RIO Hist Tree Net)

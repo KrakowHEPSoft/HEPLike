@@ -1,0 +1,32 @@
+BibCite: Aaij:2017vbb321312312
+BibEntry: '@article{Aaij:2017vbb,
+      author         = "Aaij, R. and others",
+      title          = "{Test of lepton universality with $B^{0} \rightarrow
+                        K^{*0}\ell^{+}\ell^{-}$ decays}",
+      collaboration  = "LHCb",
+      journal        = "JHEP",
+      volume         = "08",
+      year           = "2017",
+      pages          = "055",
+      doi            = "10.1007/JHEP08(2017)055",
+      eprint         = "1705.05802",
+      archivePrefix  = "arXiv",
+      primaryClass   = "hep-ex",
+      reportNumber   = "LHCB-PAPER-2017-013, CERN-EP-2017-100",
+      SLACcitation   = "%%CITATION = ARXIV:1705.05802;%%"
+      }     
+        '
+DOI: 10.1007/JHEP08(2017)055
+Decay: B->#mu #mu
+FileName: b2mumu.yaml
+HFLAV: NONE
+Name: B2mumu
+Source: HEPDATA
+Year: 2017
+ROOTData: data/histB2mumu.root
+TH2Path: "h_2DScan"
+Observables:
+- ["BR_Bs2mumu", 3.e-9]
+- ["BR_Bd2mumu", 1.5e-10]
+
+

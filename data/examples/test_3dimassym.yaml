@@ -1,0 +1,19 @@
+BibCite: NON_YET
+BibEntry: NON_YET
+DOI: NON_YET
+Decay: "\tau^{-} \rightarrow e^{-} e^{+} \\mu^{-}"
+FileName: HFLAV_2019_180.yaml
+HFLAV: '180'
+Name: HFLAV_LFV_180
+Source: NON_YET
+Year: 2019
+Observables:
+- [ "BR1", 0.1, +0.02, -0.01, 0.02]
+- [ "BR2", 0.2, +0.01, -0.05, +0.03, -0.02]
+- [ "BR3", 0.3, +0.04, -0.03, 0.05]
+Correlation:
+-  [ "BR1", "BR2", "BR3"]
+-  [ 1. ,  0.1 ,  0.2   ]
+-  [ 0.1,   1.,   0.1 ]
+-  [ 0.2 ,   0.1,  1.  ]
+
