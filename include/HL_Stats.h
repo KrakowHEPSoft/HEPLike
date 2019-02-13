@@ -21,10 +21,8 @@ namespace HL_Stats
   
   
   double gaussian_loglikelihood(double theory, double obs, double theoryerr, double obserr, bool profile_systematics);
-  double lognormal_loglikelihood(double theory, double obs, double theoryerr, double obserr, bool profile_systematics);
-  double lognormal_loglikelihood_relerror(double theory, double obs, double reltheoryerr, double relobserr, bool profile_systematics);
-  double gaussian_upper_limit(double theory, double obs, double theoryerr, double obserr, bool profile_systematics);
-  double gaussian_lower_limit(double theory, double obs, double theoryerr, double obserr, bool profile_systematics);
+  double gauss(double x, double mean, double sigma);
+
   double get_sigma_from_pval(double p);
   template<class T>
     bool InvertMatrix (const ublas::matrix<T>& input, ublas::matrix<T>& inverse)

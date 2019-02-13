@@ -71,6 +71,9 @@ double HL_ProfLikelihood::GetLogLikelihood(double theory, double theory_error=-1
     double loglikelihood=(-1.)*likelihood->Eval(theory,0, "S" );
     return loglikelihood;
   }
+  loglikelihood+=HL_Stats::gauss(central_mes_val,theory,theory_error);
+  /*
+  // here we add theory error:
   double loglikelihood=(-1.)*likelihood->Eval(theory,0, "S" );
   double chi2=-2.*loglikelihood;
   // now this is nasty, you should always profile over the theory error but if you want to inflate the chi2:
@@ -79,7 +82,7 @@ double HL_ProfLikelihood::GetLogLikelihood(double theory, double theory_error=-1
   double err2=experimental_err2+theory_error*theory_error;
   chi2=delta*delta/(err2);
   loglikelihood=-0.5*chi2;
-
+  */
   return loglikelihood;
   
 }

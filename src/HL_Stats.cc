@@ -78,7 +78,11 @@ namespace HL_Stats
 
     return true;
   }
-  
+  double gauss(double x, double mean, double sigma)
+  {
+    return (1./(M_SQRT2*HL_Constants::pi*sigma*sigma))*sl_sf_exp(- (x-mean)*(x-mean)/(2.*sigma*sigma));
+
+  }
 
 }
   
