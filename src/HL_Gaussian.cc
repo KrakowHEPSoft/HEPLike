@@ -18,7 +18,7 @@
 
 using namespace std;
 
-void HL_Gaussian::read()
+void HL_Gaussian::Read()
 {
   if(! initialized)
     {

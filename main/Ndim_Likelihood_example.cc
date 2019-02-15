@@ -30,7 +30,7 @@ int main (int argc, char *argv[])
   // profile likelihood test
 
   HL_nDimLikelihood *br = new HL_nDimLikelihood("data/examples/b2mumu.yaml");
-  br->read();  
+  br->Read();  
   br->Profile();
   
   int a;

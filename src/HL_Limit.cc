@@ -18,7 +18,7 @@
 
 using namespace std;
 
-void HL_Limit::read()
+void HL_Limit::Read()
 {
   if(! initialized)
     {

@@ -21,7 +21,7 @@ using namespace std;
 
 
 
-void HL_nDimLikelihood::read()
+void HL_nDimLikelihood::Read()
 {
   if(! initialized)
     {

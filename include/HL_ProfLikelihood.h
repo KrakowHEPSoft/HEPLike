@@ -39,7 +39,7 @@ class HL_ProfLikelihood: public HL_Data
   explicit HL_ProfLikelihood(std::string s) :  HL_Data(s) { };
   
   
-  void read();
+  void Read();
   double GetChi2(double theory, double theory_err);
   double GetLogLikelihood(double theory, double theory_err);
   double GetLikelihood(double theory, double theory_err);  

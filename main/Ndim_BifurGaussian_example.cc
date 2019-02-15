@@ -29,7 +29,7 @@ int main (int argc, char *argv[])
 {
 
   HL_nDimBifurGaussian *br = new HL_nDimBifurGaussian("data/examples/test_3dimassym.yaml");
-  br->read();
+  br->Read();
   vector<string> a;//
   a.push_back("BR1");
   a.push_back("BR3");
@@ -42,7 +42,7 @@ int main (int argc, char *argv[])
 
   /*
   HL_nDimLikelihood *br = new HL_nDimLikelihood("data/LHCb/RD/Bs2mumu_5fb/b2mumu.yaml");
-  br->read();  
+  br->Read();  
   */
 
   return 0;

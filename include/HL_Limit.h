@@ -33,7 +33,7 @@ class HL_Limit: public HL_Data
   explicit HL_Limit(std::string s) :  HL_Data(s) { };
   
   
-  void read();
+  void Read();
   double GetChi2(double);     
   double GetLogLikelihood(double);
   double GetLikelihood(double);   

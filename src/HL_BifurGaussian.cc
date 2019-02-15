@@ -18,7 +18,7 @@
 
 using namespace std;
 
-void HL_BifurGaussian::read()
+void HL_BifurGaussian::Read()
 {
   if(! initialized)
     {

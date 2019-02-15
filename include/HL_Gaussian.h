@@ -34,7 +34,7 @@ class HL_Gaussian: public HL_Data
   explicit HL_Gaussian(std::string s) :  HL_Data(s) { };
   
   
-  void read();
+  void Read();
   double GetChi2(double theory, double theory_err=0);
   double GetLikelihood(double theory, double theory_err=0);
   double GetLogLikelihood(double theory, double theory_err=0);  

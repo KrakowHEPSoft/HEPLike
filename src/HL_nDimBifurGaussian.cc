@@ -21,7 +21,7 @@ using namespace std;
 
 
 
-void HL_nDimBifurGaussian::read()
+void HL_nDimBifurGaussian::Read()
 {
   if(! initialized)
     {

@@ -33,7 +33,7 @@ int main (int argc, char *argv[])
   
   // profile likelihood test
   HL_ProfLikelihood *br = new HL_ProfLikelihood("data/LHCb/RD/RKstar_3fb/RKstar_lowq2.yaml");
-  br->read();
+  br->Read();
   
   // now let's see
   vector<double> BR;
@@ -48,11 +48,9 @@ int main (int argc, char *argv[])
 
     BR.push_back(ibr);
     double iLL=(-1.)*br->GetLogLikelihood(ibr, -2.);
-    double iLL2=(-1.)*br->GetLogLikelihood(ibr, -2., 0.1);
+    double iLL2=(-1.)*br->GetLogLikelihood(ibr,  0.1);// adding 10% error.
     LL.push_back(iLL);
     LL2.push_back(iLL2);
-
-    cout<<iLL<<" "<<iLL2<<endl;
     
     if(iLL<min1) min1=iLL;
     if(iLL2<min2) min2=iLL2;

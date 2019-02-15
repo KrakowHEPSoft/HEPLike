@@ -19,7 +19,7 @@
 
 using namespace std;
 
-void HL_ProfLikelihood::read()
+void HL_ProfLikelihood::Read()
 {
   if(! initialized)
     {

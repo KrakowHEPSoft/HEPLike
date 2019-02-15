@@ -40,7 +40,7 @@ class HL_nDimBifurGaussian: public HL_Data
   explicit HL_nDimBifurGaussian(std::string s) :  HL_Data(s) { };
   
   
-  void read();
+  void Read();
   double GetChi2( std::vector<double> theory) ;
   double GetLikelihood( std::vector<double> theory) ;  
   double GetLogLikelihood(  std::vector<double> theory) ;  

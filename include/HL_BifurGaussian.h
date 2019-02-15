@@ -34,7 +34,7 @@ class HL_BifurGaussian: public HL_Gaussian
   explicit HL_BifurGaussian(std::string s) :  HL_Gaussian(s) { };
   
   
-  void read();
+  void Read();
   double GetChi2(double theory, double theory_err=0);
   double GetLikelihood(double theory, double theory_err=0);
   double GetLogLikelihood(double theory, double theory_err=0);  

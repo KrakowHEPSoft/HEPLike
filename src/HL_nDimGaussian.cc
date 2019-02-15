@@ -21,7 +21,7 @@ using namespace std;
 
 
 
-void HL_nDimGaussian::read()
+void HL_nDimGaussian::Read()
 {
   if(! initialized)
     {

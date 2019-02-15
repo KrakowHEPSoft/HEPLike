@@ -30,13 +30,13 @@ using namespace std;
 int main (int argc, char *argv[])
 {
   HL_BifurGaussian *br = new HL_BifurGaussian("data/examples/test_bi.yaml");
-  br->read();
+  br->Read();
   cout<<"likehood: "<<br->GetLikelihood(0.16)<<endl;
   
   
   /*
   HL_Limit *limit = new HL_Limit("data/HFLAV/2019/tau/HFLAV_2019_180.yaml");
-  limit->read();
+  limit->Read();
   double br=atof(argv[1]);
   cout<<"CLS: "<<limit->GetCLs(br)<<endl;
   cout<<"Chi2: "<<limit->GetChi2(br)<<endl;
@@ -46,11 +46,11 @@ int main (int argc, char *argv[])
   /*
   // profile likelihood test
     HL_ProfLikelihood *br = new HL_ProfLikelihood("data/LHCb/RD/RKstar_3fb/RKstar_lowq2.yaml");
-    br->read();
+    br->Read();
   */
   /*
   HL_nDimGaussian *br = new HL_nDimGaussian("data/test_3dim.yaml");
-  br->read();
+  br->Read();
   vector<string> a;//
   a.push_back("BR1");
   a.push_back("BR3");
@@ -63,7 +63,7 @@ int main (int argc, char *argv[])
   */
   /*
   HL_nDimBifurGaussian *br = new HL_nDimBifurGaussian("data/test_3dimassym.yaml");
-  br->read();
+  br->Read();
   vector<string> a;//
   a.push_back("BR1");
   a.push_back("BR3");
@@ -76,7 +76,7 @@ int main (int argc, char *argv[])
   */
   /*
   HL_nDimLikelihood *br = new HL_nDimLikelihood("data/LHCb/RD/Bs2mumu_5fb/b2mumu.yaml");
-  br->read();  
+  br->Read();  
   */
 
   return 0;

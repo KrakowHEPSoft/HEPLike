@@ -39,7 +39,7 @@ class HL_nDimGaussian: public HL_Data
   explicit HL_nDimGaussian(std::string s) :  HL_Data(s) { };
   
   
-  void read();
+  void Read();
   double GetChi2( std::vector<double> theory) ;
   double GetLikelihood( std::vector<double> theory) ;  
   double GetLogLikelihood(  std::vector<double> theory) ;  

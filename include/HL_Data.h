@@ -28,7 +28,7 @@ class HL_Data
   HL_Data(std::string);
   
   std::string HFile;
-  void read();
+  void Read();
   
   
   

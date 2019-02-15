@@ -33,7 +33,7 @@ HL_Data:: HL_Data(std::string s)
 
 
 
-void HL_Data::read()
+void HL_Data::Read()
 {
   if(! initialized)
     {
