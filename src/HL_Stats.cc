@@ -31,17 +31,28 @@
 namespace HL_Stats
 {
     
-  /// Use a detection to compute a simple chi-square-like log likelihood, for the case when obs is Gaussian distributed. 
-  double gaussian_loglikelihood(double theory, double obs, double theoryerr, double obserr)
+  /// Use a detection to compute a simple chi-square-like log likelihood, for the case when obs is Gaussian distributed.
+  double gaussian_loglikelihood_theory_syst(double obs, double theory, double theoryerr)
+  {
+    double errsq = theoryerr*theoryerr;
+    double chi2 = -0.5*pow(theory-obs,2)/errsq;
+    double norm = 0.5*log(2.0*HL_Const::pi*errsq);
+    return chi2 - norm;      
+  }
+
+  
+  double gaussian_loglikelihood(double theory, double obs, double theoryerr, double obserr, bool profile_systematics)  
   {
     if(theoryerr <0.) std::cerr<<"Negative theory error, in gaussian_loglikelihood"<<std::endl;
     if(obserr<0.) std::cerr<<"Negative error error, in gaussian_loglikelihood"<<std::endl; 
 
-    double errsq = theoryerr*theoryerr + obserr*obserr;
-    double chi2 = pow(theory-obs,2)/errsq;     
-    double loglikelihood=-0.5*chi2;
+    if (theoryerr <= 0.) profile_systematics = false;
 
-    return loglikelihood;
+    double errsq = theoryerr*theoryerr + obserr*obserr;
+    double chi2 = -0.5*pow(theory-obs,2)/errsq;
+    double norm = profile_systematics ? log(2.0*HL_Const::pi*obserr*theoryerr) : 0.5*log(2.0*HL_Const::pi*errsq);
+
+    return chi2 - norm; 
   }
   double get_sigma_from_pval(double p)
   {
@@ -80,7 +91,8 @@ namespace HL_Stats
   }
   double gauss(double x, double mean, double sigma)
   {
-    return (1./(M_SQRT2*HL_Constants::pi*sigma*sigma))*sl_sf_exp(- (x-mean)*(x-mean)/(2.*sigma*sigma));
+    std::cout<<exp( - (x-mean)*(x-mean)/(2.*sigma*sigma))<<std::endl;
+    return (1./(M_SQRT2*HL_Const::pi*sigma*sigma))*exp(- (x-mean)*(x-mean)/(2.*sigma*sigma));
 
   }
 

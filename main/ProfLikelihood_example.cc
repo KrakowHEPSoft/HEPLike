@@ -20,6 +20,8 @@
 #include <boost/numeric/ublas/matrix.hpp>
 
 #include "TH1D.h"
+#include "TGraph.h"
+#include "TCanvas.h"
 
 using namespace std;
 
@@ -27,40 +29,57 @@ using namespace std;
 
 int main (int argc, char *argv[])
 {
+  TCanvas *c1 = new TCanvas("c1", "c1", 800,600);
+  
   // profile likelihood test
-    HL_ProfLikelihood *br = new HL_ProfLikelihood("data/LHCb/RD/RKstar_3fb/RKstar_lowq2.yaml");
-    br->read();
-
-  /*
-  HL_nDimGaussian *br = new HL_nDimGaussian("data/test_3dim.yaml");
+  HL_ProfLikelihood *br = new HL_ProfLikelihood("data/LHCb/RD/RKstar_3fb/RKstar_lowq2.yaml");
   br->read();
-  vector<string> a;//
-  a.push_back("BR1");
-  a.push_back("BR3");
-  br->Restrict(a);
-  //TH1D *hist;
-  vector<double> theory;
-  theory.push_back(0.1);
-  theory.push_back(0.1);
-  cout<<"Chi2: "<<br->GetChi2(theory)<<endl;
-  */
-  /*
-  HL_nDimBifurGaussian *br = new HL_nDimBifurGaussian("data/test_3dimassym.yaml");
-  br->read();
-  vector<string> a;//
-  a.push_back("BR1");
-  a.push_back("BR3");
-  br->Restrict(a);
-  //TH1D *hist;
-  vector<double> theory;
-  theory.push_back(-0.1);
-  theory.push_back(0.9);
-  cout<<"Chi2: "<<br->GetChi2(theory)<<endl;
-  */
-  /*
-  HL_nDimLikelihood *br = new HL_nDimLikelihood("data/LHCb/RD/Bs2mumu_5fb/b2mumu.yaml");
-  br->read();  
-  */
+  
+  // now let's see
+  vector<double> BR;
+  vector<double> LL;
+  vector<double> LL2;
+  
+  double ibr=0.3;
+  double dbr=0.005;
+  double min1=1e10;
+  double min2=1e10;
+  while (ibr<1.3) {
 
-  return 0;
+    BR.push_back(ibr);
+    double iLL=(-1.)*br->GetLogLikelihood(ibr, -2.);
+    double iLL2=(-1.)*br->GetLogLikelihood(ibr, -2., 0.1);
+    LL.push_back(iLL);
+    LL2.push_back(iLL2);
+
+    cout<<iLL<<" "<<iLL2<<endl;
+    
+    if(iLL<min1) min1=iLL;
+    if(iLL2<min2) min2=iLL2;
+        
+    ibr+=dbr;
+  }
+  int size=LL.size();
+  double BR2[size];
+  double LLA[size];
+  double LL2A[size];
+
+  
+  for(int i=0; i< size ; i++)
+    {
+      BR2[i]=BR[i];
+      LLA[i]=LL[i] -min1 ;
+      LL2A[i]=LL2[i] - min2;;
+      
+    }
+  TGraph* gr = new TGraph(size,BR2,LLA);
+  TGraph* gr2 = new TGraph(size,BR2,LL2A);
+  
+  gr->Draw("AC*");
+  c1->SaveAs("ProfLikelihood_example.pdf");
+  gr2->SetLineColor(kBlue);
+  gr2->Draw("AC* SAME");       
+  c1->SaveAs("ProfLikelihood_example2.pdf");
+  
+  return 1;
 }
