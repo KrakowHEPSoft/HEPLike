@@ -18,12 +18,17 @@
 #include "HL_Stats.h"
 #include "HL_Data.h"
 
+
+
 //external:
 #include "yaml-cpp/yaml.h"
 #include "gsl/gsl_cdf.h"
 #include "gsl/gsl_sf_erf.h"
 #include "gsl/gsl_math.h"
 #include "gsl/gsl_sf_exp.h"
+#include "boost/math/distributions/chi_squared.hpp"
+
+
 class HL_Limit: public HL_Data
 {
 

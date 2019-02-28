@@ -36,7 +36,7 @@ void HL_Limit::Read()
       BR.push_back( ((*it)[0]).as<double>()  ); 
     }
 
-}
+};
 double HL_Limit::GetChi2(double br)
 {
   double cls=GetCLs(br) ;
@@ -44,17 +44,8 @@ double HL_Limit::GetChi2(double br)
   //double nsigma=0.001;
   //double dsigma=0.0001;
   //double p=0;
-  double nsigma=HL_Stats::get_sigma_from_pval(1-cls);
-  /*
-  while (p<1.- cls) {
-    p= gsl_sf_erf(nsigma/M_SQRT2);
-    nsigma+=dsigma;
-  }
-  */
-  std::cout<<"n of sigmas= "<<nsigma<<"  "<<cls<<std::endl;
-  double chi2=nsigma*nsigma;
-  //double loglikelihood=gsl_sf_exp(chi2);
-  
+  double chi2=gsl_cdf_chisq_Pinv(1-cls,1);
+
   return chi2;
 }
 double HL_Limit::GetLogLikelihood(double br)
@@ -63,7 +54,6 @@ double HL_Limit::GetLogLikelihood(double br)
   return -0.5*chi2;
   
 }
-
 double HL_Limit::GetLikelihood(double br)
 {
   double log_likelihood=GetLogLikelihood(br);
