@@ -64,8 +64,10 @@ class HL_Data
 
 
   bool initialized;
+  bool HL_debug_yaml;
 
   void read_standard();
+  void set_debug_yaml(bool);
 
   
 };

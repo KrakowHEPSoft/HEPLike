@@ -1,6 +1,7 @@
 cmake_minimum_required (VERSION 2.8.11)
 project (HEPLike)
 list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS}/build)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} $ENV{ROOTSYS}/etc/cmake)
 
 ###########################
 # 
