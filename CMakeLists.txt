@@ -56,7 +56,7 @@ add_executable(Ndim_Gaussian main/Ndim_Gaussian.cc)
 add_executable(ProfLikelihood_example main/ProfLikelihood_example.cc)
 add_executable(Ndim_BifurGaussian_example main/Ndim_BifurGaussian_example.cc)
 add_executable(Ndim_Likelihood_example main/Ndim_Likelihood_example.cc)
-
+add_executable(Data_Fit_example  main/Data_Fit_example.cc)
 
 
 
@@ -67,6 +67,7 @@ target_link_libraries(Ndim_Gaussian HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} 
 target_link_libraries(ProfLikelihood_example HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
 target_link_libraries(Ndim_BifurGaussian_example HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
 target_link_libraries(Ndim_Likelihood_example  HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )  
-  
+target_link_libraries(Data_Fit_example HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
+
 
 

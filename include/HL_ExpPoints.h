@@ -61,9 +61,9 @@ class HL_ExpPoints: public HL_Data
   std::string HL_PATH;
   std::string HL_weight;
   vector<std::string> HL_obs;
+  vector<TBranch*> HL_Branches;
+  TBranch *HL_weight_branch;
   
-  TGraph *likelihood;
-
   
   TFile *f;
   

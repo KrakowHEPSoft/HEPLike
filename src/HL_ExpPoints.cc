@@ -31,8 +31,8 @@ void HL_ExpPoints::Read()
     }
 
   read_standard();
+  
 
-  //cout<<HL_BibEntry<<endl;
 
   if( config["ROOTData"])  HL_RootFile=config["ROOTData"].as<std::string>();
   else
@@ -41,7 +41,6 @@ void HL_ExpPoints::Read()
     }
   
   if(config["TTreePath"]) HL_PATH=config["TTreePath"].as<std::string>();
-  
   // now opening files
   f= new TFile(HL_RootFile.c_str(), "READ");
   HL_tree=dynamic_cast<TTree*>(f->Get(HL_PATH.c_str()));
@@ -55,7 +54,6 @@ void HL_ExpPoints::Read()
       for(YAML::const_iterator it = node.begin(); it != node.end();  ++it )
         {
           HL_obs.push_back( ((*it)[0]).as<std::string>()  );
-
         }
     }// if Observables exist
   else{
@@ -77,10 +75,16 @@ bool HL_ExpPoints::InitData()
   double weight_tmp;
   for(unsigned i =0; i < nVars ; ++i)
     {
-      HL_tree->Branch(HL_obs[i].c_str(), &vars[i], (HL_obs[i]+"/D").c_str()); 
+      HL_Branches.push_back( new TBranch);
+      //HL_tree->Branch(HL_obs[i].c_str(), &vars[i], (HL_obs[i]+"/D").c_str()); 
+      HL_tree->SetBranchAddress( HL_obs[i].c_str(), &vars[i], &HL_Branches[i] );
+      
     }
-  HL_tree->Branch(HL_weight.c_str(), &weight_tmp, (HL_weight +"/D").c_str());
+  HL_tree->SetBranchAddress( HL_weight.c_str() , &weight_tmp, &HL_weight_branch);    
+  
+  
   // storing data points in memory:
+  cout<<entries<<endl;
   for(unsigned i=0; i < entries; ++i)
     {
       HL_tree->GetEntry(i);
@@ -88,11 +92,12 @@ bool HL_ExpPoints::InitData()
       vector<double> tmp;
       for(int j=0; j < nVars ; ++j)
         {
+          //cout<<vars[j]<<" "<<weights[i]<<endl;
           tmp.push_back(vars[j]);
         }
       points.push_back(tmp);
     }  
-
+  return true;
 }
 void HL_ExpPoints::SetFun(  double FUN( vector<double> , vector<double> ) )
 {
@@ -113,10 +118,7 @@ double HL_ExpPoints::GetLogLikelihood(vector<double> theory)
   for(unsigned i=0; i <points.size(); ++i)
     {
       loglikelihood += weights[i] * log( (*fun )( theory, points[i] ));
-      
-      
     }
-  
   return loglikelihood;
 }
 double HL_ExpPoints::GetLikelihood(vector<double> theory )
