@@ -59,7 +59,11 @@ class HL_Data
   std::string HL_Kinematics;
   
   
-
+  std::string HL_Author;
+  std::string HL_Email;
+  std::string HL_Type;
+  
+  
 
 
 

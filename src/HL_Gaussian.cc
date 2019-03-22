@@ -34,16 +34,21 @@ void HL_Gaussian::Read()
       ObsName=node[0][0].as<std::string>();
       HL_Central=node[0][1].as<double>();
       HL_Sigma_stat=node[0][2].as<double>();
-      HL_Sigma_syst=node[0][3].as<double>(); 
-      
+      if(node[0].size()>3)
+        {
+          HL_Sigma_syst=node[0][3].as<double>(); 
+        }
+      else
+        {
+          HL_Sigma_syst=0.;
+        }
+
     }
   else
     {
       std::cout<<"Error in the HL_Gaussian class, your yaml file has missing Observables"<<std::endl;
     }
-    
-
-  
+      
 }
 double HL_Gaussian::GetChi2(double theory, double theory_err)
 {

@@ -82,12 +82,23 @@ void HL_Data::read_standard()
   if(config["ExperimentalDataYears"]) HL_ExperimentalDataYears=config["ExperimentalDataYears"].as<std::string>();
   else if (HL_debug_yaml) std::cout<<"HEPLike Warning, The <ExperimentalDataYears> is missing in the yaml file"<<std::endl; 
 
-  if(config["Decay"]) HL_Decay=config["Decay"].as<std::string>(); 
-  else if (HL_debug_yaml) std::cout<<"HEPLike Warning, The <Decay> is missing in the yaml file"<<std::endl; 
+  if(config["Process"]) HL_Decay=config["Process"].as<std::string>(); 
+  else if(config["Decay"]) HL_Decay=config["Decay"].as<std::string>();
+  else if (HL_debug_yaml) std::cout<<"HEPLike Warning, The <Process,Decay> is missing in the yaml file"<<std::endl; 
 
   if(config["Kinematics"]) HL_Kinematics=config["Kinematics"].as<std::string>(); 
   else if (HL_debug_yaml) std::cout<<"HEPLike Warning, The <Kinematics> is missing in the yaml file"<<std::endl; 
 
+  if(config["HLAuthor"]) HL_Author=config["HLAuthor"].as<std::string>();
+  else std::cout<<"HEPLike Warning, The <HLAuthor> is missing in the yaml file"<<std::endl;
+
+  if(config["HLEmail"]) HL_Email=config["HLEmail"].as<std::string>();
+  else std::cout<<"HEPLike Warning, The <HLEmail> is missing in the yaml file"<<std::endl;
+
+  if(config["HL_Type"]) HL_Type=config["HL_Type"].as<std::string>();
+  else if (HL_debug_yaml) std::cout<<"HEPLike Warning, The <Kinematics> is missing in the yaml file"<<std::endl;
+  
+  
   
   
 }

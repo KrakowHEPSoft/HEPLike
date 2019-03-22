@@ -13,7 +13,7 @@ Decay: "A -> B C Z"
 Kinematics: "q2> 1.2 && q2< 5"
 Observables:
 - [ "BR1", 0.1, 0.02]
-- [ "BR2", 0.2, 0.01]
+- [ "BR2", 0.2, 0.01, 0.01]
 - [ "BR3", 0.4, 0.04]
 Correlation:
 -  [ "BR1", "BR2", "BR3"]

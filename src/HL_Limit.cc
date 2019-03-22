@@ -27,7 +27,10 @@ void HL_Limit::Read()
     }
   read_standard();
   
-  YAML::Node node  = config["Cls"];
+  YAML::Node node;
+  if( config["Cls"]) node= config["Cls"];
+  else if(  config["p-value"] )  node= config["p-value"] ;
+
   for(YAML::const_iterator it = node.begin(); it != node.end();  ++it )
     {
       //std::cout << *it << std::endl;

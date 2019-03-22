@@ -37,7 +37,8 @@ void HL_BifurGaussian::Read()
       HL_Sigma_stat_L=(-1.)*(node[0][3].as<double>());
       HL_Sigma_syst_R=node[0][4].as<double>();
       HL_Sigma_syst_L=(-1.)*(node[0][5].as<double>());
-      
+      if(HL_Sigma_stat_L<0. || HL_Sigma_syst_L <0.) std::cout<<"HL_BifurGaussian warning, at least one of your error has wrong sign"<<std::endl;
+       
       
     }
   else
