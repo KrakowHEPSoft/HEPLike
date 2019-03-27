@@ -17,7 +17,7 @@ BibEntry: '@article{Aaij:2017vbb,
       primaryClass   = "hep-ex",
       reportNumber   = "LHCB-PAPER-2017-013, CERN-EP-2017-100",
       SLACcitation   = "%%CITATION = ARXIV:1705.05802;%%"
-      }     
+      }'     
 Arxiv: "1705.05802"
 SubmissionYear: 2017
 PublicationYear: 2017

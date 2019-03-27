@@ -1,0 +1,27 @@
+BibCite: NON_YET
+BibEntry: NON_YET
+DOI: NON_YET
+FileName: template.yaml
+Name: TEMPLATE
+Source: NON_YET
+SubmissionYear: 2018
+PublicationYear: 2019
+Arxiv: 1832.3123
+Collaborations: awesome
+ExperimentalDataLumi: 3fb
+ExperimentalDataYears: 2011,2012
+Decay: "\tau^{-} \rightarrow e^{-} e^{+} \\mu^{-}"
+Kinematics: q2>0.1 && q2< 0.98
+HLAuthor: YOU
+HLEmail: you@ifj.edu.pl
+HL_Type: HL_nDimBifurGaussian
+Observables:
+- [ "BR1", 0.1, +0.02, -0.01, 0.02]
+- [ "BR2", 0.2, +0.01, -0.05, +0.03, -0.02]
+- [ "BR3", 0.3, +0.04, -0.03, 0.05]
+Correlation:
+-  [ "BR1", "BR2", "BR3"]
+-  [ 1. ,  0.1 ,  0.2   ]
+-  [ 0.1,   1.,   0.1 ]
+-  [ 0.2 ,   0.1,  1.  ]
+

@@ -90,7 +90,7 @@ void HL_nDimLikelihood::Read()
     }
   profiled=false;
 
-  cout<<central_mes_val[0]<<" "<<central_mes_val[1]<<endl;
+  //cout<<central_mes_val[0]<<" "<<central_mes_val[1]<<endl;
 
 
 }

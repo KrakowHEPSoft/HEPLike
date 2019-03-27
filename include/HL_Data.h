@@ -29,6 +29,7 @@ class HL_Data
   
   std::string HFile;
   void Read();
+  void set_debug_yaml(bool);
   
   
   
@@ -71,7 +72,6 @@ class HL_Data
   bool HL_debug_yaml;
 
   void read_standard();
-  void set_debug_yaml(bool);
 
   
 };
