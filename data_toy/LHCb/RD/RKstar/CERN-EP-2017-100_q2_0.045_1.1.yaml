@@ -1,0 +1,35 @@
+BibCite: Aaij:2017vbb
+BibEntry: '@article{Aaij:2017vbb,
+      author         = "Aaij, R. and others",
+      title          = "{Test of lepton universality with $B^{0} \rightarrow
+                        K^{*0}\ell^{+}\ell^{-}$ decays}",
+      collaboration  = "LHCb",
+      journal        = "JHEP",
+      volume         = "08",
+      year           = "2017",
+      pages          = "055",
+      doi            = "10.1007/JHEP08(2017)055",
+      eprint         = "1705.05802",
+      archivePrefix  = "arXiv",
+      primaryClass   = "hep-ex",
+      reportNumber   = "LHCB-PAPER-2017-013, CERN-EP-2017-100",
+      SLACcitation   = "%%CITATION = ARXIV:1705.05802;%%"
+      }'
+DOI: "10.1007/JHEP08(2017)055"
+FileName: CERN-EP-2017-100_q2_0.045_1.1.yaml
+Name: RKstar_q2_0.045_1.1
+Source: HEPData
+SubmissionYear: 2017
+PublicationYear: 2017
+Arxiv: 1705.05802
+Collaborations: LHCb
+ExperimentalDataLumi: 3fb
+ExperimentalDataYears: 2011,2012
+Decay: RKstar
+Kinematics: "q2>0.045 && q2< 1.1"
+HLAuthor: Marcin Chrzaszcz
+HLEmail: mchrzasz@cern.ch
+HL_Type: HL_ProfLikelihood
+ROOTData: data/LHCb/RD/RKstar_3fb/HEPData-ins1599846-v1-Table_1.root
+TGraphPath: "Table 1/Graph1D_y1"
+

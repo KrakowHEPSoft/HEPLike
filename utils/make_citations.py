@@ -1,4 +1,12 @@
 #!/bin/python
+################################################
+#   HEPLike: High Energy Physics Likelihoods
+#
+#   Python script for looking up the results
+#
+#   author: Jihyun Bhom, Marcin Chrzaszcz
+################################################
+
 import sys
 import argparse
 import os
@@ -41,7 +49,7 @@ def main(argv):
                     continue
                 # now checking names:
                 for l in lookup:
-                    if( l in yamlf['Name']):
+                    if( l in yamlf['FileName']):
                         citations.append(yamlf['BibEntry'])
                         # we found the citation, we can break
                         continue

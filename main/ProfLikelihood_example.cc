@@ -32,7 +32,7 @@ int main (int argc, char *argv[])
   TCanvas *c1 = new TCanvas("c1", "c1", 800,600);
   
   // profile likelihood test
-  HL_ProfLikelihood *br = new HL_ProfLikelihood("data/LHCb/RD/RKstar_3fb/RKstar_lowq2.yaml");
+  HL_ProfLikelihood *br = new HL_ProfLikelihood("data/LHCb/RD/RKstar/CERN-EP-2017-100_q2_1.1_6.yaml");
   br->Read();
   
   // now let's see

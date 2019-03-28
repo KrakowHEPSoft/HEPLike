@@ -1,4 +1,14 @@
 #!/bin/python
+################################################
+#   HEPLike: High Energy Physics Likelihoods
+#
+#   Python script for looking up the results
+#
+#   author: Jihyun Bhom, Marcin Chrzaszcz
+################################################
+
+
+
 import sys
 import argparse
 import os
