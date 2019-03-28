@@ -15,11 +15,16 @@ def main(argv):
     lookup=[]
     for ff in f:
         lookup.append(ff.strip())
-    
     fout = open("references.bib", "w")
     citations=[]
     #print lookup
-    for subdir, dirs, files in os.walk("../data"):         
+    dir=""
+    if(os.path.isdir("../data")):
+        dir="../data"
+    else:
+        dir="data"
+            
+    for subdir, dirs, files in os.walk(dir):
         for file in files:
             if file.endswith(".yaml"):
                 #yaml1 = yaml.YAML()
@@ -30,6 +35,18 @@ def main(argv):
                 #print yamlf['BibCite'] 
                 if(yamlf['BibCite'] in lookup):
                     citations.append(yamlf['BibEntry'])
+                    # we found already citation for this, we can remove it from list:
+                    lookup.remove(yamlf['BibCite'])                    
+                    # we found the citation, we can break
+                    continue
+                # now checking names:
+                for l in lookup:
+                    if( l in yamlf['Name']):
+                        citations.append(yamlf['BibEntry'])
+                        # we found the citation, we can break
+                        continue
+                    
+
 
     for c in citations:
         fout.write(c+'\n')
