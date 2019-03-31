@@ -12,8 +12,9 @@ Boost, 1.58.0
 ROOT, 6.08
 
 sudo apt-get install cmake libgsl-dev libboost-all-dev libyaml-cpp-dev
+
 To install ROOT see:
-libyaml-cpp-dev
+https://root.cern.ch/building-root
 
 #### Instalation
 git clone  https://github.com/mchrzasz/HEPLike.git
