@@ -22,3 +22,6 @@ make
 
 
 
+##### To run examples:
+ln -s data_toy dat
+
