@@ -1,0 +1,3 @@
+## do genreate a toy dataset:
+root -l gen.cc
+a "data.root" file should be created
