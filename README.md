@@ -18,11 +18,16 @@ https://root.cern.ch/building-root
 
 #### Instalation
 git clone  https://github.com/mchrzasz/HEPLike.git
+
 cd HEPLike
+
 mkdir build
+
 cd build
+
 cmake ..
-make
+
+make -jN
 
 
 
