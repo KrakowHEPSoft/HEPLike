@@ -40,10 +40,6 @@ int main (int argc, char *argv[])
   theory.push_back(0.9);
   cout<<"Chi2: "<<br->GetChi2(theory)<<endl;
 
-  /*
-  HL_nDimLikelihood *br = new HL_nDimLikelihood("data/LHCb/RD/Bs2mumu_5fb/b2mumu.yaml");
-  br->Read();  
-  */
 
   return 0;
 }

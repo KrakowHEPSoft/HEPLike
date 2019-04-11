@@ -20,6 +20,12 @@
 #include <boost/numeric/ublas/matrix.hpp>
 
 #include "TH1D.h"
+#include "TCanvas.h"
+#include "TGraph.h"
+#include "TMultiGraph.h"
+#include "TLegend.h"
+
+
 
 using namespace std;
 
@@ -29,47 +35,84 @@ int main (int argc, char *argv[])
 {
   HL_Limit *limit = new HL_Limit("data/examples/HFLAV_2019_180.yaml");
   limit->Read();
-  double br=atof(argv[1]);
-  cout<<"CLS: "<<limit->GetCLs(br)<<endl;
-  cout<<"Chi2: "<<limit->GetChi2(br)<<endl;
-  cout<<"likehood: "<<limit->GetLikelihood(br)<<endl;
-  cout<<"Loglikehood: "<<limit->GetLogLikelihood(br)<<endl;
+  double br=5.e-10;
+  vector<double> BR;
+  vector<double> like;
+  vector<double> like_fake;
 
-  /*
-  // profile likelihood test
-    HL_ProfLikelihood *br = new HL_ProfLikelihood("data/LHCb/RD/RKstar_3fb/RKstar_lowq2.yaml");
-    br->Read();
-  */
-  /*
-  HL_nDimGaussian *br = new HL_nDimGaussian("data/test_3dim.yaml");
-  br->Read();
-  vector<string> a;//
-  a.push_back("BR1");
-  a.push_back("BR3");
-  br->Restrict(a);
-  //TH1D *hist;
-  vector<double> theory;
-  theory.push_back(0.1);
-  theory.push_back(0.1);
-  cout<<"Chi2: "<<br->GetChi2(theory)<<endl;
-  */
-  /*
-  HL_nDimBifurGaussian *br = new HL_nDimBifurGaussian("data/test_3dimassym.yaml");
-  br->Read();
-  vector<string> a;//
-  a.push_back("BR1");
-  a.push_back("BR3");
-  br->Restrict(a);
-  //TH1D *hist;
-  vector<double> theory;
-  theory.push_back(-0.1);
-  theory.push_back(0.9);
-  cout<<"Chi2: "<<br->GetChi2(theory)<<endl;
-  */
-  /*
-  HL_nDimLikelihood *br = new HL_nDimLikelihood("data/LHCb/RD/Bs2mumu_5fb/b2mumu.yaml");
-  br->Read();  
-  */
 
-  return 0;
+  double max1=-1.e10;
+  double max2=-1.e10;
+  
+
+  while(br<2e-8)
+    {
+      BR.push_back(br);
+      double tmp_like_p=limit->GetLogLikelihood(br);
+      like.push_back(tmp_like_p);
+
+      double error= fabs(9.9e-9)/1.64; 
+      double tmp_like=HL_Stats::gaussian_upper_limit(br, 0. ,0.,  error, false);
+      cout<<br<<"  "<<   tmp_like_p<<"  "<<tmp_like<<endl; 
+      like_fake.push_back(tmp_like);
+      
+      if(tmp_like_p > max1) max1=tmp_like_p;
+      if(tmp_like > max2) max2=tmp_like;
+
+         
+      br+=1e-10;
+    }
+  int bins=BR.size();
+  double BRA[bins];
+  double LL[bins];
+  double LLF[bins];
+  for(int i=0; i <bins; ++i)
+    {
+      BRA[i]=BR[i];
+      LL[i]=like[i]-max1;
+      LLF[i]=like_fake[i]-max2;
+
+    }
+
+  TGraph* gr = new TGraph(BR.size(), BRA, LL);
+  TGraph* gr1 = new TGraph(BR.size(), BRA, LLF); 
+  //############################################3
+  TCanvas *c1= new TCanvas("c1", "c1", 800,600);
+
+  gr->SetLineColor(kRed-3);
+  gr1->SetLineColor(kGreen-3);
+  gr->SetLineWidth(3);
+  gr1->SetLineWidth(3);       
+
+  gr->GetXaxis()->SetTitle("Br(#tau -> #mu #mu e)");
+  gr1->GetXaxis()->SetTitle("Br(#tau -> #mu #mu e)");
+  gr->GetYaxis()->SetTitle("#Delta log-likelihood");
+  gr1->GetYaxis()->SetTitle("#Delta log-likelihood");    
+
+
+
+  
+  TMultiGraph *mg = new TMultiGraph();
+  mg->Add(gr);
+  mg->Add(gr1); 
+
+  mg->Draw("AL");   
+  
+  mg->GetXaxis()->SetTitle("Br(#tau -> #mu e e)");
+  mg->GetYaxis()->SetTitle("#Delta log-likelihood");
+  
+  mg->Draw("AL");
+  
+
+  TLegend *leg = new TLegend(0.55,0.7,0.9,0.9);
+  leg->AddEntry(gr, "Proper Likelihood", "l");
+  leg->AddEntry(gr1, "Aprox. Proper Likelihood", "l");    
+
+  leg->Draw();
+
+
+  c1->SaveAs("dupa.png");
+
+  
+  return 1;
 }

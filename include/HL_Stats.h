@@ -51,7 +51,7 @@ namespace HL_Stats
       return true;
     }
   
-
+  double gaussian_upper_limit(double theory, double obs, double theoryerr, double obserr, bool profile_systematics);
   
   
   

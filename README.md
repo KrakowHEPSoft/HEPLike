@@ -11,6 +11,7 @@ gsl, 2.1
 Boost, 1.58.0
 ROOT, 6.08
 
+In debian based systems:
 sudo apt-get install cmake libgsl-dev libboost-all-dev libyaml-cpp-dev
 
 To install ROOT see:
