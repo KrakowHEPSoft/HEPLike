@@ -33,7 +33,7 @@ make -jN
 #### Structure of the program:
 
 main - directory containing the executable programs
-data_toy -  directory with example datasets. THe real measurements are in seperate git repo (see below). 
+data_toy -  directory with example datasets. The real measurements are in seperate git repo (see below).
 include - directory with header files for HEPLike C++ classes.
 src - directory with function definitions for HEPLike C++ clasees
 utils - directory containing the python scripts for handing database, creating bibtex files etc.
