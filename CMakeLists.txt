@@ -42,10 +42,11 @@ add_definitions(${ROOT_CXX_FLAGS})
 include_directories (include)
 
 
+
 add_library(HEPLike src/HL_Stats.cc src/HL_Data.cc src/HL_Limit.cc src/HL_Gaussian.cc src/HL_BifurGaussian.cc src/HL_ProfLikelihood.cc src/HL_nDimGaussian.cc src/HL_nDimBifurGaussian.cc src/HL_nDimLikelihood.cc src/HL_ExpPoints.cc)
 
-add_library(HEPLikeSO SHARED src/HL_Stats.cc src/HL_Data.cc src/HL_Limit.cc src/HL_Gaussian.cc src/HL_BifurGaussian.cc src/HL_ProfLikelihood.cc src/HL_nDimGaussian.cc src/HL_nDimBifurGaussian.cc src/HL_nDimLikelihood.cc src/HL_ExpPoints.cc)
 
+add_library(HEPLikeSO SHARED src/HL_Stats.cc src/HL_Data.cc src/HL_Limit.cc src/HL_Gaussian.cc src/HL_BifurGaussian.cc src/HL_ProfLikelihood.cc src/HL_nDimGaussian.cc src/HL_nDimBifurGaussian.cc src/HL_nDimLikelihood.cc src/HL_ExpPoints.cc ${ROOT_LIBRARIES} ${Boost_LIBRARIES})
 
 
 #############################################
@@ -71,4 +72,6 @@ target_link_libraries(Ndim_Likelihood_example  HEPLike yaml-cpp GSL::gsl ${ROOT_
 target_link_libraries(Data_Fit_example HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
 target_link_libraries(Test_YAML  HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} ) 
 
+
+target_link_libraries(HEPLikeSO PRIVATE GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
 
