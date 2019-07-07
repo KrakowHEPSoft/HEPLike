@@ -62,15 +62,15 @@ add_library(HEPLikeSO SHARED src/HL_Stats.cc src/HL_Data.cc src/HL_Limit.cc src/
 #add_executable(Test_YAML  main/Test_YAML.cc)
 
 
-target_link_libraries(Br_example HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )   
-target_link_libraries(BrBifurGaussian_example HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
-target_link_libraries(Limit_example HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
-target_link_libraries(Ndim_Gaussian HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
-target_link_libraries(ProfLikelihood_example HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
-target_link_libraries(Ndim_BifurGaussian_example HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
-target_link_libraries(Ndim_Likelihood_example  HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )  
-target_link_libraries(Data_Fit_example HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
-target_link_libraries(Test_YAML  HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} ) 
+#target_link_libraries(Br_example HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )   
+#target_link_libraries(BrBifurGaussian_example HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
+#target_link_libraries(Limit_example HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
+#target_link_libraries(Ndim_Gaussian HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
+#target_link_libraries(ProfLikelihood_example HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
+#target_link_libraries(Ndim_BifurGaussian_example HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
+#target_link_libraries(Ndim_Likelihood_example  HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )  
+#target_link_libraries(Data_Fit_example HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
+#target_link_libraries(Test_YAML  HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} ) 
 
 
 target_link_libraries(HEPLikeSO PRIVATE GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
