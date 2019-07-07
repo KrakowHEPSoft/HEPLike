@@ -51,15 +51,15 @@ add_library(HEPLikeSO SHARED src/HL_Stats.cc src/HL_Data.cc src/HL_Limit.cc src/
 
 #############################################
 # the executables:
-add_executable(Br_example main/Br_example.cc)
-add_executable(BrBifurGaussian_example main/BrBifurGaussian_example.cc)
-add_executable(Limit_example main/Limit_example.cc)
-add_executable(Ndim_Gaussian main/Ndim_Gaussian.cc)
-add_executable(ProfLikelihood_example main/ProfLikelihood_example.cc)
-add_executable(Ndim_BifurGaussian_example main/Ndim_BifurGaussian_example.cc)
-add_executable(Ndim_Likelihood_example main/Ndim_Likelihood_example.cc)
-add_executable(Data_Fit_example  main/Data_Fit_example.cc)
-add_executable(Test_YAML  main/Test_YAML.cc)
+#add_executable(Br_example main/Br_example.cc)
+#add_executable(BrBifurGaussian_example main/BrBifurGaussian_example.cc)
+#add_executable(Limit_example main/Limit_example.cc)
+#add_executable(Ndim_Gaussian main/Ndim_Gaussian.cc)
+#add_executable(ProfLikelihood_example main/ProfLikelihood_example.cc)
+#add_executable(Ndim_BifurGaussian_example main/Ndim_BifurGaussian_example.cc)
+#add_executable(Ndim_Likelihood_example main/Ndim_Likelihood_example.cc)
+#add_executable(Data_Fit_example  main/Data_Fit_example.cc)
+#add_executable(Test_YAML  main/Test_YAML.cc)
 
 
 target_link_libraries(Br_example HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )   

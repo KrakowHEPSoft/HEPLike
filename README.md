@@ -46,3 +46,9 @@ ln -s data_toy data
 ##### Measurments repository:
 https://github.com/mchrzasz/HEPLikeData
 
+
+##### Notes for integrating with Gambit
+To integrate HepLike with Gambit you need to boss it:
+./boss.py heplike_1_0 --include=$ROOTSYS/include
+the configs/heplike_1_0.py is included in Gambit
+
