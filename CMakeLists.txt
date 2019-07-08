@@ -44,8 +44,8 @@ add_definitions(${ROOT_CXX_FLAGS})
 #
 ###########################
 file(GLOB HL_SOURCES ${CMAKE_SOURCE_DIR}/src/*.cc)
-add_library(HEPLike_static ${HL_SOURCES)
-add_library(HEPLike_shared SHARED ${HL_SOURCES)
+add_library(HEPLike_static ${HL_SOURCES})
+add_library(HEPLike_shared SHARED ${HL_SOURCES})
 set_target_properties(HEPLike_static PROPERTIES OUTPUT_NAME HEPLike)
 set_target_properties(HEPLike_shared PROPERTIES OUTPUT_NAME HEPLike)
 target_link_libraries(HEPLike_shared PRIVATE gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
