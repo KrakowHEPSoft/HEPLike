@@ -33,24 +33,29 @@ find_package(GSL REQUIRED)
 # ROOT:
 find_package(ROOT REQUIRED COMPONENTS MathCore RIO Hist Tree Net)
 
-
 include(${ROOT_USE_FILE})
-include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS})
+include_directories(${CMAKE_SOURCE_DIR}/include ${ROOT_INCLUDE_DIRS})
 add_definitions(${ROOT_CXX_FLAGS})
 
 
-include_directories (include)
-
-
-add_library(HEPLike_static src/HL_Stats.cc src/HL_Data.cc src/HL_Limit.cc src/HL_Gaussian.cc src/HL_BifurGaussian.cc src/HL_ProfLikelihood.cc src/HL_nDimGaussian.cc src/HL_nDimBifurGaussian.cc src/HL_nDimLikelihood.cc src/HL_ExpPoints.cc)
+###########################
+#
+#    Libraries
+#
+###########################
+file(GLOB HL_SOURCES ${CMAKE_SOURCE_DIR}/src/*.cc)
+add_library(HEPLike_static ${HL_SOURCES)
+add_library(HEPLike_shared SHARED ${HL_SOURCES)
 set_target_properties(HEPLike_static PROPERTIES OUTPUT_NAME HEPLike)
-
-add_library(HEPLike_shared SHARED src/HL_Stats.cc src/HL_Data.cc src/HL_Limit.cc src/HL_Gaussian.cc src/HL_BifurGaussian.cc src/HL_ProfLikelihood.cc src/HL_nDimGaussian.cc src/HL_nDimBifurGaussian.cc src/HL_nDimLikelihood.cc src/HL_ExpPoints.cc)
 set_target_properties(HEPLike_shared PROPERTIES OUTPUT_NAME HEPLike)
 target_link_libraries(HEPLike_shared PRIVATE gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
 
-#############################################
-# the executables:
+
+###########################
+#
+#    Executables
+#
+###########################
 #add_executable(Br_example main/Br_example.cc)
 #add_executable(BrBifurGaussian_example main/BrBifurGaussian_example.cc)
 #add_executable(Limit_example main/Limit_example.cc)
