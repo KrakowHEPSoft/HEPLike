@@ -4,7 +4,7 @@ list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS}/build)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} $ENV{ROOTSYS}/etc/cmake)
 
 ###########################
-# 
+#
 #    Compile seetings
 #
 ###########################
@@ -27,9 +27,9 @@ endif()
 # looking for yaml-cpp
 find_package(Yaml-cpp)
 # looking for boost
-find_package(Boost REQUIRED)   
+find_package(Boost REQUIRED)
 # GSL
-find_package(GSL REQUIRED) 
+find_package(GSL REQUIRED)
 # ROOT:
 find_package(ROOT REQUIRED COMPONENTS MathCore RIO Hist Tree Net)
 
@@ -42,12 +42,12 @@ add_definitions(${ROOT_CXX_FLAGS})
 include_directories (include)
 
 
+add_library(HEPLike_static src/HL_Stats.cc src/HL_Data.cc src/HL_Limit.cc src/HL_Gaussian.cc src/HL_BifurGaussian.cc src/HL_ProfLikelihood.cc src/HL_nDimGaussian.cc src/HL_nDimBifurGaussian.cc src/HL_nDimLikelihood.cc src/HL_ExpPoints.cc)
+set_target_properties(HEPLike_static PROPERTIES OUTPUT_NAME HEPLike)
 
-add_library(HEPLike src/HL_Stats.cc src/HL_Data.cc src/HL_Limit.cc src/HL_Gaussian.cc src/HL_BifurGaussian.cc src/HL_ProfLikelihood.cc src/HL_nDimGaussian.cc src/HL_nDimBifurGaussian.cc src/HL_nDimLikelihood.cc src/HL_ExpPoints.cc)
-
-
-add_library(HEPLikeSO SHARED src/HL_Stats.cc src/HL_Data.cc src/HL_Limit.cc src/HL_Gaussian.cc src/HL_BifurGaussian.cc src/HL_ProfLikelihood.cc src/HL_nDimGaussian.cc src/HL_nDimBifurGaussian.cc src/HL_nDimLikelihood.cc src/HL_ExpPoints.cc ${ROOT_LIBRARIES} ${Boost_LIBRARIES})
-
+add_library(HEPLike_shared SHARED src/HL_Stats.cc src/HL_Data.cc src/HL_Limit.cc src/HL_Gaussian.cc src/HL_BifurGaussian.cc src/HL_ProfLikelihood.cc src/HL_nDimGaussian.cc src/HL_nDimBifurGaussian.cc src/HL_nDimLikelihood.cc src/HL_ExpPoints.cc)
+set_target_properties(HEPLike_shared PROPERTIES OUTPUT_NAME HEPLike)
+target_link_libraries(HEPLike_shared PRIVATE gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
 
 #############################################
 # the executables:
@@ -61,17 +61,13 @@ add_library(HEPLikeSO SHARED src/HL_Stats.cc src/HL_Data.cc src/HL_Limit.cc src/
 #add_executable(Data_Fit_example  main/Data_Fit_example.cc)
 #add_executable(Test_YAML  main/Test_YAML.cc)
 
-
-#target_link_libraries(Br_example HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )   
-#target_link_libraries(BrBifurGaussian_example HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
-#target_link_libraries(Limit_example HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
-#target_link_libraries(Ndim_Gaussian HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
-#target_link_libraries(ProfLikelihood_example HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
-#target_link_libraries(Ndim_BifurGaussian_example HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
-#target_link_libraries(Ndim_Likelihood_example  HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )  
-#target_link_libraries(Data_Fit_example HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
-#target_link_libraries(Test_YAML  HEPLike yaml-cpp GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} ) 
-
-
-target_link_libraries(HEPLikeSO PRIVATE GSL::gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
+#target_link_libraries(Br_example HEPLike_static yaml-cpp gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
+#target_link_libraries(BrBifurGaussian_example HEPLike_static yaml-cpp gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
+#target_link_libraries(Limit_example HEPLike_static yaml-cpp gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
+#target_link_libraries(Ndim_Gaussian HEPLike_static yaml-cpp gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
+#target_link_libraries(ProfLikelihood_example HEPLike_static yaml-cpp gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
+#target_link_libraries(Ndim_BifurGaussian_example HEPLike_static yaml-cpp gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
+#target_link_libraries(Ndim_Likelihood_example  HEPLike_static yaml-cpp gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
+#target_link_libraries(Data_Fit_example HEPLike_static yaml-cpp gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
+#target_link_libraries(Test_YAML  HEPLike_static yaml-cpp gsl ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
 
