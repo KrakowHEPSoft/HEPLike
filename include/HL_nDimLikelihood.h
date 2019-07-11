@@ -52,7 +52,7 @@ class HL_nDimLikelihood: public HL_Data
   double GetChi2( std::vector<double> theory) ;
   double GetLikelihood( std::vector<double> theory) ;  
   double GetLogLikelihood(  std::vector<double> theory) ;  
-  bool Restrict(std::vector<std::string>);
+  //bool Restrict(std::vector<std::string>);
 
   void Profile();
   double GetChi2_profile( double theory, std::string);
