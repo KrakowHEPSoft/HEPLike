@@ -116,6 +116,21 @@ double HL_nDimLikelihood::GetLikelihood(std::vector<double> theory)
   double log_likelihood=GetLogLikelihood(theory);
   return gsl_sf_exp(log_likelihood);
 }
+double HL_nDimLikelihood::GetLogLikelihood(std::vector<double> theory , vector<double> theory_err)
+{
+  double log_likelihood=GetLogLikelihood(theory);
+  double chi2=-2.*log_likelihood;
+  
+  for(unsigned i=0; i< theory.size(); i++)
+    {
+      chi2+=(theory[i]-central_mes_val[i])*(theory[i]-central_mes_val[i])/(  theory_err[i]*theory_err[i]);
+
+    }
+  
+  return -0.5*chi2;
+        
+}
+
 
 
 void HL_nDimLikelihood::Profile()
