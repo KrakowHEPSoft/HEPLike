@@ -48,7 +48,7 @@ void HL_nDimLikelihood::Read()
       string path=HFile.substr (0, pos);
 
       
-      path=path+HL_RootFile;
+      path=path+"/"+HL_RootFile;
       HL_RootFile=path;
       cout<<"HEPLike testing the path: "<<HL_RootFile<<endl;
     }
