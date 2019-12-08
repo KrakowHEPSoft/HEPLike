@@ -41,7 +41,7 @@ void HL_nDimLikelihood::Read()
           int pos_new=HFile.find("/data/", pos+1);
           if(pos_new>0)
             {
-              pos=pos_new
+              pos=pos_new;
             }
           else break;
         }
