@@ -33,8 +33,21 @@ void HL_nDimLikelihood::Read()
     {
       HL_RootFile=config["ROOTData"].as<std::string>();
       // the HL_RootFile is something like data/RD/... but we need the absolute path:
-      int pos=HFile.find("data/");
+      int pos=HFile.find("/data/");
+      //string path=HFile.substr (0, pos);
+      if(pos<0) std::cout<<"Error in HL_nDimLikelihood, didn't find 'data'"<<std::endl;
+      while(true)
+        {
+          int pos_new=HFile.find("/data/", pos+1);
+          if(pos_new>0)
+            {
+              pos=pos_new
+            }
+          else break;
+        }
       string path=HFile.substr (0, pos);
+
+      
       path=path+HL_RootFile;
       HL_RootFile=path;
       cout<<"HEPLike testing the path: "<<HL_RootFile<<endl;
