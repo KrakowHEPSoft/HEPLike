@@ -119,7 +119,7 @@ void HL_nDimBifurGaussian::Read()
         }// i
       
     }//no corrlation case
-  central_restricted=NoOfObservables;
+  size_restricted=NoOfObservables;
   cout<<HL_correlation<<endl;
   //cout<<HL_cov<<endl;
 }
