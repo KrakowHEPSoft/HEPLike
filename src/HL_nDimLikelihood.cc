@@ -29,7 +29,16 @@ void HL_nDimLikelihood::Read()
       return;
     }
   read_standard();
-  if( config["ROOTData"])  HL_RootFile=config["ROOTData"].as<std::string>();
+  if( config["ROOTData"])
+    {
+      HL_RootFile=config["ROOTData"].as<std::string>();
+      // the HL_RootFile is something like data/RD/... but we need the absolute path:
+      int pos=HFile.find("data/");
+      string path=HFile.substr (0, pos);
+      path=path+HL_RootFile;
+      HL_RootFile=path;
+      cout<<"HEPLike testing the path: "<<HL_RootFile<<endl;
+    }
   else
     {
       std::cout<<"You didn't profice a root file!!! HL_ProfLikelihood class is protesting!"<<std::endl;
