@@ -164,7 +164,8 @@ double HL_nDimBifurGaussian::GetChi2(std::vector<double> theory)  //, double the
       //HL_Stats::inverse(HL_correlation_restricted, size_restricted);   
       size_restricted=NoOfObservables;
       HL_Stats::InvertMatrix(HL_cov_restricted,HL_cov_inv_restricted);
-      restricted=true; 
+      restricted=true;
+      central_restricted=central;
     }
   // now calculating chi2
   double chi2=0;
@@ -238,6 +239,7 @@ double HL_nDimBifurGaussian::GetChi2(std::vector<double> theory,  boost::numeric
       size_restricted=NoOfObservables;
       HL_Stats::InvertMatrix(HL_cov_restricted,HL_cov_inv_restricted);
       restricted=true; 
+      central_restricted=central;
     }
   // now calculating chi2
   double chi2=0;
