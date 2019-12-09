@@ -204,6 +204,7 @@ double HL_nDimBifurGaussian::GetChi2(std::vector<double> theory)  //, double the
           chi2+= diff[i] * HL_cov_inv_restricted(i,j)*diff[j] ;
         }
     }
+  std::cout<<"Returning chi2: "<<chi2<<std::endl;
   return chi2;
 }
 double HL_nDimBifurGaussian::GetLogLikelihood(std::vector<double> theory)
