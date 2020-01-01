@@ -153,7 +153,6 @@ double HL_nDimLikelihood::GetLogLikelihood(std::vector<double> theory , vector<d
 }
 
 
-
 void HL_nDimLikelihood::Profile()
 {
   //profiling over X:
