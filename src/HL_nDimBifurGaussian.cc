@@ -241,7 +241,7 @@ double HL_nDimBifurGaussian::GetChi2(std::vector<double> theory,  boost::numeric
         std::cout<<"Error in HL_nDimBifurGaussian::GetChi2, your theory cov matrix is not square!"<<std::endl ;
       }
 
-  
+    cout<<"restricted: "<<restricted<<endl;
   if(!restricted) // if we don't resctric and use whole matrix
     {
       HL_correlation_restricted=HL_correlation;
@@ -255,7 +255,7 @@ double HL_nDimBifurGaussian::GetChi2(std::vector<double> theory,  boost::numeric
   vector<double> diff;
   if(theory.size() !=  central_restricted.size())
     {
-      std::cout<<"Theory: "<<theory.size()<<"  Exp:"<< central_restricted.size()<<std::endl;  
+      std::cout<<"Theory: "<<theory.size()<<"  Exp:"<< central_restricted.size()<<" "<<  central.size()<<std::endl;  
       std::cout<<"Error in HL_nDimBifurGaussian::GetChi2, you had different dimensions in theory and experiment"<<std::endl;
       return -1e10;
     }
