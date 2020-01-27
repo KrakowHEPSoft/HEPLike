@@ -174,12 +174,13 @@ double HL_nDimBifurGaussian::GetChi2(std::vector<double> theory)  //, double the
       restricted=true;
       central_restricted=central;
     }
+
   // now calculating chi2
   double chi2=0;
   vector<double> diff;
   if(theory.size() !=  central_restricted.size())
     {
-      std::cout<<"Theory: "<<theory.size()<<"  Exp:"<< central_restricted.size()<<std::endl; 
+      std::cout<<"Theory: "<<theory.size()<<"  Exp:"<< central_restricted.size()<<"  "<< central.size() <<std::endl; 
       std::cout<<"Error in HL_nDimBifurGaussian::GetChi2, you had different dimensions in theory and experiment"<<std::endl;
       return -1e10;
     }
