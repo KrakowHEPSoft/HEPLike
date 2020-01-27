@@ -122,6 +122,13 @@ void HL_nDimBifurGaussian::Read()
   size_restricted=NoOfObservables;
   cout<<HL_correlation<<endl;
   //cout<<HL_cov<<endl;
+  cout<<"Debug central"<<endl;
+  for(int i=0; i <central.size(); ++i)
+    {
+      cout<<central[i]<<endl;
+
+    }
+
 }
 bool HL_nDimBifurGaussian::Restrict(std::vector<std::string> names)
 {
