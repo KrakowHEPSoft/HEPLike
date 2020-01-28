@@ -244,6 +244,7 @@ double HL_nDimBifurGaussian::GetChi2(std::vector<double> theory,  boost::numeric
     cout<<"restricted: "<<restricted<<endl;
   if(!restricted) // if we don't resctric and use whole matrix
     {
+      cout<<"in restricted"<<endl;
       HL_correlation_restricted=HL_correlation;
       size_restricted=NoOfObservables;
       HL_Stats::InvertMatrix(HL_cov_restricted,HL_cov_inv_restricted);
