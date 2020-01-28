@@ -29,6 +29,7 @@ void HL_nDimBifurGaussian::Read()
       return;
     }
   read_standard();
+  restricted=false;
   if(config["Observables"])
     {
       YAML::Node node  = config["Observables"];
