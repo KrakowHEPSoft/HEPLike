@@ -61,13 +61,13 @@ void HL_ProfLikelihood::Read()
   // now opening files
   f= new TFile(HL_RootFile.c_str(), "READ");
   likelihood=dynamic_cast<TGraph*>(f->Get(HL_PATH.c_str()));
-
+  likelihood->Print();
 
 
 
   xmin=likelihood->GetXaxis()->GetXmin () ;
   xmax=likelihood->GetXaxis()->GetXmax () ;
-
+  std::cout<<xmin<<" "<<xmax<<std::endl;
   if(config["Observables"] )
     {
       YAML::Node node  = config["Observables"];
