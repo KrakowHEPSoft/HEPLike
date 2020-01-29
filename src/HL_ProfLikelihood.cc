@@ -88,7 +88,7 @@ double HL_ProfLikelihood::GetLogLikelihood(double theory, double theory_error=-1
 {
   if(theory < xmin || theory > xmax) return -1.e10;
   double loglikelihood=(-1.)*likelihood->Eval(theory,0, "S" );
-
+  std::cout<<"Likelihood: "<<loglikelihood<<" for "<<theory<<std::endl;
   if(theory_error<0.){
       return loglikelihood;
   }
