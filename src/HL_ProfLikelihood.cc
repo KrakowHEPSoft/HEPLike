@@ -61,8 +61,7 @@ void HL_ProfLikelihood::Read()
   // now opening files
   f= new TFile(HL_RootFile.c_str(), "READ");
   likelihood=dynamic_cast<TGraph*>(f->Get(HL_PATH.c_str()));
-  likelihood->Print();
-
+  
 
 
   xmin=likelihood->GetXaxis()->GetXmin () ;
