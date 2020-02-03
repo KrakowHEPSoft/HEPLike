@@ -29,6 +29,8 @@ void HL_nDimLikelihood::Read()
       return;
     }
   read_standard();
+  loglikelihood_penalty=1.e6;
+  
   if( config["ROOTData"])
     {
       HL_RootFile=config["ROOTData"].as<std::string>();
@@ -124,6 +126,11 @@ double HL_nDimLikelihood::GetChi2(std::vector<double> theory)  //, double theory
 double HL_nDimLikelihood::GetLogLikelihood(std::vector<double> theory)
 {
   int bin;
+  if(theory[0]>xmax) return loglikelihood_penalty;
+  if(theory[0]<xmin) return loglikelihood_penalty;   
+  if(theory[1]>ymax) return loglikelihood_penalty;
+  if(theory[1]<ymin) return loglikelihood_penalty;
+    
   if(theory.size() ==2)
     {
       bin=hist2D->FindBin(theory[0], theory[1]);

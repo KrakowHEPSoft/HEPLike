@@ -63,7 +63,7 @@ class HL_nDimLikelihood: public HL_Data
   double GetLogLikelihood_profile(  double theory, std::string X);
   
   
-  
+  double loglikelihood_penalty;
 
   
  private:
