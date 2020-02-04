@@ -5,6 +5,7 @@ enable_testing()
 
 list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS}/build)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} $ENV{ROOTSYS}/etc/cmake)
+set(CMAKE_MACOSX_RPATH TRUE) # use @rpath keyword for the macOS rpath
 
 ###########################
 #
