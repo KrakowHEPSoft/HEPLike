@@ -48,7 +48,9 @@ make -jN
 
 cmake -DEXECUTABLE=TRUE ..
 
-ctest or make test
+ctest
+or equivalent
+make test
 
 
 ##### Measurments repository:
