@@ -2,6 +2,18 @@ cmake_minimum_required (VERSION 2.8.11)
 project (HEPLike)
 enable_testing()
 
+message("######################################################")
+message("#                                                    #")
+message("#       HEPLike software V1.0                        #")
+message("#       J.Bhom, M.Chrzaszcz                          #")
+message("#                                                    #")
+message("#       Documentation:                               #")
+message("#       https://github.com/mchrzasz/HEPLike          #")
+message("#       GPL 3 license                                #")
+message("#                                                    #")
+message("######################################################")
+
+
 
 list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS}/build)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} $ENV{ROOTSYS}/etc/cmake)
