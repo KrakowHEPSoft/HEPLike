@@ -30,6 +30,6 @@ Kinematics: "q2>1.1 && q2< 6"
 HLAuthor: Marcin Chrzaszcz
 HLEmail: mchrzasz@cern.ch
 HL_Type: HL_ProfLikelihood
-ROOTData: data/LHCb/RD/RKstar_3fb/HEPData-ins1599846-v1-Table_2.root
+ROOTData: data/LHCb/RD/RKstar/HEPData-ins1599846-v1-Table_2.root
 TGraphPath: "Table 2/Graph1D_y1"
 

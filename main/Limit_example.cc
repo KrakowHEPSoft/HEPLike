@@ -114,5 +114,5 @@ int main (int argc, char *argv[])
   c1->SaveAs("dupa.png");
 
   
-  return 1;
+  return 0;
 }

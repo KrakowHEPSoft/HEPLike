@@ -30,9 +30,14 @@ using namespace std;
 int main (int argc, char *argv[])
 {
   TCanvas *c1 = new TCanvas("c1", "c1", 800,600);
-  
+  if(argc !=2)
+    {
+      return 1;
+
+    }
+  string pwd=argv[1];
   // profile likelihood test
-  HL_ProfLikelihood *br = new HL_ProfLikelihood("data/LHCb/RD/RKstar/CERN-EP-2017-100_q2_1.1_6.yaml");
+  HL_ProfLikelihood *br = new HL_ProfLikelihood(pwd+"/data/LHCb/RD/RKstar/CERN-EP-2017-100_q2_1.1_6.yaml");
   br->Read();
   
   // now let's see
@@ -79,5 +84,5 @@ int main (int argc, char *argv[])
   gr2->Draw("AC* SAME");       
   c1->SaveAs("ProfLikelihood_example2.pdf");
   
-  return 1;
+  return 0;
 }
