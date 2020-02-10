@@ -32,6 +32,15 @@ namespace HL_Stats
 {
     
   /// Use a detection to compute a simple chi-square-like log likelihood, for the case when obs is Gaussian distributed.
+  double gauss(double obs, double theory, double theoryerr)
+  {
+    double norm=1./(sqrt(2.*HL_Const::pi)*theoryerr);
+    double rest=pow(HL_Const::e,-((obs-theory)*(obs-theory))/(2.*theoryerr*theoryerr));
+    return (norm*rest);
+      
+
+  }
+
   double gaussian_loglikelihood_theory_syst(double obs, double theory, double theoryerr)
   {
     double errsq = theoryerr*theoryerr;
@@ -88,12 +97,6 @@ namespace HL_Stats
     lu_substitute(A, pm, inverse);
 
     return true;
-  }
-  double gauss(double x, double mean, double sigma)
-  {
-    std::cout<<exp( - (x-mean)*(x-mean)/(2.*sigma*sigma))<<std::endl;
-    return (1./(M_SQRT2*HL_Const::pi*sigma*sigma))*exp(- (x-mean)*(x-mean)/(2.*sigma*sigma));
-
   }
   /// Use a detection to compute a gaussian log-likelihood for an upper limit
   double gaussian_upper_limit(double theory, double obs, double theoryerr, double obserr, bool profile_systematics)

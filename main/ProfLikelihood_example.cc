@@ -22,6 +22,9 @@
 #include "TH1D.h"
 #include "TGraph.h"
 #include "TCanvas.h"
+#include "TMultiGraph.h"
+
+
 
 using namespace std;
 
@@ -45,15 +48,16 @@ int main (int argc, char *argv[])
   vector<double> LL;
   vector<double> LL2;
   
-  double ibr=0.3;
-  double dbr=0.005;
+  double ibr=0.50;
+  double dbr=0.01;
   double min1=1e10;
   double min2=1e10;
-  while (ibr<1.3) {
+  while (ibr<1.1) {
 
+    cout<<"Checking "<<ibr<<endl;
     BR.push_back(ibr);
-    double iLL=(-1.)*br->GetLogLikelihood(ibr, -2.);
-    double iLL2=(-1.)*br->GetLogLikelihood(ibr,  0.1);// adding 10% error.
+    double iLL=(-1.)*br->GetLogLikelihood(ibr, 0.05);
+    double iLL2=(-1.)*br->GetLogLikelihood(ibr);//,  0.1);// adding 10% error.
     LL.push_back(iLL);
     LL2.push_back(iLL2);
     
@@ -77,11 +81,13 @@ int main (int argc, char *argv[])
     }
   TGraph* gr = new TGraph(size,BR2,LLA);
   TGraph* gr2 = new TGraph(size,BR2,LL2A);
+
+  TMultiGraph *mg = new TMultiGraph();
+  mg->Add(gr,"lp");
+  mg->Add(gr2,"cp");
+
+  mg->Draw("a");
   
-  gr->Draw("AC*");
-  c1->SaveAs("ProfLikelihood_example.pdf");
-  gr2->SetLineColor(kBlue);
-  gr2->Draw("AC* SAME");       
   c1->SaveAs("ProfLikelihood_example2.pdf");
   
   return 0;

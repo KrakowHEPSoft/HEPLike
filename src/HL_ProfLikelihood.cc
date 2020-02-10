@@ -19,6 +19,7 @@
 
 using namespace std;
 
+
 void HL_ProfLikelihood::Read()
 {
   if(! initialized)
@@ -74,34 +75,74 @@ void HL_ProfLikelihood::Read()
       central_mes_val=node[0][1].as<double>();
 
     }
-
-}
-double HL_ProfLikelihood::GetChi2(double theory, double theory_err=-1.)
-{
-  double log_likelihood=GetLogLikelihood(theory,theory_err);
-  double chi2=-2.*log_likelihood;
-  return chi2;
-}
-
-double HL_ProfLikelihood::GetLogLikelihood(double theory, double theory_error=-1.)
-{
+  gmin=ROOT::Math::Factory::CreateMinimizer("GSLMultiMin", "ConjugateFR");
+  gmin->SetMaxFunctionCalls(10000000); // for Minuit/Minuit2
+  gmin->SetMaxIterations(1000000);  // for GSL
+  gmin->SetTolerance(0.0001);
+  gmin->SetPrintLevel(3);
+  
+  fun=MyFunction();
+  fun.SetLikelihood(likelihood);
 
   
+}
+double HL_ProfLikelihood::GetLogLikelihood(double theory)
+{
   if(theory < xmin || theory > xmax) return -1.e10;
-  double loglikelihood=(-1.)*likelihood->Eval(theory,0);
-
-  if(theory_error<0.){
-      return loglikelihood;
-  }
-  // we inflate the likelihood by theory error square:
-  loglikelihood*=(1.+theory_error)*(1.+theory_error);
-
+  double loglikelihood=(-1)*likelihood->Eval(theory,0);
 
   return loglikelihood;
 
 }
-double HL_ProfLikelihood::GetLikelihood(double theory, double theory_err=-1.)
+double HL_ProfLikelihood::GetLogLikelihood(double theory, double theory_err)
 {
-  double log_likelihood=GetLogLikelihood(theory,theory_err);
+  if(theory < xmin || theory > xmax) return -1.e10;
+  fun.SetTheory(theory,theory_err);
+  ROOT::Math::Functor  f1(fun,1); 
+
+
+  gmin->SetFunction(f1);
+  double step[1] = {0.01*theory_err};
+  double variable[1]={theory-5.*theory_err};
+  gmin->SetVariable(0,"x",variable[0], step[0]);
+  gmin->SetVariableInitialRange(0,theory-5*theory_err, theory+5.*theory_err);
+  gmin->SetVariableLimits(0,theory-5.*theory_err, theory+5.*theory_err);
+  gmin->Minimize();
+  const double *theory_nuisance = gmin->X();
+
+  double loglikelihood=likelihood->Eval(theory_nuisance[0],0);
+
+  return (-1.)*loglikelihood;
+
+}                                                            
+
+
+double HL_ProfLikelihood::GetChi2(double theory)
+{
+  double log_likelihood=GetLogLikelihood(theory);
+  double chi2=-2.*log_likelihood;
+  return chi2;
+}
+
+double HL_ProfLikelihood::GetChi2(double theory, double theory_err)
+{
+  double log_likelihood=GetLogLikelihood(theory, theory_err);
+  double chi2=-2.*log_likelihood;
+  return chi2;
+}
+
+
+
+
+double HL_ProfLikelihood::GetLikelihood(double theory)
+{
+  double log_likelihood=GetLogLikelihood(theory);
+  return gsl_sf_exp(log_likelihood);
+}
+
+
+double HL_ProfLikelihood::GetLikelihood(double theory, double theory_err)
+{
+  double log_likelihood=GetLogLikelihood(theory, theory_err);
   return gsl_sf_exp(log_likelihood);
 }

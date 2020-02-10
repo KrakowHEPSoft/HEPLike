@@ -18,7 +18,8 @@ using namespace std;
 namespace HL_Stats
 {
   namespace ublas = boost::numeric::ublas;
-  
+
+  double gauss(double obs, double theory, double theoryerr);
   double gaussian_loglikelihood_theory_syst(double obs, double theory, double theoryerr);
   double gaussian_loglikelihood(double theory, double obs, double theoryerr, double obserr, bool profile_systematics);
   double gauss(double x, double mean, double sigma);
