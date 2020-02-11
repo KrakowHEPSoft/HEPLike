@@ -29,7 +29,7 @@ void HL_nDimLikelihood::Read()
       return;
     }
   read_standard();
-  loglikelihood_penalty=1.e6;
+  loglikelihood_penalty=-1.e6;
   
   if( config["ROOTData"])
     {
