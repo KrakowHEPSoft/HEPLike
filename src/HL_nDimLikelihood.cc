@@ -29,7 +29,7 @@ void HL_nDimLikelihood::Read()
       return;
     }
   read_standard();
-  loglikelihood_penalty=1.e6;
+  loglikelihood_penalty=-1.e6;
   
   if( config["ROOTData"])
     {
@@ -137,7 +137,7 @@ double HL_nDimLikelihood::GetLogLikelihood(std::vector<double> theory)
 
     }
   double log_likelihood=hist2D->GetBinContent(bin);
-  return -log_likelihood;
+  return (-1.)*log_likelihood;
 }
 double HL_nDimLikelihood::GetLikelihood(std::vector<double> theory)
 {
