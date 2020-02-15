@@ -37,6 +37,55 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/io.hpp>
 //#include <boost/qvm/mat_operations.hpp>
+#include "Math/Minimizer.h"
+#include "Math/Factory.h"
+#include "Math/Functor.h"
+#include "TRandom2.h"
+#include "TError.h"
+
+
+/*
+class MyFunction: public ROOT::Math::IBaseFunctionMultiDim{
+
+ public:
+  double DoEval(const double* theory_nuisance) const{
+
+    bin=hist2D->FindBin(theory_nuisance[0], theory_nuisance[1]);    
+
+    double log_likelihood=-hist2D->GetBinContent(bin); 
+    
+
+    
+    double gauss_systematic=HL_Stats::gauss(theory_nuisance, theory_mean, theory_err);
+    return loglike-log(gauss_systematic);// here the logligek is -\Delta LL so no minus before
+  }
+  ROOT::Math::IBaseFunctionOneDim* Clone() const{
+    return new MyFunction();
+  }
+  void SetLikelihood(TH2D *l)
+  {
+    hist2D=l;
+  };
+  void SetTheory(double *mean, double *cov)
+  {
+    theory_mean=mean;
+    theory_err=err;
+  };
+
+ private:
+  double theory_mean;
+  double theory_err;
+  TH2D *hist2D
+
+};
+
+
+*/
+
+
+
+
+
 
 
 class HL_nDimLikelihood: public HL_Data
