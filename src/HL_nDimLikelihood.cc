@@ -49,7 +49,7 @@ void HL_nDimLikelihood::Read()
         }
       string path=HFile.substr (0, pos);
 
-      
+
       path=path+"/"+HL_RootFile;
       HL_RootFile=path;
     }
@@ -57,6 +57,7 @@ void HL_nDimLikelihood::Read()
     {
       std::cout<<"You didn't profice a root file!!! HL_ProfLikelihood class is protesting!"<<std::endl;
     }
+  
   if(config["TH2Path"])
     {
       HL_PATH=config["TH2Path"].as<std::string>();
@@ -111,7 +112,19 @@ void HL_nDimLikelihood::Read()
 
 
     }
+
+    
   profiled=false;
+  gmin=ROOT::Math::Factory::CreateMinimizer("GSLMultiMin", "ConjugateFR");
+  gmin->SetMaxFunctionCalls(10000000); // for Minuit/Minuit2
+  gmin->SetMaxIterations(1000000);  // for GSL
+  gmin->SetTolerance(0.0001);
+  gmin->SetPrintLevel(3);
+  
+
+  
+  fun=MyFunction2D();
+  fun.SetLikelihood(hist2D);
 
   //cout<<central_mes_val[0]<<" "<<central_mes_val[1]<<endl;
 
@@ -139,24 +152,72 @@ double HL_nDimLikelihood::GetLogLikelihood(std::vector<double> theory)
   double log_likelihood=hist2D->GetBinContent(bin);
   return (-1.)*log_likelihood;
 }
+
+double HL_nDimLikelihood::GetLogLikelihood(std::vector<double> theory, boost::numeric::ublas::matrix<double> theory_cov)
+{
+  if(theory_cov.size1() != theory.size() )
+    {
+      std::cout<<"Error in HL_nDimLikelihood::GetLogLikelihood  you had different dimensions in theory and cov matrix"<<std::endl;
+    }
+  if(theory_cov.size2() != theory_cov.size1() )
+    {
+      std::cout<<"Error in HL_nDimLikelihood::GetLogLikelihood, your theory cov matrix is not square!"<<std::endl ;
+
+    }
+
+  int bin;
+  if(theory[0]>xmax) return loglikelihood_penalty;
+  if(theory[0]<xmin) return loglikelihood_penalty;
+  if(theory[1]>ymax) return loglikelihood_penalty;
+  if(theory[1]<ymin) return loglikelihood_penalty;
+
+
+  
+  fun.SetTheory(theory,theory_cov);
+  ROOT::Math::Functor  f1(fun, 2);
+
+  
+  gmin->SetFunction(f1);  
+
+  double step[2] = {0.01*sqrt(theory_cov(0,0)), 0.01*sqrt(theory_cov(1,1)) };
+  double variable[2] = { theory[0], theory[1]};
+
+  
+  gmin->SetVariable(0,"x",variable[0]-3.*sqrt(theory_cov(0,0)), step[0]);
+  gmin->SetVariable(1,"y",variable[1]-3.*sqrt(theory_cov(1,1)), step[1]);
+
+  gmin->SetVariableInitialRange(0,theory[0]-5.*sqrt(theory_cov(0,0)), theory[0]+5.*sqrt(theory_cov(0,0)));
+  gmin->SetVariableInitialRange(1,theory[1]-5.*sqrt(theory_cov(1,1)), theory[1]+5.*sqrt(theory_cov(1,1))); 
+  
+  gmin->SetVariableLimits(0,theory[0]-5.*sqrt(theory_cov(0,0)), theory[0]+5.*sqrt(theory_cov(0,0)));
+  gmin->SetVariableLimits(1,theory[1]-5.*sqrt(theory_cov(1,1)), theory[1]+5.*sqrt(theory_cov(1,1))); 
+
+  
+  gmin->Minimize();
+  const double *theory_nuisance = gmin->X();
+  std::cout<<"Found nusaince: "<<theory_nuisance[0]<<" "<<theory_nuisance[1]<<endl;
+
+  if(theory_nuisance[0]>xmax) return loglikelihood_penalty;
+  if(theory_nuisance[0]<xmin) return loglikelihood_penalty;
+  if(theory_nuisance[1]>ymax) return loglikelihood_penalty;
+  if(theory_nuisance[1]<ymin) return loglikelihood_penalty;
+
+  bin=hist2D->FindBin(theory_nuisance[0], theory_nuisance[1]);  
+
+  cout<<"Compare: "<<theory_nuisance[0]<<" "<<theory[0]<<endl;
+
+  
+  double log_likelihood=hist2D->GetBinContent(bin);
+  return (-1.)*log_likelihood;
+  
+
+}
+
+
 double HL_nDimLikelihood::GetLikelihood(std::vector<double> theory)
 {
   double log_likelihood=GetLogLikelihood(theory);
   return gsl_sf_exp(log_likelihood);
-}
-double HL_nDimLikelihood::GetLogLikelihood(std::vector<double> theory , vector<double> theory_err)
-{
-  double log_likelihood=GetLogLikelihood(theory);
-  double chi2=-2.*log_likelihood;
-  
-  for(unsigned i=0; i< theory.size(); i++)
-    {
-      chi2+=(theory[i]-central_mes_val[i])*(theory[i]-central_mes_val[i])/(  theory_err[i]*theory_err[i]);
-
-    }
-  
-  return -0.5*chi2;
-        
 }
 
 

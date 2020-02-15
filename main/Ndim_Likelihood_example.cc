@@ -20,6 +20,12 @@
 #include <boost/numeric/ublas/matrix.hpp>
 
 #include "TH1D.h"
+#include "TH1D.h"
+#include "TGraph.h"
+#include "TCanvas.h"
+#include "TMultiGraph.h"
+
+
 
 using namespace std;
 
@@ -27,12 +33,59 @@ using namespace std;
 
 int main (int argc, char *argv[])
 {
-  // profile likelihood test
+  TCanvas *c1 = new TCanvas("c1", "c1", 800,600);
+  TCanvas *c2 = new TCanvas("c2", "c2", 800,600);  
+  if(argc !=2)
+    {
+      return 1;
 
-  HL_nDimLikelihood *br = new HL_nDimLikelihood("data/examples/b2mumu.yaml");
-  br->Read();  
-  br->Profile();
+    }
+  string pwd=argv[1];
   
-  int a;
+  HL_nDimLikelihood *br = new HL_nDimLikelihood(pwd+"/data/examples/b2mumu.yaml");
+  br->Read();
+  cout<<"??"<<endl; 
+  TH2D *hist=dynamic_cast<TH2D*>(br->GetHist());
+  TH2D *hist_post=dynamic_cast<TH2D*>(hist->Clone("AA"));
+  cout<<"??"<<endl;
+  boost::numeric::ublas::matrix<double> theory_cov(2,2);
+  theory_cov(0,0)=(6.e-9)*(6.e-9)*0.05*0.05;
+  theory_cov(1,1)=(4.e-10)*(4.e-10)*0.05*0.05;  
+  theory_cov(0,1)=0.;
+  theory_cov(1,0)=0.;
+  //vector<double> theory={6.e-9, 4.e-10};
+
+    
+  int Nx=hist_post->GetNbinsX();
+  int Ny=hist_post->GetNbinsY(); 
+
+  cout<<Nx<<" "<<Ny<<endl;
+
+  
+  for(unsigned i=1; i<=Nx; ++i)
+    {
+      for(unsigned j=1; j<=Ny; ++j) 
+        {
+          cout<<i<<" "<<j<<endl;
+          
+          double x = hist->GetXaxis()->GetBinCenter(i);
+          double y = hist->GetYaxis()->GetBinCenter(j);  
+          vector<double> theory={x,y};
+          cout<<"?"<<endl;
+          double LL=br->GetLogLikelihood(theory,theory_cov);
+          cout<<"??"<<endl;  
+          hist_post->SetBinContent(i,j,-LL);
+          cout<<"compare LL: "<<LL<<"  "<<br->GetLogLikelihood(theory)<<endl;
+
+        }
+    }
+  c1->cd();
+  hist->Draw("COLZ");
+  c1->SaveAs("oryginal.pdf");
+  c2->cd();
+  hist_post->Draw("COLZ");
+  c2->SaveAs("new.pdf");
+  
+
   return 0;
 }
