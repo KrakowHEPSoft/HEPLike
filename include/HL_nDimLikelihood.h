@@ -126,7 +126,9 @@ class HL_nDimLikelihood: public HL_Data
   
   void Read();
   double GetChi2( std::vector<double> theory) ;
+  double GetChi2( std::vector<double> theory,  boost::numeric::ublas::matrix<double> theory_cov);
   double GetLikelihood( std::vector<double> theory) ;  
+  double GetLikelihood(std::vector<double> theory, boost::numeric::ublas::matrix<double> theory_cov);
   double GetLogLikelihood(  std::vector<double> theory) ;  
   double GetLogLikelihood(std::vector<double> theory, boost::numeric::ublas::matrix<double> theory_cov);
 

@@ -136,6 +136,13 @@ double HL_nDimLikelihood::GetChi2(std::vector<double> theory)  //, double theory
   return -2.*log_likelihood;
 
 }
+double HL_nDimLikelihood::GetChi2(std::vector<double> theory,  boost::numeric::ublas::matrix<double> theory_cov)
+{
+  double log_likelihood=GetLogLikelihood(theory);
+  return -2.*log_likelihood;
+
+}
+
 double HL_nDimLikelihood::GetLogLikelihood(std::vector<double> theory)
 {
   int bin;
@@ -216,6 +223,14 @@ double HL_nDimLikelihood::GetLikelihood(std::vector<double> theory)
   double log_likelihood=GetLogLikelihood(theory);
   return gsl_sf_exp(log_likelihood);
 }
+
+double HL_nDimLikelihood::GetLikelihood(std::vector<double> theory, boost::numeric::ublas::matrix<double> theory_cov)
+{
+  double log_likelihood=GetLogLikelihood(theory,theory_cov);
+  return gsl_sf_exp(log_likelihood);
+}
+
+
 
 
 void HL_nDimLikelihood::Profile()
