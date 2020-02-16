@@ -53,6 +53,7 @@ class HL_nDimBifurGaussian: public HL_Data
 
 
   bool Restrict(std::vector<std::string>);
+  std::vector<std::string> GetObservables(){ return Observables;};  
   
  private:
   

@@ -138,6 +138,7 @@ class HL_nDimLikelihood: public HL_Data
   double GetLikelihood_profile( double theory, std::string axis) ;
   double GetLogLikelihood_profile(  double theory, std::string X);
   
+  std::vector<std::string> GetObservables(){ return Observables;};  
   
   double loglikelihood_penalty;
   TH1* GetHist(){ return hist;}; 
