@@ -115,10 +115,10 @@ void HL_nDimLikelihood::Read()
 
     
   profiled=false;
-  gmin=ROOT::Math::Factory::CreateMinimizer("GSLMultiMin", "ConjugateFR");
+  gmin=ROOT::Math::Factory::CreateMinimizer("GSLMultiMin", "ConjugatePR");
   gmin->SetMaxFunctionCalls(10000000); // for Minuit/Minuit2
   gmin->SetMaxIterations(1000000);  // for GSL
-  gmin->SetTolerance(0.0001);
+  gmin->SetTolerance(0.000001);
   gmin->SetPrintLevel(3);
   
 
@@ -179,12 +179,12 @@ double HL_nDimLikelihood::GetLogLikelihood(std::vector<double> theory, boost::nu
   
   gmin->SetFunction(f1);  
 
-  double step[2] = {0.01*sqrt(theory_cov(0,0)), 0.01*sqrt(theory_cov(1,1)) };
+  double step[2] = {0.05*sqrt(theory_cov(0,0)), 0.05*sqrt(theory_cov(1,1)) };
   double variable[2] = { theory[0], theory[1]};
 
   
-  gmin->SetVariable(0,"x",variable[0]-3.*sqrt(theory_cov(0,0)), step[0]);
-  gmin->SetVariable(1,"y",variable[1]-3.*sqrt(theory_cov(1,1)), step[1]);
+  gmin->SetVariable(0,"x",variable[0]+0.5*sqrt(theory_cov(0,0)), step[0]);
+  gmin->SetVariable(1,"y",variable[1]+0.5*sqrt(theory_cov(1,1)), step[1]);
 
   gmin->SetVariableInitialRange(0,theory[0]-5.*sqrt(theory_cov(0,0)), theory[0]+5.*sqrt(theory_cov(0,0)));
   gmin->SetVariableInitialRange(1,theory[1]-5.*sqrt(theory_cov(1,1)), theory[1]+5.*sqrt(theory_cov(1,1))); 
@@ -195,7 +195,6 @@ double HL_nDimLikelihood::GetLogLikelihood(std::vector<double> theory, boost::nu
   
   gmin->Minimize();
   const double *theory_nuisance = gmin->X();
-  std::cout<<"Found nusaince: "<<theory_nuisance[0]<<" "<<theory_nuisance[1]<<endl;
 
   if(theory_nuisance[0]>xmax) return loglikelihood_penalty;
   if(theory_nuisance[0]<xmin) return loglikelihood_penalty;
@@ -203,8 +202,6 @@ double HL_nDimLikelihood::GetLogLikelihood(std::vector<double> theory, boost::nu
   if(theory_nuisance[1]<ymin) return loglikelihood_penalty;
 
   bin=hist2D->FindBin(theory_nuisance[0], theory_nuisance[1]);  
-
-  cout<<"Compare: "<<theory_nuisance[0]<<" "<<theory[0]<<endl;
 
   
   double log_likelihood=hist2D->GetBinContent(bin);
@@ -289,7 +286,7 @@ void HL_nDimLikelihood::Profile()
           hist_profileY->SetBinContent(iy, min);
         }
     }
-  cout<<"?"<<endl;
+
   TFile *ftmp=new TFile("tmp.root", "RECREATE");
   hist_profileY->Write();
   hist_profileX->Write();
