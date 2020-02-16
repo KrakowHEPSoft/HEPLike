@@ -50,8 +50,10 @@ void HL_Gaussian::Read()
     }
       
 }
-double HL_Gaussian::GetChi2(double theory, double theory_err)
+double HL_Gaussian::GetChi2(double theory, double theory_var)
 {
+  double theory_err=sqrt(theory_var);
+
   double err2=HL_Sigma_stat*HL_Sigma_stat+ HL_Sigma_syst*HL_Sigma_syst+theory_err*theory_err;
   double chi2=(HL_Central-theory)*(HL_Central-theory)/err2;
   return chi2;

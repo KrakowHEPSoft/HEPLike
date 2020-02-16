@@ -94,8 +94,10 @@ double HL_ProfLikelihood::GetLogLikelihood(double theory)
   return loglikelihood;
 
 }
-double HL_ProfLikelihood::GetLogLikelihood(double theory, double theory_err)
+double HL_ProfLikelihood::GetLogLikelihood(double theory, double theory_veriance)
 {
+  double theory_err=sqrt(theory_veriance);
+
   if(theory < xmin || theory > xmax) return -1.e10;
   fun.SetTheory(theory,theory_err);
   ROOT::Math::Functor  f1(fun,1); 

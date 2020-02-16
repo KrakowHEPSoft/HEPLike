@@ -56,8 +56,9 @@ void HL_BifurGaussian::Read()
 
   cout<<HL_Sigma_stat_R<<" "<<HL_Sigma_stat_L<<" "<<HL_Sigma_syst_R<<" "<<HL_Sigma_syst_L<<endl;
 }
-double HL_BifurGaussian::GetChi2(double theory, double theory_err)
+double HL_BifurGaussian::GetChi2(double theory, double theory_var)
 {
+  double theory_err=sqrt(theory_var);
   double delta=HL_Central-theory;
   double chi2=0.;
   if(delta>0.)
