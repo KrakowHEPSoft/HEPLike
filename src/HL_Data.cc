@@ -39,7 +39,7 @@ void HL_Data::Read()
 {
   if(! initialized)
     {
-      std::cout << "TRYING TO READ WITHOUT GIVING ANY FILE!" << std::endl;
+      std::cout << "HEPLike Warning, TRYING TO READ WITHOUT GIVING ANY FILE!" << std::endl;
       return;
     }
   read_standard();

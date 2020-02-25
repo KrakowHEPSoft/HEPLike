@@ -25,7 +25,7 @@ void HL_nDimGaussian::Read()
 {
   if(! initialized)
     {
-      std::cout << "TRYING TO READ WITHOUT GIVING ANY FILE!" << std::endl;
+      std::cout << "HL_nDimGaussian, TRYING TO READ WITHOUT GIVING ANY FILE!" << std::endl;
       return;
     }
   read_standard();

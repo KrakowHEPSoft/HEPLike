@@ -22,7 +22,7 @@ void HL_Limit::Read()
 {
   if(! initialized)
     {
-      std::cout << "TRYING TO READ WITHOUT GIVING ANY FILE!" << std::endl;
+      std::cout << "HL_Limit, warninig, TRYING TO READ WITHOUT GIVING ANY FILE!" << std::endl;
       return;
     }
   read_standard();

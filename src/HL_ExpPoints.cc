@@ -26,7 +26,7 @@ void HL_ExpPoints::Read()
 {
   if(! initialized)
     {
-      std::cout << "TRYING TO READ WITHOUT GIVING ANY FILE!" << std::endl;
+      std::cout << "HL_ExpPoints warning, TRYING TO READ WITHOUT GIVING ANY FILE!" << std::endl;
       return;
     }
 
@@ -37,7 +37,7 @@ void HL_ExpPoints::Read()
   if( config["ROOTData"])  HL_RootFile=config["ROOTData"].as<std::string>();
   else
     {
-      std::cout<<"You didn't provide a root file!!! HL_ExpPoints class is protesting!"<<std::endl;
+      std::cout<<"HL_ExpPoints warning, You didn't provide a root file!!! HL_ExpPoints class is protesting!"<<std::endl;
     }
   
   if(config["TTreePath"]) HL_PATH=config["TTreePath"].as<std::string>();
@@ -46,7 +46,7 @@ void HL_ExpPoints::Read()
   HL_tree=dynamic_cast<TTree*>(f->Get(HL_PATH.c_str()));
   if(config["Weight"]) HL_weight=config["Weight"].as<std::string>();   
   else{
-    std::cout<<"You didn't provide a weight name!!! HL_ExpPoints class is protesting!"<<std::endl;
+    std::cout<<"HL_ExpPoints warning, You didn't provide a weight name!!! HL_ExpPoints class is protesting!"<<std::endl;
   }
   if(config["Observables"])
     {
@@ -57,10 +57,10 @@ void HL_ExpPoints::Read()
         }
     }// if Observables exist
   else{
-    std::cout<<"You didn't provide a observable name!!! HL_ExpPoints class is protesting!"<<std::endl;
+    std::cout<<"HL_ExpPoints warning, You didn't provide a observable name!!! HL_ExpPoints class is protesting!"<<std::endl;
   }
   bool success=InitData();
-  if(!success ) std::cout<<"HL_ExpPoints couldn't read data points!!! HL_ExpPoints class is protesting!"<<std::endl;
+  if(!success ) std::cout<<"HL_ExpPoints warning, HL_ExpPoints couldn't read data points!!! HL_ExpPoints class is protesting!"<<std::endl;
   
 
 
@@ -84,7 +84,6 @@ bool HL_ExpPoints::InitData()
   
   
   // storing data points in memory:
-  cout<<entries<<endl;
   for(unsigned i=0; i < entries; ++i)
     {
       HL_tree->GetEntry(i);

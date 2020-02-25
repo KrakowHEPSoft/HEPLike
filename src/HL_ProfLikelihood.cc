@@ -24,7 +24,7 @@ void HL_ProfLikelihood::Read()
 {
   if(! initialized)
     {
-      std::cout << "TRYING TO READ WITHOUT GIVING ANY FILE!" << std::endl;
+      std::cout << "HL_ProfLikelihood Warning, TRYING TO READ WITHOUT GIVING ANY FILE!" << std::endl;
       return;
     }
 

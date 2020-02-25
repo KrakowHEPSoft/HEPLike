@@ -25,7 +25,7 @@ void HL_nDimLikelihood::Read()
 {
   if(! initialized)
     {
-      std::cout << "TRYING TO READ WITHOUT GIVING ANY FILE!" << std::endl;
+      std::cout << "HL_nDimLikelihood Warning, TRYING TO READ WITHOUT GIVING ANY FILE!" << std::endl;
       return;
     }
   read_standard();
@@ -228,7 +228,7 @@ void HL_nDimLikelihood::Profile()
           hist_profileY->SetBinContent(iy, min);
         }
     }
-  cout<<"?"<<endl;
+
   TFile *ftmp=new TFile("tmp.root", "RECREATE");
   hist_profileY->Write();
   hist_profileX->Write();

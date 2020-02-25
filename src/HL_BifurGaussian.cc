@@ -22,7 +22,7 @@ void HL_BifurGaussian::Read()
 {
   if(! initialized)
     {
-      std::cout << "TRYING TO READ WITHOUT GIVING ANY FILE!" << std::endl;
+      std::cout << "HL_BifurGaussian Warning, TRYING TO READ WITHOUT GIVING ANY FILE!" << std::endl;
       return;
     }
 
@@ -54,7 +54,7 @@ void HL_BifurGaussian::Read()
       std::cout<<"Error in the HL_BifurGaussian class, your yaml file has missing Observables"<<std::endl;
     }
 
-  cout<<HL_Sigma_stat_R<<" "<<HL_Sigma_stat_L<<" "<<HL_Sigma_syst_R<<" "<<HL_Sigma_syst_L<<endl;
+  //  cout<<HL_Sigma_stat_R<<" "<<HL_Sigma_stat_L<<" "<<HL_Sigma_syst_R<<" "<<HL_Sigma_syst_L<<endl;
 }
 double HL_BifurGaussian::GetChi2(double theory, double theory_err)
 {
