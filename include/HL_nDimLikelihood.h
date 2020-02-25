@@ -40,49 +40,76 @@
 #include "Math/Minimizer.h"
 #include "Math/Factory.h"
 #include "Math/Functor.h"
+#include "Math/IFunction.h"  
 #include "TRandom2.h"
 #include "TError.h"
 
 
-/*
-class MyFunction: public ROOT::Math::IBaseFunctionMultiDim{
 
+class MyFunction2D: public ROOT::Math::IBaseFunctionMultiDim{
  public:
   double DoEval(const double* theory_nuisance) const{
-
-    bin=hist2D->FindBin(theory_nuisance[0], theory_nuisance[1]);    
-
-    double log_likelihood=-hist2D->GetBinContent(bin); 
+    double loglikelihood_penalty=1e10;
+    int bin;
+    bin=likelihood->FindBin(theory_nuisance[0], theory_nuisance[1]);
+    double xmin=likelihood->GetXaxis()->GetXmin();
+    double xmax=likelihood->GetXaxis()->GetXmax();
+    double ymin=likelihood->GetYaxis()->GetXmin();
+    double ymax=likelihood->GetYaxis()->GetXmax();
+    if(theory_nuisance[0]>xmax) return loglikelihood_penalty;
+    if(theory_nuisance[0]<xmin) return loglikelihood_penalty;
+    if(theory_nuisance[1]>ymax) return loglikelihood_penalty;
+    if(theory_nuisance[1]<ymin) return loglikelihood_penalty;
     
-
     
-    double gauss_systematic=HL_Stats::gauss(theory_nuisance, theory_mean, theory_err);
-    return loglike-log(gauss_systematic);// here the logligek is -\Delta LL so no minus before
+    double negative_LL=likelihood->GetBinContent(bin);
+    
+    double chi2=0.;
+    double diff[2];
+    for(unsigned i=0; i < 2; i++)
+      {
+        diff[i]=theory_nuisance[i]-theory_mean[i];
+      }
+    boost::numeric::ublas::matrix<double>theory_cov_inv(2,2);
+    
+    HL_Stats::InvertMatrix(theory_cov, theory_cov_inv);
+    
+    
+    for(unsigned i=0; i <2 ; i++)
+      {
+        for(unsigned j=0; j< 2 ;  j++)
+          {
+            chi2+=diff[i] * theory_cov_inv(i,j)*diff[j] ; 
+          }
+      }
+    //
+    double deltaLL= 0.5*chi2;
+
+    return (deltaLL+negative_LL); // here both are negative likelihoods that needs to be mimalized
+
   }
-  ROOT::Math::IBaseFunctionOneDim* Clone() const{
-    return new MyFunction();
+  ROOT::Math::IBaseFunctionMultiDim* Clone() const{
+    return new MyFunction2D();
   }
-  void SetLikelihood(TH2D *l)
+  void SetLikelihood(TH2D *h)
   {
-    hist2D=l;
-  };
-  void SetTheory(double *mean, double *cov)
+    likelihood=h;
+  }
+  void SetTheory(vector<double> mean, boost::numeric::ublas::matrix<double> cov)
   {
     theory_mean=mean;
-    theory_err=err;
-  };
-
+    theory_cov=cov;
+  }
+  unsigned int NDim() const{
+    return 2;
+  }
  private:
-  double theory_mean;
-  double theory_err;
-  TH2D *hist2D
+
+  vector <double> theory_mean;
+  boost::numeric::ublas::matrix<double> theory_cov;
+  TH2D *likelihood;
 
 };
-
-
-*/
-
-
 
 
 
@@ -99,11 +126,11 @@ class HL_nDimLikelihood: public HL_Data
   
   void Read();
   double GetChi2( std::vector<double> theory) ;
+  double GetChi2( std::vector<double> theory,  boost::numeric::ublas::matrix<double> theory_cov);
   double GetLikelihood( std::vector<double> theory) ;  
+  double GetLikelihood(std::vector<double> theory, boost::numeric::ublas::matrix<double> theory_cov);
   double GetLogLikelihood(  std::vector<double> theory) ;  
-  //bool Restrict(std::vector<std::string>);
-  double GetLogLikelihood(  std::vector<double> theory, std::vector<double> theory_error) ;
-  
+  double GetLogLikelihood(std::vector<double> theory, boost::numeric::ublas::matrix<double> theory_cov);
 
   
   void Profile();
@@ -111,9 +138,10 @@ class HL_nDimLikelihood: public HL_Data
   double GetLikelihood_profile( double theory, std::string axis) ;
   double GetLogLikelihood_profile(  double theory, std::string X);
   
+  std::vector<std::string> GetObservables(){ return Observables;};  
   
   double loglikelihood_penalty;
-
+  TH1* GetHist(){ return hist;}; 
   
  private:
 
@@ -154,7 +182,10 @@ class HL_nDimLikelihood: public HL_Data
   bool profiled;
 
 
-
+  // for minimaization
+  ROOT::Math::Minimizer* gmin;
+  MyFunction2D fun;   
+  
   
   
 };
