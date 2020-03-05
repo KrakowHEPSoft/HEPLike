@@ -235,6 +235,7 @@ double HL_nDimGaussian::GetChi2(std::vector<double> theory , boost::numeric::ubl
       size_restricted=NoOfObservables;
 
       HL_cov_restricted+=theory_cov;
+      cout<<"experimental cov1: "<<HL_cov_restricted<<endl;
       HL_Stats::InvertMatrix(HL_cov_restricted,HL_cov_inv_restricted);
       
       
@@ -242,6 +243,7 @@ double HL_nDimGaussian::GetChi2(std::vector<double> theory , boost::numeric::ubl
     }
     if(restricted)
       {
+        cout<<"experimental cov2: "<<HL_cov_restricted<<endl;       
         HL_cov_restricted+=theory_cov;
         HL_Stats::InvertMatrix(HL_cov_restricted,HL_cov_inv_restricted);
       }
