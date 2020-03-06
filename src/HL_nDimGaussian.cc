@@ -127,7 +127,6 @@ void HL_nDimGaussian::Read()
 }
 bool HL_nDimGaussian::Restrict(std::vector<std::string> names)
 {
-  cout<<"Calling restriction"<<endl;
 
   size_restricted=  names.size();
   std::vector<int> indexes;
@@ -216,7 +215,6 @@ double HL_nDimGaussian::GetLikelihood(std::vector<double> theory)
 
 double HL_nDimGaussian::GetChi2(std::vector<double> theory , boost::numeric::ublas::matrix<double> theory_cov)
 {
-  cout<<"Test cov: "<<HL_cov<<endl;
   
   if(theory_cov.size1() != theory.size() )
     {
@@ -238,7 +236,6 @@ double HL_nDimGaussian::GetChi2(std::vector<double> theory , boost::numeric::ubl
       size_restricted=NoOfObservables;
 
       HL_cov_restricted+=theory_cov;
-      cout<<"experimental cov1: "<<HL_cov_restricted<<endl;
       HL_Stats::InvertMatrix(HL_cov_restricted,HL_cov_inv_restricted);
       
       
@@ -246,7 +243,6 @@ double HL_nDimGaussian::GetChi2(std::vector<double> theory , boost::numeric::ubl
     }
   else
       {
-        cout<<"experimental cov2: "<<HL_cov_restricted<<endl;       
         HL_cov_restricted+=theory_cov;
         HL_Stats::InvertMatrix(HL_cov_restricted,HL_cov_inv_restricted);
       }
