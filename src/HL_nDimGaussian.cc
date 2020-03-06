@@ -216,6 +216,8 @@ double HL_nDimGaussian::GetLikelihood(std::vector<double> theory)
 
 double HL_nDimGaussian::GetChi2(std::vector<double> theory , boost::numeric::ublas::matrix<double> theory_cov)
 {
+  cout<<"Test cov: "<<HL_cov<<endl;
+  
   if(theory_cov.size1() != theory.size() )
     {
       std::cout<<"Error in HL_nDimGaussian::GetChi2, you had different dimensions in theory and cov matrix"<<std::endl;
