@@ -241,7 +241,7 @@ double HL_nDimGaussian::GetChi2(std::vector<double> theory , boost::numeric::ubl
       
       restricted=true;
     }
-    if(restricted)
+  else
       {
         cout<<"experimental cov2: "<<HL_cov_restricted<<endl;       
         HL_cov_restricted+=theory_cov;
