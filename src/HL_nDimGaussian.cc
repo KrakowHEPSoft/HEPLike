@@ -127,6 +127,8 @@ void HL_nDimGaussian::Read()
 }
 bool HL_nDimGaussian::Restrict(std::vector<std::string> names)
 {
+  cout<<"Calling restriction"<<endl;
+
   size_restricted=  names.size();
   std::vector<int> indexes;
   for(int i=0 ; i<NoOfObservables ; i++)
@@ -154,7 +156,6 @@ bool HL_nDimGaussian::Restrict(std::vector<std::string> names)
         }
     }
   restricted=true;
-  HL_Stats::InvertMatrix(HL_cov_restricted,HL_cov_inv_restricted);
 
 
   return true;
@@ -173,7 +174,7 @@ double HL_nDimGaussian::GetChi2(std::vector<double> theory)  //, double theory_e
       //HL_Stats::inverse(HL_correlation_restricted, size_restricted);
       size_restricted=NoOfObservables;
       HL_Stats::InvertMatrix(HL_cov_restricted,HL_cov_inv_restricted);
-      restricted=true;
+      //     restricted=true;
     }
   // now calculating chi2
   double chi2=0;
@@ -239,7 +240,7 @@ double HL_nDimGaussian::GetChi2(std::vector<double> theory , boost::numeric::ubl
       HL_Stats::InvertMatrix(HL_cov_restricted,HL_cov_inv_restricted);
       
       
-      restricted=true;
+      //      restricted=true;
     }
   else
       {
