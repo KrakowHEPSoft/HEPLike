@@ -150,13 +150,15 @@ double HL_nDimLikelihood::GetLogLikelihood(std::vector<double> theory)
   if(theory[0]<xmin) return loglikelihood_penalty;   
   if(theory[1]>ymax) return loglikelihood_penalty;
   if(theory[1]<ymin) return loglikelihood_penalty;
-    
+  /*
   if(theory.size() ==2)
     {
       bin=hist2D->FindBin(theory[0], theory[1]);
 
     }
-  double log_likelihood=hist2D->GetBinContent(bin);
+    double log_likelihood=hist2D->GetBinContent(bin);
+  */
+  double log_likelihood=hist2D->Interpolate (theory[0], theory[1]); 
   return (-1.)*log_likelihood;
 }
 
@@ -207,14 +209,15 @@ double HL_nDimLikelihood::GetLogLikelihood(std::vector<double> theory, boost::nu
   if(theory_nuisance[0]<xmin) return loglikelihood_penalty;
   if(theory_nuisance[1]>ymax) return loglikelihood_penalty;
   if(theory_nuisance[1]<ymin) return loglikelihood_penalty;
-
+  /*
   bin=hist2D->FindBin(theory_nuisance[0], theory_nuisance[1]);  
-
   
   double log_likelihood=hist2D->GetBinContent(bin);
-  return (-1.)*log_likelihood;
-  
+  */
+  double log_likelihood=hist2D->Interpolate(theory_nuisance[0], theory_nuisance[1]);      
 
+
+  return (-1.)*log_likelihood;
 }
 
 
