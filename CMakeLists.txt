@@ -56,10 +56,31 @@ add_definitions(${ROOT_CXX_FLAGS})
 
 ###########################
 #
+#    Config   Variables
+#
+###########################
+if(NOT DEFINED EXECUTABLE)
+  set(EXECUTABLE FALSE)
+endif()
+
+if(NOT DEFINED USE_ROOT)
+  set(USE_ROOT TRUE)
+endif()
+
+
+###########################
+#
 #    Libraries
 #
 ###########################
-file(GLOB HL_SOURCES ${CMAKE_SOURCE_DIR}/src/*.cc)
+if(USE_ROOT)
+
+  file(GLOB HL_SOURCES ${CMAKE_SOURCE_DIR}/src/*.cc)
+else()
+  file(GLOB HL_SOURCES ${CMAKE_SOURCE_DIR}/src/HL_Stats.cc ${CMAKE_SOURCE_DIR}/src/HL_nDimGaussian.cc ${CMAKE_SOURCE_DIR}/src/HL_nDimBifurGaussian.cc ${CMAKE_SOURCE_DIR}/src/HL_Limit.cc ${CMAKE_SOURCE_DIR}/src/HL_Gaussian.cc ${CMAKE_SOURCE_DIR}/src/HL_Data.cc ${CMAKE_SOURCE_DIR}/src/HL_BifurGaussian.cc )
+
+endif()  
+
 add_library(HEPLike_static ${HL_SOURCES})
 add_library(HEPLike_shared SHARED ${HL_SOURCES})
 set_target_properties(HEPLike_static PROPERTIES OUTPUT_NAME HEPLike)
@@ -73,7 +94,7 @@ target_link_libraries(HEPLike_shared PRIVATE ${ROOT_LIBRARIES} ${Boost_LIBRARIES
 #
 ###########################
 
-if(EXECUTABLE)
+if(EXECUTABLE AND USE_ROOT)
   
   execute_process (
     COMMAND bash -c "ln -s ../data_toy/ data"
