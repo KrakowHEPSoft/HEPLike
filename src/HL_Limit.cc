@@ -26,29 +26,62 @@ void HL_Limit::Read()
       return;
     }
   read_standard();
-  
+  useUL=false;
+  UL90CL=-1.;
+  UL95CL=-1.;
   YAML::Node node;
+  // case where we have a p-value scan:
   if( config["Cls"]) node= config["Cls"];
   else if(  config["p-value"] )  node= config["p-value"] ;
-
-  for(YAML::const_iterator it = node.begin(); it != node.end();  ++it )
+  if(node)
     {
-      //std::cout << *it << std::endl;
-      //std::cout << (*it)[0] <<  std::endl;   
-      CLs.push_back( ((*it)[1]).as<double>()  );
-      BR.push_back( ((*it)[0]).as<double>()  ); 
+      for(YAML::const_iterator it = node.begin(); it != node.end();  ++it )
+        {
+          //std::cout << *it << std::endl;
+          //std::cout << (*it)[0] <<  std::endl;   
+          CLs.push_back( ((*it)[1]).as<double>()  );
+          BR.push_back( ((*it)[0]).as<double>()  ); 
+        }
+    }
+  // case where we have just UL:
+  if(config["UL90CL"])
+    {
+      UL90CL=config["UL90CL"].as<double>();
+      useUL=true;
+    }
+  if(config["UL95CL"])
+    {
+      UL95CL=config["UL95CL"].as<double>();
+      useUL=true;
     }
 
+      
 };
 double HL_Limit::GetChi2(double br)
 {
-  double cls=GetCLs(br) ;
-  //std::cout<<gsl_cdf_gaussian_P(1., 1)-gsl_cdf_gaussian_P(-1., 1.)<<std::endl;
-  //double nsigma=0.001;
-  //double dsigma=0.0001;
-  //double p=0;
-  double chi2=gsl_cdf_chisq_Pinv(1-cls,1);
+  double chi2;
+  
+  if(useUL== false)
+    {
+      double cls=GetCLs(br) ;
+      chi2=gsl_cdf_chisq_Pinv(1-cls,1);
+    }
+  else
+    {
+      double error;
+      if(UL95CL>0.)
+        {
+          error=fabs(0. - UL95CL)/1.64;  
+        }
+      else if(UL90CL>0.)
+        {
+          error = fabs(0. - UL90CL)/1.28; 
+        }
+      double likelihood=HL_Stats::gaussian_upper_limit(br, 0., 0., error, false);
+      double loglikelihood=log(likelihood);
+      chi2=loglikelihood*(-2.);
 
+    }
   return chi2;
 }
 double HL_Limit::GetLogLikelihood(double br)

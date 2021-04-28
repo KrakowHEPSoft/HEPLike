@@ -47,6 +47,9 @@ class HL_Limit: public HL_Data
  protected:
   std::vector<double> CLs;
   std::vector<double> BR;
+  double UL90CL;
+  double UL95CL;
+  bool useUL;
   
   //private:
   //double GetCLs(double val);//, std::vector<double> br, std::vector<double> cls);
