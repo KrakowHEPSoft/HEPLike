@@ -72,7 +72,8 @@ void HL_nDimLikelihood::Read()
   TFile *f= new TFile(HL_RootFile.c_str(), "READ");
   if(dim==2)
     {
-      hist2D=dynamic_cast<TH2D*>(f->Get(HL_PATH.c_str()));
+      TH2D *hist2D_tmp=dynamic_cast<TH2D*>(f->Get(HL_PATH.c_str()));
+      hist2D=dynamic_cast<TH2D*>(hist2D_tmp->Clone());
       n_binsX=hist2D->GetNbinsX();
       n_binsY=hist2D->GetNbinsY();
       n_binsZ=hist2D->GetNbinsZ();
@@ -81,7 +82,9 @@ void HL_nDimLikelihood::Read()
     }
   else if(dim==3)
     {
-      hist3D=dynamic_cast<TH3D*>(f->Get(HL_PATH.c_str()));
+      TH3D *hist3D_tmp=dynamic_cast<TH3D*>(f->Get(HL_PATH.c_str()));
+      hist3D=dynamic_cast<TH3D*>(hist3D_tmp->Clone());
+      
 
       n_binsX=hist3D->GetNbinsX();
       n_binsY=hist3D->GetNbinsY();
@@ -112,7 +115,7 @@ void HL_nDimLikelihood::Read()
 
 
     }
-
+  f->Close();
     
   profiled=false;
   gmin=ROOT::Math::Factory::CreateMinimizer("GSLMultiMin", "ConjugatePR");
@@ -308,6 +311,10 @@ void HL_nDimLikelihood::Profile()
   TFile *ftmp=new TFile("tmp.root", "RECREATE");
   hist_profileY->Write();
   hist_profileX->Write();
+  hist_profileY->Delete();
+  hist_profileX->Delete();
+    
+
   if(dim==2) return;
 
   hist_profileZ=new TH1D("profZ", "profZ", n_binsZ,zmin, zmax);       
@@ -324,8 +331,9 @@ void HL_nDimLikelihood::Profile()
         }
       hist_profileZ->SetBinContent(iz, min);
     }
-  
-
+  hist_profileZ->Write();
+  hist_profileZ->Delete();
+  ftmp->Close();
 }
 double HL_nDimLikelihood::GetLogLikelihood_profile(  double theory, std::string X)
 {
@@ -337,6 +345,7 @@ double HL_nDimLikelihood::GetLogLikelihood_profile(  double theory, std::string 
       return -log_likelihood;
     }
   else if(X==Observables[1])
+
     {
       int  bin= hist_profileY->FindBin(theory);
       double log_likelihood=hist_profileY->GetBinContent(bin);
