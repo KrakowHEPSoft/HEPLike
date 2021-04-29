@@ -71,14 +71,14 @@ double HL_Limit::GetChi2(double br)
       double error;
       if(UL95CL>0.)
         {
-          error=fabs(0. - UL95CL)/1.64;  
+          error=fabs(0. - UL95CL)/1.96;  
         }
       else if(UL90CL>0.)
         {
-          error = fabs(0. - UL90CL)/1.28; 
+          error = fabs(0. - UL90CL)/1.64; 
         }
-      double likelihood=HL_Stats::gaussian_upper_limit(br, 0., 0., error, false);
-      double loglikelihood=log(likelihood);
+      double loglikelihood=HL_Stats::gaussian_upper_limit(br, 0., 0., error, false);
+      
       chi2=loglikelihood*(-2.);
 
     }

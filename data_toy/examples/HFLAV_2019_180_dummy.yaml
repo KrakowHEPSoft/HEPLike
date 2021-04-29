@@ -1,0 +1,14 @@
+FileName: HFLAV_2019_180.yaml
+Name: HFLAV_2019_180
+DOI: NON_YET3
+BibCite: NON_YET1
+BibEntry: NON_YET2
+Arxiv: "1233.2312"
+SubmissionYear: 2018
+PublicationYear: 2019
+Collaborations: "LHCb CMS ATLAS"
+ExperimentalDataLumi: 400
+ExperimentalDataYears: "2011,2012,2015"
+Decay: "tau -> mu mu mu"
+Kinematics: "q2> 1.2 && q2< 5"
+UL90CL: 9.9e-9

@@ -40,7 +40,10 @@ int main (int argc, char *argv[])
   vector<double> like;
   vector<double> like_fake;
 
-
+  HL_Limit *limit2 = new HL_Limit("data/examples/HFLAV_2019_180_dummy.yaml");
+  limit2->Read();
+  
+  
   double max1=-1.e10;
   double max2=-1.e10;
   
@@ -50,12 +53,15 @@ int main (int argc, char *argv[])
       BR.push_back(br);
       double tmp_like_p=limit->GetLogLikelihood(br);
       like.push_back(tmp_like_p);
+      double tmp_like=limit2->GetLogLikelihood(br); 
+      like_fake.push_back(tmp_like);
 
+      /*
       double error= fabs(9.9e-9)/1.64; 
-      double tmp_like=HL_Stats::gaussian_upper_limit(br, 0. ,0.,  error, false);
+      double tmp_ like=HL_Stats::gaussian_upper_limit(br, 0. ,0.,  error, false);
       cout<<br<<"  "<<   tmp_like_p<<"  "<<tmp_like<<endl; 
       like_fake.push_back(tmp_like);
-      
+      */
       if(tmp_like_p > max1) max1=tmp_like_p;
       if(tmp_like > max2) max2=tmp_like;
 
