@@ -318,8 +318,8 @@ void HL_nDimLikelihood::Profile()
   TFile *ftmp=new TFile("tmp.root", "RECREATE");
   hist_profileY->Write();
   hist_profileX->Write();
-  hist_profileY->Delete();
-  hist_profileX->Delete();
+  //hist_profileY->Delete();
+  //hist_profileX->Delete();
     
 
   if(dim==2) return;
@@ -339,8 +339,9 @@ void HL_nDimLikelihood::Profile()
       hist_profileZ->SetBinContent(iz, min);
     }
   hist_profileZ->Write();
-  hist_profileZ->Delete();
+  //  hist_profileZ->Delete();
   ftmp->Close();
+  ftmp->Delete();
 }
 double HL_nDimLikelihood::GetLogLikelihood_profile(  double theory, std::string X)
 {
