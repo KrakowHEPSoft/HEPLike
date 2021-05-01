@@ -50,7 +50,7 @@ find_package(GSL REQUIRED)
 find_package(ROOT REQUIRED COMPONENTS MathCore RIO Hist Tree Net)
 
 include(${ROOT_USE_FILE})
-include_directories(${CMAKE_SOURCE_DIR}/include ${ROOT_INCLUDE_DIRS})
+include_directories(${CMAKE_SOURCE_DIR}/include ${ROOT_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 add_definitions(${ROOT_CXX_FLAGS})
 
 
