@@ -30,7 +30,7 @@ void HL_nDimLikelihood::Read()
     }
   read_standard();
   loglikelihood_penalty=-1.e6;
-  
+
   if( config["ROOTData"])
     {
       HL_RootFile=config["ROOTData"].as<std::string>();
@@ -57,7 +57,7 @@ void HL_nDimLikelihood::Read()
     {
       std::cout<<"You didn't profice a root file!!! HL_ProfLikelihood class is protesting!"<<std::endl;
     }
-  
+
   if(config["TH2Path"])
     {
       HL_PATH=config["TH2Path"].as<std::string>();
@@ -74,6 +74,11 @@ void HL_nDimLikelihood::Read()
     {
       TH2D *hist2D_tmp=dynamic_cast<TH2D*>(f->Get(HL_PATH.c_str()));
       hist2D=dynamic_cast<TH2D*>(hist2D_tmp->Clone());
+      hist2D->SetDirectory(0);
+      hist2D_tmp->Delete();
+      
+      //delete hist2D_tmp;
+      
       n_binsX=hist2D->GetNbinsX();
       n_binsY=hist2D->GetNbinsY();
       n_binsZ=hist2D->GetNbinsZ();
@@ -84,7 +89,9 @@ void HL_nDimLikelihood::Read()
     {
       TH3D *hist3D_tmp=dynamic_cast<TH3D*>(f->Get(HL_PATH.c_str()));
       hist3D=dynamic_cast<TH3D*>(hist3D_tmp->Clone());
-      
+      hist3D->SetDirectory(0) ;
+      hist3D_tmp->Delete();
+      //delete hist3D_tmp;
 
       n_binsX=hist3D->GetNbinsX();
       n_binsY=hist3D->GetNbinsY();
@@ -116,7 +123,7 @@ void HL_nDimLikelihood::Read()
 
     }
   f->Close();
-    
+  delete f;
   profiled=false;
   gmin=ROOT::Math::Factory::CreateMinimizer("GSLMultiMin", "ConjugatePR");
   gmin->SetMaxFunctionCalls(10000000); // for Minuit/Minuit2

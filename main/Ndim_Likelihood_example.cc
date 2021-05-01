@@ -45,8 +45,12 @@ int main (int argc, char *argv[])
   HL_nDimLikelihood *br = new HL_nDimLikelihood(pwd+"/data/examples/b2mumu.yaml");
   br->Read();
 
+  cout<<"AA"<<endl;
+  
   TH2D *hist=dynamic_cast<TH2D*>(br->GetHist());
+  cout<<"AA"<<endl;
   TH2D *hist_post=dynamic_cast<TH2D*>(hist->Clone("AA"));
+  cout<<"AA"<<endl;
   boost::numeric::ublas::matrix<double> theory_cov(2,2);
   theory_cov(0,0)=(6.e-9)*(6.e-9)*0.1*0.1;
   theory_cov(1,1)=(4.e-10)*(4.e-10)*0.1*0.1;  
