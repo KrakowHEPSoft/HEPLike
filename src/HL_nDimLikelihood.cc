@@ -23,6 +23,9 @@ using namespace std;
 
 void HL_nDimLikelihood::Read()
 {
+
+  // Note: amended to allow text file input for 2D arrays
+  
   if(! initialized)
     {
       std::cout << "HL_nDimLikelihood Warning, TRYING TO READ WITHOUT GIVING ANY FILE!" << std::endl;
@@ -31,86 +34,128 @@ void HL_nDimLikelihood::Read()
   read_standard();
   loglikelihood_penalty=-1.e6;
 
-  if( config["ROOTData"])
-    {
-      HL_RootFile=config["ROOTData"].as<std::string>();
-      // the HL_RootFile is something like data/RD/... but we need the absolute path:
-      int pos=HFile.find("/data/");
-      //string path=HFile.substr (0, pos);
-      if(pos<0) std::cout<<"Error in HL_nDimLikelihood, didn't find 'data'"<<std::endl;
-      while(true)
-        {
-          int pos_new=HFile.find("/data/", pos+1);
-          if(pos_new>0)
-            {
-              pos=pos_new;
-            }
-          else break;
-        }
-      string path=HFile.substr (0, pos);
+  //Always use text input if it is available (avoids potential mem issues)
 
+  if( config["TextData"])
+    {
+    std::cout << "HL_nDimLikelihood is using text input" << std::endl;
+    int pos=HFile.find("/data/");
+	//string path=HFile.substr (0, pos);
+	if(pos<0) std::cout<<"Error in HL_nDimLikelihood, didn't find 'data'"<<std::endl;
+	while(true)
+	  {
+	    int pos_new=HFile.find("/data/", pos+1);
+	    if(pos_new>0)
+	      {
+		pos=pos_new;
+	      }
+	    else break;
+	  }
+	string path=HFile.substr (0, pos);
+		
+	std::string filename=path+"/"+config["TextData"].as<std::string>();
+	std::cout << "Opening file " << filename << std::endl;
+	std::ifstream in(filename.c_str());
+	in >> n_binsX >> xmin >> xmax >> n_binsY >> ymin >> ymax;
+	hist2D = new TH2D("HLhist","HLhist",n_binsX,xmin,xmax,n_binsY,ymin,ymax);
 
-      path=path+"/"+HL_RootFile;
-      HL_RootFile=path;
-    }
-  else
-    {
-      std::cout<<"You didn't profice a root file!!! HL_ProfLikelihood class is protesting!"<<std::endl;
-    }
-
-  if(config["TH2Path"])
-    {
-      HL_PATH=config["TH2Path"].as<std::string>();
-      dim=2;
-    }
-  else if(config["TH3Path"])
-    {
-      HL_PATH=config["TH3Path"].as<std::string>();
-      dim=3;
-    }
-
-  TFile *f= new TFile(HL_RootFile.c_str(), "READ");
-  if(dim==2)
-    {
-      TH2D *hist2D_tmp=dynamic_cast<TH2D*>(f->Get(HL_PATH.c_str()));
-      hist2D=dynamic_cast<TH2D*>(hist2D_tmp->Clone());
-      hist2D->SetDirectory(0);
-      hist2D_tmp->Delete();
-      
-      //delete hist2D_tmp;
-      
-      n_binsX=hist2D->GetNbinsX();
-      n_binsY=hist2D->GetNbinsY();
-      n_binsZ=hist2D->GetNbinsZ();
-      hist=hist2D;
+	for(int x=0;x<n_binsX+1;x++){
+	  for(int y=0;y<n_binsY+1;y++){
+	    double bx,by,binc;
+	    in >> bx >> by>> binc;
+	    hist2D->SetBinContent(bx,by,binc);
+	  }
+	}
+	in.close();
+	hist=hist2D;
 
     }
-  else if(dim==3)
-    {
-      TH3D *hist3D_tmp=dynamic_cast<TH3D*>(f->Get(HL_PATH.c_str()));
-      hist3D=dynamic_cast<TH3D*>(hist3D_tmp->Clone());
-      hist3D->SetDirectory(0) ;
-      hist3D_tmp->Delete();
-      //delete hist3D_tmp;
-
-      n_binsX=hist3D->GetNbinsX();
-      n_binsY=hist3D->GetNbinsY();
-      n_binsZ=hist3D->GetNbinsZ();
-      hist=hist3D;
-
-    }
-  xmin=hist->GetXaxis()->GetXmin();
-  xmax=hist->GetXaxis()->GetXmax();
-  ymin=hist->GetYaxis()->GetXmin();
-  ymax=hist->GetYaxis()->GetXmax();
-  zmin=0.;
-  zmax=0.;
-  if(dim==3)
-    {
-      zmin=hist->GetZaxis()->GetXmin();
-      zmax=hist->GetZaxis()->GetXmax();
-    }
-
+  else {
+    
+    if( config["ROOTData"])
+      {
+	HL_RootFile=config["ROOTData"].as<std::string>();
+	// the HL_RootFile is something like data/RD/... but we need the absolute path:
+	int pos=HFile.find("/data/");
+	//string path=HFile.substr (0, pos);
+	if(pos<0) std::cout<<"Error in HL_nDimLikelihood, didn't find 'data'"<<std::endl;
+	while(true)
+	  {
+	    int pos_new=HFile.find("/data/", pos+1);
+	    if(pos_new>0)
+	      {
+		pos=pos_new;
+	      }
+	    else break;
+	  }
+	string path=HFile.substr (0, pos);
+		
+	path=path+"/"+HL_RootFile;
+	HL_RootFile=path;
+      }
+    else
+      {
+	
+	std::cout<<"You didn't provide a root file for a text file!!! HL_nDimLikelihood class is protesting!"<<std::endl;
+      }
+    
+    
+    if(config["TH2Path"])
+      {
+	HL_PATH=config["TH2Path"].as<std::string>();
+	dim=2;
+      }
+    else if(config["TH3Path"])
+      {
+	HL_PATH=config["TH3Path"].as<std::string>();
+	dim=3;
+      }
+    cout<<"here"<<endl;
+    TFile *f= new TFile(HL_RootFile.c_str(), "READ");
+    if(dim==2)
+      {
+	TH2D *hist2D_tmp=dynamic_cast<TH2D*>(f->Get(HL_PATH.c_str()));
+	hist2D=dynamic_cast<TH2D*>(hist2D_tmp->Clone());
+	hist2D->SetDirectory(0);
+	hist2D_tmp->Delete();
+	
+	//delete hist2D_tmp;
+	
+	n_binsX=hist2D->GetNbinsX();
+	n_binsY=hist2D->GetNbinsY();
+	n_binsZ=hist2D->GetNbinsZ();
+	hist=hist2D;
+	
+      }
+    else if(dim==3)
+      {
+	TH3D *hist3D_tmp=dynamic_cast<TH3D*>(f->Get(HL_PATH.c_str()));
+	hist3D=dynamic_cast<TH3D*>(hist3D_tmp->Clone());
+	hist3D->SetDirectory(0) ;
+	hist3D_tmp->Delete();
+	//delete hist3D_tmp;
+	
+	n_binsX=hist3D->GetNbinsX();
+	n_binsY=hist3D->GetNbinsY();
+	n_binsZ=hist3D->GetNbinsZ();
+	hist=hist3D;
+	
+      }
+    xmin=hist->GetXaxis()->GetXmin();
+    xmax=hist->GetXaxis()->GetXmax();
+    ymin=hist->GetYaxis()->GetXmin();
+    ymax=hist->GetYaxis()->GetXmax();
+    zmin=0.;
+    zmax=0.;
+    if(dim==3)
+      {
+	zmin=hist->GetZaxis()->GetXmin();
+	zmax=hist->GetZaxis()->GetXmax();
+      }
+    f->Close();
+    delete f;
+  }
+  cout<<"here123"<<endl;
   if(config["Observables"])
     {
       YAML::Node node  = config["Observables"];
@@ -119,26 +164,22 @@ void HL_nDimLikelihood::Read()
           Observables.push_back( ((*it)[0]).as<std::string>()  );
           central_mes_val.push_back( ((*it)[1]).as<double>()  );
         }
-
-
     }
-  f->Close();
-  delete f;
-  profiled=false;
-  gmin=ROOT::Math::Factory::CreateMinimizer("GSLMultiMin", "ConjugatePR");
+  
+  //profiled=false;
+  /*gmin=ROOT::Math::Factory::CreateMinimizer("GSLMultiMin", "ConjugatePR");
+  //gmin=ROOT::Math::Factory::CreateMinimizer("Minuit2");
   gmin->SetMaxFunctionCalls(10000000); // for Minuit/Minuit2
   gmin->SetMaxIterations(1000000);  // for GSL
   gmin->SetTolerance(0.000001);
-  gmin->SetPrintLevel(3);
-  
-
-  
+  gmin->SetPrintLevel(3);*/
+    
   fun=MyFunction2D();
-  fun.SetLikelihood(hist2D);
+  fun.SetLikelihood(hist2D); 
 
   //cout<<central_mes_val[0]<<" "<<central_mes_val[1]<<endl;
 
-
+  cout<<"Finished"<<endl;
 }
 double HL_nDimLikelihood::GetChi2(std::vector<double> theory)  //, double theory_err)
 {
@@ -189,13 +230,17 @@ double HL_nDimLikelihood::GetLogLikelihood(std::vector<double> theory, boost::nu
   if(theory[0]<xmin) return loglikelihood_penalty;
   if(theory[1]>ymax) return loglikelihood_penalty;
   if(theory[1]<ymin) return loglikelihood_penalty;
-
-
   
   fun.SetTheory(theory,theory_cov);
   ROOT::Math::Functor  f1(fun, 2);
 
-  
+  //MJW add this here
+  ROOT::Math::Minimizer* gmin=ROOT::Math::Factory::CreateMinimizer("GSLMultiMin", "ConjugatePR");
+  //gmin=ROOT::Math::Factory::CreateMinimizer("Minuit2");
+  gmin->SetMaxFunctionCalls(10000000); // for Minuit/Minuit2
+  gmin->SetMaxIterations(1000000);  // for GSL
+  gmin->SetTolerance(0.000001);
+  gmin->SetPrintLevel(3);
   gmin->SetFunction(f1);  
 
   double step[2] = {0.05*sqrt(theory_cov(0,0)), 0.05*sqrt(theory_cov(1,1)) };

@@ -42,7 +42,7 @@ int main (int argc, char *argv[])
     }
   string pwd=argv[1];
   
-  HL_nDimLikelihood *br = new HL_nDimLikelihood(pwd+"/data/examples/b2mumu.yaml");
+  HL_nDimLikelihood *br = new HL_nDimLikelihood(pwd+"/data/examples/CERN-EP-2017-100.yaml");
   br->Read();
 
   cout<<"AA"<<endl;
@@ -62,7 +62,7 @@ int main (int argc, char *argv[])
   int Nx=hist_post->GetNbinsX();
   int Ny=hist_post->GetNbinsY(); 
 
-  
+  cout<<"Here"<<endl;
   for(unsigned i=1; i<=Nx; ++i)
     {
       for(unsigned j=1; j<=Ny; ++j) 
@@ -71,6 +71,7 @@ int main (int argc, char *argv[])
           double x = hist->GetXaxis()->GetBinCenter(i);
           double y = hist->GetYaxis()->GetBinCenter(j);  
           vector<double> theory={x,y};
+	  cout<<"Getting LL"<<endl;
           double LL=br->GetLogLikelihood(theory,theory_cov);
           hist_post->SetBinContent(i,j,-LL);
 
