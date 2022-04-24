@@ -63,9 +63,9 @@ int main (int argc, char *argv[])
   int Ny=hist_post->GetNbinsY(); 
 
   cout<<"Here"<<endl;
-  for(unsigned i=1; i<=Nx; ++i)
+  for(unsigned i=1; i<=Nx-1; ++i)
     {
-      for(unsigned j=1; j<=Ny; ++j) 
+      for(unsigned j=1; j<=Ny-1; ++j) 
         {
           
           double x = hist->GetXaxis()->GetBinCenter(i);

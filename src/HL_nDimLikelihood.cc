@@ -155,7 +155,6 @@ void HL_nDimLikelihood::Read()
     f->Close();
     delete f;
   }
-  cout<<"here123"<<endl;
   if(config["Observables"])
     {
       YAML::Node node  = config["Observables"];
@@ -234,7 +233,7 @@ double HL_nDimLikelihood::GetLogLikelihood(std::vector<double> theory, boost::nu
   fun.SetTheory(theory,theory_cov);
   ROOT::Math::Functor  f1(fun, 2);
 
-  //MJW add this here
+
   ROOT::Math::Minimizer* gmin=ROOT::Math::Factory::CreateMinimizer("GSLMultiMin", "ConjugatePR");
   //gmin=ROOT::Math::Factory::CreateMinimizer("Minuit2");
   gmin->SetMaxFunctionCalls(10000000); // for Minuit/Minuit2
