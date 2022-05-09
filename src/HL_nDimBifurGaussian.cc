@@ -33,26 +33,26 @@ void HL_nDimBifurGaussian::Read()
   if(config["Observables"])
     {
       YAML::Node node  = config["Observables"];
-      
+
       for(YAML::const_iterator it = node.begin(); it != node.end();  ++it )
         {
           Observables.push_back( ((*it)[0]).as<std::string>()  );
           central.push_back( ((*it)[1]).as<double>()  );
-          
-          stat_error_right.push_back( ((*it)[2]).as<double>()  );     
+
+          stat_error_right.push_back( ((*it)[2]).as<double>()  );
           stat_error_left.push_back( (-1.)* ((*it)[3]).as<double>()  );
-          syst_error_right.push_back( ((*it)[4]).as<double>()  );        
-          if( (*it).size()>5 )   
+          syst_error_right.push_back( ((*it)[4]).as<double>()  );
+          if( (*it).size()>5 )
             {
-              syst_error_left.push_back( (-1.)*((*it)[5]).as<double>()  );        
-              
+              syst_error_left.push_back( (-1.)*((*it)[5]).as<double>()  );
+
             }
           else syst_error_left.push_back( ((*it)[4]).as<double>()  );
-                    
+
         }
     }// read the errors and cenral vaules, now correlation
-  
-  
+
+
 
   NoOfObservables=Observables.size();
 
@@ -60,14 +60,14 @@ void HL_nDimBifurGaussian::Read()
     {
       error_right.push_back( sqrt(stat_error_right[i]*stat_error_right[i] + syst_error_right[i]*syst_error_right[i]));
       error_left.push_back( sqrt(stat_error_left[i]*stat_error_left[i] + syst_error_left[i]*syst_error_left[i]));
-      
+
     }
-      
+
   if(config["Correlation"])
     {
       YAML::Node node  = config["Correlation"];
       int row=0;
-      
+
       HL_correlation= boost::numeric::ublas::matrix<double>(NoOfObservables,NoOfObservables);
       HL_cov = boost::numeric::ublas::matrix<double>(NoOfObservables,NoOfObservables);
       HL_cov_inv = boost::numeric::ublas::matrix<double>(NoOfObservables,NoOfObservables);
@@ -89,7 +89,7 @@ void HL_nDimBifurGaussian::Read()
                   HL_correlation(row-1,i)= ((*it)[i]).as<double>();
                 }
             }
-          
+
           row++;
         }
     }
@@ -98,8 +98,8 @@ void HL_nDimBifurGaussian::Read()
       HL_correlation= boost::numeric::ublas::matrix<double>(NoOfObservables,NoOfObservables);
       HL_cov = boost::numeric::ublas::matrix<double>(NoOfObservables,NoOfObservables);
       HL_cov_inv = boost::numeric::ublas::matrix<double>(NoOfObservables,NoOfObservables);
-      
-      
+
+
       for(int i=0;i<NoOfObservables; i++)
         {
           for(int j=0;j<NoOfObservables; j++)
@@ -107,8 +107,8 @@ void HL_nDimBifurGaussian::Read()
               if(i==j)
                 {
                   HL_correlation(i,j) =1.;
-                  HL_cov(i,j) =1.;  
-                  HL_cov_inv(i,j)=1.;   
+                  HL_cov(i,j) =1.;
+                  HL_cov_inv(i,j)=1.;
                 }//diagonal
               else
                 {
@@ -118,7 +118,7 @@ void HL_nDimBifurGaussian::Read()
                 }//ofdiagonal
             }// j
         }// i
-      
+
     }//no corrlation case
   size_restricted=NoOfObservables;
 
@@ -146,11 +146,11 @@ bool HL_nDimBifurGaussian::Restrict(std::vector<std::string> names)
         {
           int i_index=indexes[i];
           int j_index=indexes[j];
-          HL_correlation_restricted(i,j)=HL_correlation(i_index, j_index); 
+          HL_correlation_restricted(i,j)=HL_correlation(i_index, j_index);
         }
     }
   restricted=true;
-  
+
   return true;
 }
 
@@ -160,7 +160,7 @@ double HL_nDimBifurGaussian::GetChi2(std::vector<double> theory)  //, double the
   if(!restricted) // if we don't resctric and use whole matrix
     {
       HL_correlation_restricted=HL_correlation;
-      //HL_Stats::inverse(HL_correlation_restricted, size_restricted);   
+      //HL_Stats::inverse(HL_correlation_restricted, size_restricted);
       size_restricted=NoOfObservables;
       HL_Stats::InvertMatrix(HL_cov_restricted,HL_cov_inv_restricted);
       //      restricted=true;
@@ -172,7 +172,7 @@ double HL_nDimBifurGaussian::GetChi2(std::vector<double> theory)  //, double the
   vector<double> diff;
   if(theory.size() !=  central_restricted.size())
     {
-      //std::cout<<"Theory: "<<theory.size()<<"  Exp:"<< central_restricted.size()<<"  "<< central.size() <<std::endl; 
+      //std::cout<<"Theory: "<<theory.size()<<"  Exp:"<< central_restricted.size()<<"  "<< central.size() <<std::endl;
       std::cout<<"Error in HL_nDimBifurGaussian::GetChi2, you had different dimensions in theory and experiment"<<std::endl;
       return -1e10;
     }
@@ -211,13 +211,13 @@ double HL_nDimBifurGaussian::GetLogLikelihood(std::vector<double> theory)
 {
 
   double chi2=GetChi2(theory);
-  
+
   return -0.5*chi2;
 }
 double HL_nDimBifurGaussian::GetLikelihood(std::vector<double> theory)
 {
   double log_likelihood=GetLogLikelihood(theory);
-  return gsl_sf_exp(log_likelihood);  
+  return gsl_sf_exp(log_likelihood);
 }
 
 
@@ -235,23 +235,22 @@ double HL_nDimBifurGaussian::GetChi2(std::vector<double> theory,  boost::numeric
 
 
   if(!restricted) // if we don't resctric and use whole matrix
-    {
-      cout<<"in restricted"<<endl;
-      HL_correlation_restricted=HL_correlation;
-      size_restricted=NoOfObservables;
-      HL_Stats::InvertMatrix(HL_cov_restricted,HL_cov_inv_restricted);
-      //restricted=true; 
-      central_restricted=central;
-    }
+  {
+    HL_correlation_restricted=HL_correlation;
+    size_restricted=NoOfObservables;
+    HL_Stats::InvertMatrix(HL_cov_restricted,HL_cov_inv_restricted);
+    //restricted=true;
+    central_restricted=central;
+  }
   // now calculating chi2
   double chi2=0;
   vector<double> diff;
   if(theory.size() !=  central_restricted.size())
-    {
-      std::cout<<"Theory: "<<theory.size()<<"  Exp:"<< central_restricted.size()<<" "<<  central.size()<<std::endl;  
-      std::cout<<"Error in HL_nDimBifurGaussian::GetChi2, you had different dimensions in theory and experiment"<<std::endl;
-      return -1e10;
-    }
+  {
+    std::cout<<"Theory: "<<theory.size()<<"  Exp:"<< central_restricted.size()<<" "<<  central.size()<<std::endl;
+    std::cout<<"Error in HL_nDimBifurGaussian::GetChi2, you had different dimensions in theory and experiment"<<std::endl;
+    return -1e10;
+  }
   for(int i=0;i<central_restricted.size(); i++) { diff.push_back(central_restricted[i] - theory[i] );}
 
 
@@ -271,7 +270,7 @@ double HL_nDimBifurGaussian::GetChi2(std::vector<double> theory,  boost::numeric
 
   //adding theory error:
   HL_cov_restricted+=theory_cov;
-  
+
 
   HL_Stats::InvertMatrix(HL_cov_restricted,HL_cov_inv_restricted);
 
@@ -294,7 +293,7 @@ double HL_nDimBifurGaussian::GetLikelihood(std::vector<double> theory, boost::nu
   double log_likelihood=GetLogLikelihood(theory,  theory_cov);
   return gsl_sf_exp(log_likelihood);
 }
-  
+
 
 
 
