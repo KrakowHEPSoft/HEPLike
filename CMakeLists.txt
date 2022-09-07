@@ -34,7 +34,6 @@ if(COMPILER_SUPPORTS_CXX11)
 endif()
 
 
-
 ###########################
 #
 #    Packages search
@@ -46,13 +45,18 @@ find_package(Yaml-cpp)
 find_package(Boost REQUIRED)
 # GSL
 find_package(GSL REQUIRED)
-# ROOT:
-find_package(ROOT REQUIRED COMPONENTS MathCore RIO Hist Tree Net)
 
-include(${ROOT_USE_FILE})
-include_directories(${CMAKE_SOURCE_DIR}/include ${ROOT_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
-add_definitions(${ROOT_CXX_FLAGS})
+include_directories(${CMAKE_SOURCE_DIR}/include ${Boost_INCLUDE_DIRS})
 
+option(USE_ROOT "Compile with ROOT enabled" TRUE)
+if(USE_ROOT)
+  # ROOT:
+  find_package(ROOT REQUIRED COMPONENTS MathCore RIO Hist Tree Net)
+
+  include(${ROOT_USE_FILE})
+  include_directories(${ROOT_INCLUDE_DIRS})
+  add_definitions(${ROOT_CXX_FLAGS})
+endif()
 
 ###########################
 #
@@ -63,23 +67,17 @@ if(NOT DEFINED EXECUTABLE)
   set(EXECUTABLE FALSE)
 endif()
 
-if(NOT DEFINED USE_ROOT)
-  set(USE_ROOT TRUE)
-endif()
-
+# Configure the file
+set(outhdr "${CMAKE_SOURCE_DIR}/include/cmake_variables.h")
+configure_file("${CMAKE_SOURCE_DIR}/include/cmake_variables.h.in" ${outhdr})
 
 ###########################
 #
 #    Libraries
 #
 ###########################
-if(USE_ROOT)
 
-  file(GLOB HL_SOURCES ${CMAKE_SOURCE_DIR}/src/*.cc)
-else()
-  file(GLOB HL_SOURCES ${CMAKE_SOURCE_DIR}/src/HL_Stats.cc ${CMAKE_SOURCE_DIR}/src/HL_nDimGaussian.cc ${CMAKE_SOURCE_DIR}/src/HL_nDimBifurGaussian.cc ${CMAKE_SOURCE_DIR}/src/HL_Limit.cc ${CMAKE_SOURCE_DIR}/src/HL_Gaussian.cc ${CMAKE_SOURCE_DIR}/src/HL_Data.cc ${CMAKE_SOURCE_DIR}/src/HL_BifurGaussian.cc )
-
-endif()  
+file(GLOB HL_SOURCES ${CMAKE_SOURCE_DIR}/src/*.cc)
 
 add_library(HEPLike_static ${HL_SOURCES})
 add_library(HEPLike_shared SHARED ${HL_SOURCES})
@@ -94,8 +92,8 @@ target_link_libraries(HEPLike_shared PRIVATE ${ROOT_LIBRARIES} ${Boost_LIBRARIES
 #
 ###########################
 
-if(EXECUTABLE AND USE_ROOT)
-  
+if(EXECUTABLE)
+
   execute_process (
     COMMAND bash -c "ln -s ../data_toy/ data"
     )
@@ -110,15 +108,21 @@ if(EXECUTABLE AND USE_ROOT)
   add_executable(Data_Fit_example  main/Data_Fit_example.cc)
   add_executable(Test_YAML  main/Test_YAML.cc)
 
-  target_link_libraries(Br_example HEPLike_shared yaml-cpp ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
-  target_link_libraries(BrBifurGaussian_example HEPLike_static yaml-cpp  ${ROOT_LIBRARIES} ${Boost_LIBRARIES} ${GSL_LIBRARIES} )
-  target_link_libraries(Limit_example HEPLike_static yaml-cpp  ${ROOT_LIBRARIES} ${Boost_LIBRARIES} ${GSL_LIBRARIES})
-  target_link_libraries(Ndim_Gaussian HEPLike_static yaml-cpp  ${ROOT_LIBRARIES} ${Boost_LIBRARIES}  ${GSL_LIBRARIES})  
-  target_link_libraries(ProfLikelihood_example HEPLike_static yaml-cpp   ${ROOT_LIBRARIES} ${Boost_LIBRARIES}  ${GSL_LIBRARIES})  
-  target_link_libraries(Ndim_BifurGaussian_example HEPLike_static yaml-cpp  ${ROOT_LIBRARIES} ${Boost_LIBRARIES}  ${GSL_LIBRARIES})  
-  target_link_libraries(Ndim_Likelihood_example  HEPLike_static yaml-cpp  ${ROOT_LIBRARIES} ${Boost_LIBRARIES}  ${GSL_LIBRARIES})  
-  target_link_libraries(Data_Fit_example HEPLike_static yaml-cpp  ${ROOT_LIBRARIES} ${Boost_LIBRARIES}  ${GSL_LIBRARIES})  
-  target_link_libraries(Test_YAML  HEPLike_static yaml-cpp  ${ROOT_LIBRARIES} ${Boost_LIBRARIES}  ${GSL_LIBRARIES})  
+  if(USE_ROOT)
+    set(LIBRARIES ${ROOT_LIBRARIES} ${Boost_LIBRARIES} ${GSL_LIBRARIES})
+  else()
+    set(LIBARRIES ${Boost_LIBRARIES} ${GSL_LIBRARIES})
+  endif()
+
+  target_link_libraries(Br_example HEPLike_shared yaml-cpp ${LIBRARIES} )
+  target_link_libraries(BrBifurGaussian_example HEPLike_static yaml-cpp  ${LIBRARIES})
+  target_link_libraries(Limit_example HEPLike_static yaml-cpp  ${LIBRARIES})
+  target_link_libraries(Ndim_Gaussian HEPLike_static yaml-cpp  ${LIBRARIES})
+  target_link_libraries(ProfLikelihood_example HEPLike_static yaml-cpp   ${LIBRARIES})
+  target_link_libraries(Ndim_BifurGaussian_example HEPLike_static yaml-cpp  ${LIBRARIES})
+  target_link_libraries(Ndim_Likelihood_example  HEPLike_static yaml-cpp  ${LIBRARIES})
+  target_link_libraries(Data_Fit_example HEPLike_static yaml-cpp  ${LIBRARIES})
+  target_link_libraries(Test_YAML  HEPLike_static yaml-cpp  ${LIBRARIES})
 
   add_test(HL_Test_YAML Test_YAML ../data_toy/examples/test_3dimassym.yaml)
   add_test(HL_Limit Limit_example xterm)
@@ -127,7 +131,7 @@ if(EXECUTABLE AND USE_ROOT)
   add_test(HL_Ndim_Gaussian Ndim_Gaussian)
   add_test(HL_ProfLikelihood_example ProfLikelihood_example ${CMAKE_CURRENT_BINARY_DIR})
   add_test(HL_Ndim_BifurGaussian_example Ndim_BifurGaussian_example)
-  
 
-  
+
+
 endif()
