@@ -39,13 +39,14 @@ endif()
 #    Packages search
 #
 ###########################
-# looking for yaml-cpp
-find_package(Yaml-cpp)
+# Use provided version of yaml-cpp
+add_subdirectory(${PROJECT_SOURCE_DIR}/yaml-cpp EXCLUDE_FROM_ALL)
 # looking for boost
 find_package(Boost REQUIRED)
 # GSL
 find_package(GSL REQUIRED)
 
+include_directories(${CMAKE_SOURCE_DIR}/yaml-cpp/include)
 include_directories(${CMAKE_SOURCE_DIR}/include ${Boost_INCLUDE_DIRS})
 
 option(USE_ROOT "Compile with ROOT enabled" TRUE)
