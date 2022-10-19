@@ -15,9 +15,10 @@
 
 
 //HEPLike headers
-#include "HL_Stats.h"
 #include "HL_Data.h"
 #include "HL_Root.h"
+#include "HL_Function.h"
+#include "HL_Minimizer.h"
 
 //external:
 #include "yaml-cpp/yaml.h"
@@ -25,47 +26,6 @@
 #include "gsl/gsl_sf_erf.h"
 #include "gsl/gsl_math.h"
 #include "gsl/gsl_sf_exp.h"
-
-
-class MyFunction: public ROOT::Math::IBaseFunctionOneDim
-{
-
- public:
-
-  double DoEval(double theory_nuisance) const
-  {
-
-    double loglike=likelihood->Eval(theory_nuisance,0);
-    double like=exp(loglike);
-
-
-    double gauss_systematic=HL_Stats::gauss(theory_nuisance, theory_mean, theory_err);
-
-    return loglike-log(gauss_systematic);// here the logliek is -\Delta LL so no minus before
-  }
-
-  ROOT::Math::IBaseFunctionOneDim* Clone() const
-  {
-    return new MyFunction();
-  }
-
-  void SetLikelihood(TGraph *l)
-  {
-    likelihood=l;
-  };
-
-  void SetTheory(double mean, double err)
-  {
-    theory_mean=mean;
-    theory_err=err;
-  };
-
- private:
-  double theory_mean;
-  double theory_err;
-  TGraph *likelihood;
-
-};
 
 
 class HL_ProfLikelihood: public HL_Data
@@ -76,6 +36,7 @@ class HL_ProfLikelihood: public HL_Data
   explicit HL_ProfLikelihood() :  HL_Data() {};
   explicit HL_ProfLikelihood(std::string s) :  HL_Data(s) { };
 
+  ~HL_ProfLikelihood();
 
   void Read();
   double GetChi2(double theory);
@@ -97,13 +58,12 @@ class HL_ProfLikelihood: public HL_Data
 
   std::string HL_RootFile;
   std::string HL_PATH;
-  LikelihoodInterpolator *likelihood;
 
-  // for minimaization
-  //ROOT::Math::Minimizer* gmin;
-  gsl_multimin_fdfminimizer * gmin;
+  HL_Interpolator1D *likelihood;
 
-  MyFunction fun;
+  HL_Minimizer *gmin;
+
+  HL_Function1D *fun;
 
 
 };

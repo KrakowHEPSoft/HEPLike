@@ -16,6 +16,8 @@
   #include "TAxis.h"
   #include "TMath.h"
   #include "TH1D.h"
+  #include "TH2D.h"
+  #include "TH3D.h"
   #include "TBranch.h"
   #include "TRandom2.h"
   #include "TError.h"
@@ -23,6 +25,7 @@
   #include "Math/Minimizer.h"
   #include "Math/Factory.h"
   #include "Math/Functor.h"
+  #include "Math/IFunction.h"
 
 // If not, then wrap usual methods in root classes
 #else
