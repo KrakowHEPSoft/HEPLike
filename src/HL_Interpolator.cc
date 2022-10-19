@@ -16,7 +16,7 @@ HL_Interpolator1D::HL_Interpolator1D(int npoints, double *x, double *y)
 }
 
 #ifdef USE_ROOT
- HL_Interpolator1D::HL_Interpolator1D(TGraph tgraph)
+ HL_Interpolator1D::HL_Interpolator1D(TGraph *tgraph)
  {
    TG = tgraph;
  }
@@ -26,17 +26,29 @@ HL_Interpolator1D::~HL_Interpolator1D()
 {
   gsl_spline_free(spline);
   gsl_interp_accel_free(x_accel);
+
+  #ifdef USE_ROOT
+    delete TG;
+  #endif
 }
 
 double HL_Interpolator1D::Eval(double x) const;
 {
-  return gsl_spline_eval(spline, x, x_accel);
+  #ifdef USE_ROOT
+    return TG->Eval(x, 0);
+  #else
+    return gsl_spline_eval(spline, x, x_accel);
+  #endif
 }
 
 void HL_Iterpolator1D::SetLimits(double xmin, double xmax)
 {
   x_min = xmin;
   x_max = xmax;
+
+  #ifdef USE_ROOT
+    TG->GetXaxis()->SetLimits(xmin,xmax);
+  #endif
 }
 
 double HL_Interpolator1D::GetXmin() const
@@ -57,16 +69,31 @@ HL_Interpolator2D::HL_Interpolator2D(int npointsx, int npointsy, double *x, doub
   gsl_spline2d_init(spline2d, x, y, z, npointsx, npointsy);
 }
 
+#ifdef USE_ROOT
+ HL_Interpolator2D::HL_Interpolator2D(TH2D *th2d)
+ {
+   TH = th2d;
+ }
+#endif
+
 HL_Interpolator2D::~HL_Interpolator2D()
 {
   gsl_spline_free(spline2d);
   gsl_interp_accel_free(x_accel);
   gsl_interp_accel_free(y_accel);
+
+  #ifdef USE_ROOT
+    delete TH;
+  #endif
 }
 
 double HL_Interpolator2D::Eval(double x) const;
 {
-  return gsl_spline_eval(spline, x, y, x_accel, y_accel);
+  #ifdef USE_ROOT
+    return TH->Interpolate(x, y);
+  #else
+    return gsl_spline_eval(spline, x, y, x_accel, y_accel);
+  #endif
 }
 
 void HL_Iterpolator2D::SetLimits(double xmin, double xmax, double ymin, double ymax)

@@ -45,8 +45,8 @@ class HL_Interpolator1D
     double GetXmax() const;
 
     #ifdef USE_ROOT
-      TGraph TG;
-      HL_Interpolator1D(TGraph tgraph);
+      TGraph *TG;
+      HL_Interpolator1D(TGraph*);
     #endif
 };
 
@@ -78,6 +78,11 @@ class HL_Interpolator2D
     double GetXmax() const;
     double GetYmin() const;
     double GetYmax() const;
+
+    #ifdef USE_ROOT
+      TH2D *TH;
+      HL_Interpolator2D(TH2D*);
+    #endif
 
 };
 

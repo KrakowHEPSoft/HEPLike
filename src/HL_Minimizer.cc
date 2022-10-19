@@ -35,18 +35,8 @@ void HL_Minimizer::SetTolerance(const double tol)
 
 void HL_Minimizer::SetFunction(HL_Function &f)
 {
-  /* Position of the minimum (1,2), scale factors
-     10,20, height 30. */
-  //double par[5] = { 1.0, 2.0, 10.0, 20.0, 30.0 };
-
-
   my_func.n = ndim;
   my_func.f = &(f->DoEval);
-  //my_func.df = my_df;
-  //my_func.fdf = my_fdf;
-  //my_func.params = par;
-
-
 }
 
 void HL_Minimizer::SetVariable(int i, double value, double step)
