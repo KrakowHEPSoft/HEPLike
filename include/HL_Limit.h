@@ -13,12 +13,9 @@
 #include <fstream>
 #include <iomanip>
 
-
 //HL_Like headers
 #include "HL_Stats.h"
 #include "HL_Data.h"
-
-
 
 //external:
 #include "yaml-cpp/yaml.h"
@@ -36,26 +33,24 @@ class HL_Limit: public HL_Data
 
   explicit HL_Limit() :  HL_Data() {};
   explicit HL_Limit(std::string s) :  HL_Data(s) { };
-  
-  
+
+
   void Read();
-  double GetChi2(double);     
+  double GetChi2(double);
   double GetLogLikelihood(double);
-  double GetLikelihood(double);   
+  double GetLikelihood(double);
   double GetCLs(double val);
-  
+
  protected:
   std::vector<double> CLs;
   std::vector<double> BR;
   double UL90CL;
   double UL95CL;
   bool useUL;
-  
+
   //private:
   //double GetCLs(double val);//, std::vector<double> br, std::vector<double> cls);
-  
 
-  
 };
 
 

@@ -27,49 +27,41 @@
 // If not, then wrap usual methods in root classes
 #else
 
-// TODO: Expand these types to do sometthing
 
 class TBranch
 {
+  public:
 
+    TBranch()  { throw std::runtime_error("TBranch class is only available in ROOT, please enable ROOT to use"); }
+    TBranch(const TBranch&)  { throw std::runtime_error("TBranch class is only available in ROOT, please enable ROOT to use"); }
 };
 
 class TTree : std::vector<TBranch*>
 {
   public:
 
-    // Number of entries
-    int GetEntries();
-
-    // Get one entry
-    int GetEntry(long int);
-
-    // Get address of branch
-    int SetBranchAddress(const char *, void *add, TBranch ** = 0);
-
+    TTree(const TTree&)  { throw std::runtime_error("TTree class is only available in ROOT, please enable ROOT to use"); }
+    int GetEntries()  { throw std::runtime_error("TTree class is only available in ROOT, please enable ROOT to use"); }
+    int GetEntry(long int) { throw std::runtime_error("TTree class is only available in ROOT, please enable ROOT to use"); }
+    int SetBranchAddress(const char *, void *add, TBranch ** = 0) { throw std::runtime_error("TTree class is only available in ROOT, please enable ROOT to use"); }
 };
 
 class TFile
 {
   public:
 
-    // Constructor
-    TFile(std::string, std::string);
-
-    // Getter
-    TTree* Get(std::string);
+    TFile(std::string, std::string) { throw std::runtime_error("TFile class is only available in ROOT, please enable ROOT to use"); }
+    TTree* Get(std::string) { throw std::runtime_error("TFile class is only available in ROOT, please enable ROOT to use"); }
 
 };
 
 class TGraph
 {
+  public:
 
+    TGraph(const TGraph&)  { throw std::runtime_error("TGraph class is only available in ROOT, please enable ROOT to use"); }
 };
 
-namespace ROOT
-{
-
-}
 
 #endif
 

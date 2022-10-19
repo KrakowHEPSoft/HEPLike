@@ -67,14 +67,6 @@ class HL_ExpPoints: public HL_Data
   vector<vector<double>> points;
   vector<double> weights;
 
-
-
-
-
-
-
-
-
 };
 
 

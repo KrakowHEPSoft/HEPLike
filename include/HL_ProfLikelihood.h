@@ -27,10 +27,13 @@
 #include "gsl/gsl_sf_exp.h"
 
 
-class MyFunction: public ROOT::Math::IBaseFunctionOneDim{
+class MyFunction: public ROOT::Math::IBaseFunctionOneDim
+{
 
  public:
-  double DoEval(double theory_nuisance) const{
+
+  double DoEval(double theory_nuisance) const
+  {
 
     double loglike=likelihood->Eval(theory_nuisance,0);
     double like=exp(loglike);
@@ -38,15 +41,19 @@ class MyFunction: public ROOT::Math::IBaseFunctionOneDim{
 
     double gauss_systematic=HL_Stats::gauss(theory_nuisance, theory_mean, theory_err);
 
-    return loglike-log(gauss_systematic);// here the logligek is -\Delta LL so no minus before
+    return loglike-log(gauss_systematic);// here the logliek is -\Delta LL so no minus before
   }
-  ROOT::Math::IBaseFunctionOneDim* Clone() const{
+
+  ROOT::Math::IBaseFunctionOneDim* Clone() const
+  {
     return new MyFunction();
   }
+
   void SetLikelihood(TGraph *l)
-    {
-      likelihood=l;
-    };
+  {
+    likelihood=l;
+  };
+
   void SetTheory(double mean, double err)
   {
     theory_mean=mean;
@@ -59,8 +66,6 @@ class MyFunction: public ROOT::Math::IBaseFunctionOneDim{
   TGraph *likelihood;
 
 };
-
-
 
 
 class HL_ProfLikelihood: public HL_Data
@@ -83,9 +88,6 @@ class HL_ProfLikelihood: public HL_Data
   double GetLikelihood(double theory, double theory_err);
 
 
-
-
-
  private:
 
   double xmin;
@@ -95,13 +97,11 @@ class HL_ProfLikelihood: public HL_Data
 
   std::string HL_RootFile;
   std::string HL_PATH;
-  TGraph *likelihood;
+  LikelihoodInterpolator *likelihood;
 
   // for minimaization
-  ROOT::Math::Minimizer* gmin;
-
-
-  TFile *f;
+  //ROOT::Math::Minimizer* gmin;
+  gsl_multimin_fdfminimizer * gmin;
 
   MyFunction fun;
 
