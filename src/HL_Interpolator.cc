@@ -61,7 +61,7 @@ double HL_Interpolator1D::GetXmax() const
   return x_max;
 }
 
-HL_Interpolator2D::HL_Interpolator2D(int npointsx, int npointsy, double **x, double **y, double **z)
+HL_Interpolator2D::HL_Interpolator2D(int npointsx, int npointsy, double *x, double *y, double *z)
 : nx(npointsx)
 , ny(npointsy)
 , x_data(x)
@@ -84,31 +84,21 @@ HL_Interpolator2D::HL_Interpolator2D(int npointsx, int npointsy, double **x, dou
 
 HL_Interpolator2D::~HL_Interpolator2D()
 {
-  gsl_spline_free(spline2d);
+  gsl_spline2d_free(spline2d);
   gsl_interp_accel_free(x_accel);
   gsl_interp_accel_free(y_accel);
-
-  for(int i=0; i< nx; i++)
-  {
-    delete x_data[i];
-    delete y_data[i];
-    delete z_data[i];
-  }
-  delete x_data;
-  delete y_data;
-  delete z_data;
 
   #ifdef USE_ROOT
     delete TH;
   #endif
 }
 
-double HL_Interpolator2D::Eval(double x, double y) const;
+double HL_Interpolator2D::Eval(double x, double y) const
 {
   #ifdef USE_ROOT
     return TH->Interpolate(x, y);
   #else
-    return gsl_spline_eval(spline, x, y, x_accel, y_accel);
+    return gsl_spline_eval2d(spline, x, y, x_accel, y_accel);
   #endif
 }
 

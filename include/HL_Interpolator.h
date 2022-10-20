@@ -60,15 +60,15 @@ class HL_Interpolator2D
     gsl_interp_accel* y_accel;
 
     int nx, ny;
-    double x_min, xmax;
+    double x_min, x_max;
     double y_min, y_max;
 
   public:
 
-    double **x_data, **y_data, **z_data;
+    double *x_data, *y_data, *z_data;
 
     // Constructor
-    HL_Interpolator2D(int, int, double**, double**, double**);
+    HL_Interpolator2D(int, int, double*, double*, double*);
 
     // Destructor
     ~HL_Interpolator2D();

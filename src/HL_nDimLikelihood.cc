@@ -59,22 +59,19 @@ void HL_nDimLikelihood::Read()
     // Data has entries from 0 to nxbins, so a total of nxbins+1
     n_binsX++;
     n_binsY++;
-    double **x; x = new double *[n_binsX];
-    double **y; y = new double *[n_binsX];
-    double **c; c = new double *[n_binsX];
+    double x[n_binsX];
+    double y[n_binsY];
+    double c[n_binsX*n_binsY];
 
     for(int i=0; i<n_binsX; i++)
     {
-      x[i] = new double[n_binsY];
-      y[i] = new double[n_binsY];
-      c[i] = new double[n_binsY];
       for(int j=0; j<n_binsY; j++)
       {
         double bx,by,binc;
         in >> bx >> by >> binc;
-        x[i][j] = bx;
-        y[i][j] = by;
-        c[i][j] = binc;
+        x[i] = bx;
+        y[j] = by;
+        c[i*n_binsX+j] = binc;
       }
     }
     in.close();
@@ -312,12 +309,12 @@ void HL_nDimLikelihood::Profile(std::string mode)
 
       for(int iy=0 ; iy < n_binsY ; ++iy)
       {
-        double val = hist2D->z_data[ix][iy];
+        double val = hist2D->z_data[ix*n_binsX+iy];
         if(compare(val, min, max))
         {
           min = val;
           max = val;
-          newX[ix] = hist2D->x_data[ix][iy];
+          newX[ix] = hist2D->x_data[ix];
           newY[ix] = val;
         }
       }
@@ -337,12 +334,12 @@ void HL_nDimLikelihood::Profile(std::string mode)
     //  {
     //    for(int iz=1 ; iz< n_binsZ ; ++iz)
     //    {
-    //      double val = hist3D->w_data[ix][iy][iz]);
+    //      double val = hist3D->w_data[ix*n_binsX*n_binsX+iy*n_binsY+iz]);
     //      if(compare(val, min, max)
     //      {
     //        min = val;
     //        max = val;
-    //        newX[ix] = hist->x_data[ix][iy][iz];
+    //        newX[ix] = hist->x_data[ix];
     //        newY[ix] = val;
     //      }
     //    }
@@ -361,12 +358,12 @@ void HL_nDimLikelihood::Profile(std::string mode)
 
       for(int ix=0 ; ix < n_binsX ; ++ix)
       {
-        double val = hist2D->z_data[ix][iy];
+        double val = hist2D->z_data[ix*n_binsX+iy];
         if(compare(val, min, max))
         {
           min = val;
           max = val;
-          newX[iy] = hist2D->y_data[ix][iy];
+          newX[iy] = hist2D->y_data[iy];
           newY[iy] = val;
         }
       }
@@ -386,12 +383,12 @@ void HL_nDimLikelihood::Profile(std::string mode)
     //  {
     //    for(int iz=0 ; iz< n_binsZ ; ++iz)
     //    {
-    //      double val = hist3D->w_data[ix][iy][iz];
+    //      double val = hist3D->w_data[ix*n_binsX*n_binsX+iy*n_binsY+iz];
     //      if(compare(val, min, max)
     //      {
     //        min = val;
     //        max = val;
-    //        newX[iy] = hist3D->y_data[ix][iy][iz];
+    //        newX[iy] = hist3D->y_data[iy];
     //        newY[iy] = val;
     //      }
     //    }
@@ -414,12 +411,12 @@ void HL_nDimLikelihood::Profile(std::string mode)
     //  {
     //    for(int iy=0 ; iy< n_binsY ; ++iy)
     //    {
-    //      double val = hist3D->w_data[ix][iy][iz];
+    //      double val = hist3D->w_data[ix*n_binsX*n_binsX+iy*n_binsY+iz];
     //      if(compare(val, min, max)
     //      {
     //        min = val;
     //        max = val;
-    //        newX[iz] = hist3D->z_data[ix][iy][iz];
+    //        newX[iz] = hist3D->z_data[iz];
     //        newY[iz] = val;
     //      }
     //    }
