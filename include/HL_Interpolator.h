@@ -55,7 +55,7 @@ class HL_Interpolator2D
   private:
 
     // Member variables
-    gsl_spline* spline2d;
+    gsl_spline2d* spline2d;
     gsl_interp_accel* x_accel;
     gsl_interp_accel* y_accel;
 

@@ -46,7 +46,7 @@ class TTree
     TTree(const TTree&)  { throw std::runtime_error("TTree class is only available in ROOT, please enable ROOT to use"); }
     int GetEntries()  { throw std::runtime_error("TTree class is only available in ROOT, please enable ROOT to use"); }
     int GetEntry(long int) { throw std::runtime_error("TTree class is only available in ROOT, please enable ROOT to use"); }
-    int SetBranchAddress(const char *, void *add, TBranch ** = 0) { throw std::runtime_error("TTree class is only available in ROOT, please enable ROOT to use"); }
+    int SetBranchAddress(const char *, void *, TBranch ** = 0) { throw std::runtime_error("TTree class is only available in ROOT, please enable ROOT to use"); }
 };
 
 class TFile

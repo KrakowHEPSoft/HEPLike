@@ -34,7 +34,7 @@ class HL_Function1D
       double theory_nuisance = gsl_vector_get(x, 0);
 
       double loglike = likelihood->Eval(theory_nuisance);
-      double like = exp(loglike);
+      //double like = exp(loglike);
 
 
       double gauss_systematic=HL_Stats::gauss(theory_nuisance, theory_mean, theory_err);
