@@ -98,7 +98,7 @@ double HL_Interpolator2D::Eval(double x, double y) const
   #ifdef USE_ROOT
     return TH->Interpolate(x, y);
   #else
-    return gsl_spline_eval2d(spline, x, y, x_accel, y_accel);
+    return gsl_spline2d_eval(spline2d, x, y, x_accel, y_accel);
   #endif
 }
 
