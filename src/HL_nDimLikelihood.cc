@@ -17,8 +17,9 @@
 #include "HL_Constants.h"
 #include "HL_nDimLikelihood.h"
 
-
 using namespace std;
+
+static bool ndim_debug = false;
 
 HL_nDimLikelihood::~HL_nDimLikelihood()
 {
@@ -48,9 +49,9 @@ void HL_nDimLikelihood::Read()
 
   if( config["TextData"])
   {
-    if (debug) std::cout << "HL_nDimLikelihood is using text input" << std::endl;
+    if (ndim_debug) std::cout << "HL_nDimLikelihood is using text input" << std::endl;
     std::string filename = find_path(config["TextData"].as<std::string>());
-    if (debug) std::cout << "Opening file " << filename << std::endl;
+    if (ndim_debug) std::cout << "Opening file " << filename << std::endl;
     std::ifstream in(filename.c_str());
     // TODO: This assumes it is always 2D, need to change this to make it work with 3D too
     dim=2;

@@ -16,8 +16,6 @@
 #include <boost/numeric/ublas/matrix.hpp>
 using namespace std;
 
-static bool debug = false;
-
 namespace HL_Stats
 {
   namespace ublas = boost::numeric::ublas;

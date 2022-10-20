@@ -17,8 +17,9 @@
 #include "HL_Constants.h"
 #include "HL_nDimBifurGaussian.h"
 
-
 using namespace std;
+
+static bool ndbg_debug = false;
 
 void HL_nDimBifurGaussian::Read()
 {
@@ -171,7 +172,7 @@ double HL_nDimBifurGaussian::GetChi2(std::vector<double> theory)  //, double the
   vector<double> diff;
   if(theory.size() !=  central_restricted.size())
   {
-    if(debug) std::cout<<"Theory: "<<theory.size()<<"  Exp:"<< central_restricted.size()<<"  "<< central.size() <<std::endl;
+    if(ndbg_debug) std::cout<<"Theory: "<<theory.size()<<"  Exp:"<< central_restricted.size()<<"  "<< central.size() <<std::endl;
     throw std::runtime_error("Error in HL_nDimBifurGaussian::GetChi2, you had different dimensions in theory and experiment");
     return -1e10;
   }
@@ -200,7 +201,7 @@ double HL_nDimBifurGaussian::GetChi2(std::vector<double> theory)  //, double the
       chi2+= diff[i] * HL_cov_inv_restricted(i,j)*diff[j] ;
     }
   }
-  if (debug) std::cout<<"Returning chi2: "<<chi2<<std::endl;
+  if (ndbg_debug) std::cout<<"Returning chi2: "<<chi2<<std::endl;
   return chi2;
 }
 
@@ -243,7 +244,7 @@ double HL_nDimBifurGaussian::GetChi2(std::vector<double> theory,  boost::numeric
   vector<double> diff;
   if(theory.size() !=  central_restricted.size())
   {
-    if(debug) std::cout<<"Theory: "<<theory.size()<<"  Exp:"<< central_restricted.size()<<" "<<  central.size()<<std::endl;
+    if(ndbg_debug) std::cout<<"Theory: "<<theory.size()<<"  Exp:"<< central_restricted.size()<<" "<<  central.size()<<std::endl;
     throw std::runtime_error("Error in HL_nDimBifurGaussian::GetChi2, you had different dimensions in theory and experiment");
     return -1e10;
   }

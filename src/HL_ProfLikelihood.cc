@@ -20,6 +20,8 @@
 
 using namespace std;
 
+static bool prof_debug = false;
+
 HL_ProfLikelihood::~HL_ProfLikelihood()
 {
   delete likelihood;
@@ -42,9 +44,9 @@ void HL_ProfLikelihood::Read()
   //Always use text input if it is available (avoids potential mem issues)
   if(config["TextData"])
   {
-    if(debug) std::cout << "HL_ProfLikelihood is using text input" << std::endl;
+    if(prof_debug) std::cout << "HL_ProfLikelihood is using text input" << std::endl;
     std::string filename = find_path(config["TextData"].as<std::string>());
-    if(debug) std::cout << "Opening file " << filename << std::endl;
+    if(prof_debug) std::cout << "Opening file " << filename << std::endl;
     std::ifstream in(filename.c_str());
     in >> nxbins >> xmin >> xmax;
     // Data has entries from 0 to nxbins, so a total of nxbins+1

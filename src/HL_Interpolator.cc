@@ -32,7 +32,7 @@ HL_Interpolator1D::~HL_Interpolator1D()
   #endif
 }
 
-double HL_Interpolator1D::Eval(double x) const;
+double HL_Interpolator1D::Eval(double x) const
 {
   #ifdef USE_ROOT
     return TG->Eval(x, 0);
