@@ -41,7 +41,7 @@ double HL_Interpolator1D::Eval(double x) const
   #endif
 }
 
-void HL_Iterpolator1D::SetLimits(double xmin, double xmax)
+void HL_Interpolator1D::SetLimits(double xmin, double xmax)
 {
   x_min = xmin;
   x_max = xmax;
@@ -112,7 +112,7 @@ double HL_Interpolator2D::Eval(double x) const;
   #endif
 }
 
-void HL_Iterpolator2D::SetLimits(double xmin, double xmax, double ymin, double ymax)
+void HL_Interpolator2D::SetLimits(double xmin, double xmax, double ymin, double ymax)
 {
   x_min = xmin;
   x_max = xmax;
