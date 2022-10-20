@@ -15,6 +15,8 @@
 #include <boost/numeric/ublas/matrix.hpp>
 using namespace std;
 
+static bool debug = false;
+
 namespace HL_Stats
 {
   namespace ublas = boost::numeric::ublas;
@@ -26,36 +28,34 @@ namespace HL_Stats
 
   double get_sigma_from_pval(double p);
   template<class T>
-    bool InvertMatrix (const ublas::matrix<T>& input, ublas::matrix<T>& inverse)
+  bool InvertMatrix (const ublas::matrix<T>& input, ublas::matrix<T>& inverse)
+  {
+    using namespace boost::numeric::ublas;
+    typedef permutation_matrix<std::size_t> pmatrix;
+
+    // create a working copy of the input
+    matrix<T> A(input);
+    // create a permutation matrix for the LU-factorization
+    pmatrix pm(A.size1());
+
+    // perform LU-factorization
+    int res = lu_factorize(A,pm);
+    if ( res != 0 )
     {
-      using namespace boost::numeric::ublas;
-      typedef permutation_matrix<std::size_t> pmatrix;
-
-      // create a working copy of the input
-      matrix<T> A(input);
-      // create a permutation matrix for the LU-factorization
-      pmatrix pm(A.size1());
-
-      // perform LU-factorization
-      int res = lu_factorize(A,pm);
-      if ( res != 0 )
-        {
-          std::cout<<"The matrix inversion failed in HL_Stats::InvertMatrix"<<std::endl;
-          return false;
-        }
-      // create identity matrix of "inverse"
-      inverse.assign(identity_matrix<T>(A.size1()));
-
-      // backsubstitute to get the inverse
-      lu_substitute(A, pm, inverse);
-
-      return true;
+      throw std::runtime_error("The matrix inversion failed in HL_Stats::InvertMatrix");
+      return false;
     }
-  
+    // create identity matrix of "inverse"
+    inverse.assign(identity_matrix<T>(A.size1()));
+
+    // backsubstitute to get the inverse
+    lu_substitute(A, pm, inverse);
+
+    return true;
+  }
+
   double gaussian_upper_limit(double theory, double obs, double theoryerr, double obserr, bool profile_systematics);
-  
-  
-  
+
 }
 
 #endif

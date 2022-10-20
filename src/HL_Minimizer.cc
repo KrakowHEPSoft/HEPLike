@@ -13,6 +13,8 @@ HL_Minimizer::HL_Minimizer(std::string type, size_t n)
 
   if(type == "ConjugateFR")
     s = gsl_multimin_fdfminimizer_alloc(gsl_multimin_fdfminimizer_conjugate_fr, n);
+  else if (type == "ConjugatePR")
+    s = gsl_multimin_fdfminimizer_alloc(gsl_multimin_fdfminimizer_conjugate_pr, n);
 
   x = gsl_vector_alloc(ndim);
 }

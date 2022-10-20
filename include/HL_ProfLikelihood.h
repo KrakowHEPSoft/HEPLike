@@ -17,6 +17,7 @@
 //HEPLike headers
 #include "HL_Data.h"
 #include "HL_Root.h"
+#include "HL_Interpolator.h"
 #include "HL_Function.h"
 #include "HL_Minimizer.h"
 
@@ -51,6 +52,7 @@ class HL_ProfLikelihood: public HL_Data
 
  private:
 
+  int nxbins;
   double xmin;
   double xmax;
   double central_mes_val;

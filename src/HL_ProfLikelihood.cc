@@ -19,8 +19,6 @@
 
 using namespace std;
 
-bool debug = false;
-
 HL_ProfLikelihood::~HL_ProfLikelihood()
 {
   delete likelihood;
@@ -47,13 +45,14 @@ void HL_ProfLikelihood::Read()
     std::string filename = find_path(config["TextData"].as<std::string>());
     if(debug) std::cout << "Opening file " << filename << std::endl;
     std::ifstream in(filename.c_str());
-    int nxbins;
     in >> nxbins >> xmin >> xmax;
+    // Data has entries from 0 to nxbins, so a total of nxbins+1
+    nxbins++;
 
     double x[nxbins];
     double y[nxbins];
 
-    for(int point=0;point<nxbins+1;point++)
+    for(int point=0;point<nxbins;point++)
     {
       double point_,x_,y_;
       in >> point_ >> x_>> y_;
@@ -81,6 +80,8 @@ void HL_ProfLikelihood::Read()
       f->Close();
       delete f;
 
+      xmin=likelihood->TG->GetXaxis()->GetXmin();
+      xmax=likelihood->TG->GetXaxis()->GetXmax();
       likelihood->SetLimits(xmin,xmax);
 
     #else
@@ -98,13 +99,6 @@ void HL_ProfLikelihood::Read()
     ObsName=node[0][0].as<std::string>();
     central_mes_val=node[0][1].as<double>();
   }
-
-  //gmin=ROOT::Math::Factory::CreateMinimizer("GSLMultiMin", "ConjugateFR");
-  //gmin->SetMaxFunctionCalls(10000000); // for Minuit/Minuit2
-  //gmin->SetMaxIterations(1000000);  // for GSL
-  //gmin->SetTolerance(0.0001);
-  //gmin->SetPrintLevel(3);
-
 
   gmin = new HL_Minimizer("ConjugateFR", 1);
   gmin->SetMaxIterations(1000000);
