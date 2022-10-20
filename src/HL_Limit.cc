@@ -3,6 +3,7 @@
 //   Module to read yaml files
 //
 //   author: Jihyun Bhom, Marcin Chrzaszcz
+//   author: Tomas Gonzalo
 //////////////////////////////////////////////////
 
 
@@ -22,8 +23,7 @@ void HL_Limit::Read()
 {
   if(! initialized)
   {
-    std::cout << "HL_Limit, warninig, TRYING TO READ WITHOUT GIVING ANY FILE!" << std::endl;
-    return;
+    throw std::runtime_error("HL_Limit, warninig, TRYING TO READ WITHOUT GIVING ANY FILE!");
   }
   read_standard();
   useUL=false;
@@ -37,8 +37,6 @@ void HL_Limit::Read()
   {
     for(YAML::const_iterator it = node.begin(); it != node.end();  ++it )
     {
-      //std::cout << *it << std::endl;
-      //std::cout << (*it)[0] <<  std::endl;
       CLs.push_back( ((*it)[1]).as<double>()  );
       BR.push_back( ((*it)[0]).as<double>()  );
     }

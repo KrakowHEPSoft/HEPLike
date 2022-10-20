@@ -3,6 +3,7 @@
 //   Module to construck likelihoods for gaussian distribution
 //
 //   author: Jihyun Bhom, Marcin Chrzaszcz
+//   author: Tomas Gonzalo
 //////////////////////////////////////////////////
 
 
@@ -22,7 +23,7 @@ void HL_Gaussian::Read()
 {
   if(! initialized)
   {
-    std::cout << "TRYING TO READ WITHOUT GIVING ANY FILE!" << std::endl;
+    throw std::runtime_error("TRYING TO READ WITHOUT GIVING ANY FILE!");
     return;
   }
 
@@ -46,7 +47,7 @@ void HL_Gaussian::Read()
   }
   else
   {
-    std::cout<<"Error in the HL_Gaussian class, your yaml file has missing Observables"<<std::endl;
+    throw std::runtime_error("Error in the HL_Gaussian class, your yaml file has missing Observables");
   }
 
 }
@@ -74,7 +75,3 @@ double HL_Gaussian::GetLikelihood(double theory, double theory_err)
   double log_likelihood=GetLogLikelihood(theory,theory_err);
   return gsl_sf_exp(log_likelihood);
 }
-
-
-
-

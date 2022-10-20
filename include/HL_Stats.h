@@ -3,6 +3,7 @@
 //   Header with statistic functions
 //
 //   author: Jihyun Bhom, Marcin Chrzaszcz
+//   author: Tomas Gonzalo
 //////////////////////////////////////////////////
 #ifndef STATS_H
 #define STATS_H

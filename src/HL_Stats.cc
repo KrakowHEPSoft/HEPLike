@@ -3,6 +3,7 @@
 //   Module with statistic functions
 //
 //   author: Jihyun Bhom, Marcin Chrzaszcz
+//   author: Tomas Gonzalo
 //////////////////////////////////////////////////
 
 
@@ -51,7 +52,7 @@ namespace HL_Stats
   double gaussian_loglikelihood(double theory, double obs, double theoryerr, double obserr, bool profile_systematics)
   {
     if(theoryerr <0.) std::cerr<<"Negative theory error, in gaussian_loglikelihood"<<std::endl;
-    if(obserr<0.) std::cerr<<"Negative error error, in gaussian_loglikelihood"<<std::endl;
+    if(obserr<0.) std::cerr<<"Negative observed error, in gaussian_loglikelihood"<<std::endl;
 
     if (theoryerr <= 0.) profile_systematics = false;
 

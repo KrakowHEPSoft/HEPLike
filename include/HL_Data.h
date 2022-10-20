@@ -3,6 +3,7 @@
 //   Header for baseic class
 //
 //   author: Jihyun Bhom, Marcin Chrzaszcz
+//   author: Tomas Gonzalo
 //////////////////////////////////////////////////
 #ifndef HL_DATA_H
 #define HL_DATA_H

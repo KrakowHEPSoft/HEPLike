@@ -12,12 +12,6 @@
 
 #include "gsl/gsl_vector.h"
 
-class HL_Function
-{
-  public:
-    virtual double DoEval(const gsl_vector *, void*) { throw std::runtime_error("Not implemented"); }
-};
-
 class HL_Function1D
 {
 

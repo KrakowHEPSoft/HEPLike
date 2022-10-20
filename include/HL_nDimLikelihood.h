@@ -3,6 +3,7 @@
 //   Header for ndim Likelihood
 //
 //   author: Jihyun Bhom, Marcin Chrzaszcz
+//   author: Tomas Gonzalo
 //////////////////////////////////////////////////
 
 

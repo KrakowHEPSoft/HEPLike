@@ -27,7 +27,7 @@
   #include "Math/Functor.h"
   #include "Math/IFunction.h"
 
-// If not, then wrap usual methods in root classes
+// If not, then just throw errors if types are used
 #else
 
 

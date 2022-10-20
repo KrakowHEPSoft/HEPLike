@@ -3,6 +3,7 @@
 //   Module to construct PROFLIKELIHOOD
 //
 //   author: Jihyun Bhom, Marcin Chrzaszcz
+//   author: Tomas Gonzalo
 //////////////////////////////////////////////////
 
 

@@ -3,6 +3,7 @@
 //   Module to construck likelihoods for ndim likelihood
 //
 //   author: Jihyun Bhom, Marcin Chrzaszcz
+//   author: Tomas Gonzalo
 //////////////////////////////////////////////////
 
 

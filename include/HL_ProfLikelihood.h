@@ -3,6 +3,7 @@
 //   Header for PROFLIKELIHOOD class
 //
 //   author: Jihyun Bhom, Marcin Chrzaszcz
+//   author: Tomas Gonzalo
 //////////////////////////////////////////////////
 #ifndef HL_PROFLIKELIHOOD_H
 #define HL_PROFLIKELIHOOD_H

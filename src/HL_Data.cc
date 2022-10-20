@@ -3,6 +3,7 @@
 //   Module to read yaml files
 //
 //   author: Jihyun Bhom,  Marcin Chrzaszcz
+//   author: Tomas Gonzalo
 //////////////////////////////////////////////////
 
 
@@ -46,7 +47,7 @@ void HL_Data::Read()
 {
   if(! initialized)
   {
-    std::cout << "HEPLike Warning, TRYING TO READ WITHOUT GIVING ANY FILE!" << std::endl;
+    throw std::runtime_error("HEPLike Warning, TRYING TO READ WITHOUT GIVING ANY FILE!");
     return;
   }
   read_standard();
