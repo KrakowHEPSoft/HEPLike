@@ -103,7 +103,7 @@ HL_Interpolator2D::~HL_Interpolator2D()
   #endif
 }
 
-double HL_Interpolator2D::Eval(double x) const;
+double HL_Interpolator2D::Eval(double x, double y) const;
 {
   #ifdef USE_ROOT
     return TH->Interpolate(x, y);

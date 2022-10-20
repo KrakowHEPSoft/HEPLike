@@ -39,7 +39,7 @@ class TBranch
     TBranch(const TBranch&)  { throw std::runtime_error("TBranch class is only available in ROOT, please enable ROOT to use"); }
 };
 
-class TTree : std::vector<TBranch*>
+class TTree
 {
   public:
 
