@@ -21,7 +21,7 @@ HL_Minimizer::HL_Minimizer(std::string type, size_t n)
 
 HL_Minimizer::~HL_Minimizer()
 {
-  gsl_min_fdfminimizer_free(s);
+  gsl_multimin_fdfminimizer_free(s);
   gsl_vector_free (x);
 }
 
@@ -35,10 +35,12 @@ void HL_Minimizer::SetTolerance(const double tol)
   tolerance = tol;
 }
 
-void HL_Minimizer::SetFunction(HL_Function &f)
+void HL_Minimizer::SetFunction(HL_Function *f)
 {
   my_func.n = ndim;
-  my_func.f = &(f->DoEval);
+
+  my_func.f = (double (*) (const gsl_vector *, void *))(f);
+
 }
 
 void HL_Minimizer::SetVariable(int i, double value, double step)

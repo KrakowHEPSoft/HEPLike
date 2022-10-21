@@ -12,7 +12,13 @@
 
 #include "gsl/gsl_vector.h"
 
-class HL_Function1D
+class HL_Function
+{
+  public:
+    virtual double operator()(const gsl_vector *, void *) { throw std::runtime_error("Not implemented"); }
+};
+
+class HL_Function1D : public HL_Function
 {
 
   private:
@@ -29,7 +35,7 @@ class HL_Function1D
       likelihood = l;
     };
 
-    double DoEval(const gsl_vector *x, void *)
+    double operator()(const gsl_vector *x, void *)
     {
       double theory_nuisance = gsl_vector_get(x, 0);
 
@@ -51,7 +57,7 @@ class HL_Function1D
 
 };
 
-class HL_Function2D
+class HL_Function2D : public HL_Function
 {
 
   private:
@@ -68,7 +74,7 @@ class HL_Function2D
       likelihood = l;
     };
 
-    double DoEval(const gsl_vector *x, void *)
+    double operator()(const gsl_vector *x, void *)
     {
       std::vector<double> theory_nuisance = {gsl_vector_get(x, 0), gsl_vector_get(x,1)};
 
