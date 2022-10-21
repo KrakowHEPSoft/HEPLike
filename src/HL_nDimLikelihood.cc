@@ -69,8 +69,8 @@ void HL_nDimLikelihood::Read()
       {
         double bx,by,binc;
         in >> bx >> by >> binc;
-        x[i] = bx;
-        y[j] = by;
+        x[i] = xmin + bx*(xmax-xmin)/(n_binsX-1);
+        y[j] = ymin + by*(ymax-ymin)/(n_binsY-1);
         c[i*n_binsX+j] = binc;
       }
     }

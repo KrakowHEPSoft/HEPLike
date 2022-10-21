@@ -35,8 +35,7 @@ void HL_ProfLikelihood::Read()
   // Note: amended to allow text file input
   if(! initialized)
    {
-    std::cout << "HL_ProfLikelihood Warning, TRYING TO READ WITHOUT GIVING ANY FILE!" << std::endl;
-    return;
+    throw std::runtime_error("HL_ProfLikelihood Warning, TRYING TO READ WITHOUT GIVING ANY FILE!")
   }
 
   read_standard();
@@ -59,8 +58,17 @@ void HL_ProfLikelihood::Read()
     {
       double point_,x_,y_;
       in >> point_ >> x_>> y_;
-      x[point]=x_;
-      y[point]=y_;
+      // If value is the same or smaller as the previous one, skip it
+      if(point > 0 and x_ <= x[point-1])
+      {
+        nxbins--;
+        point--;
+      }
+      else
+      {
+        x[point]=x_;
+        y[point]=y_;
+      }
     }
     in.close();
 

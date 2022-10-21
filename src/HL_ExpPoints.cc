@@ -72,11 +72,11 @@ bool HL_ExpPoints::InitData()
 {
   //initializing tree:
   int entries=HL_tree->GetEntries();
-  int nVars=HL_obs.size();
+  size_t nVars=HL_obs.size();
   vector<TBranch> branches(nVars);
   double vars[nVars];
   double weight_tmp;
-  for(unsigned i =0; i < nVars ; ++i)
+  for(size_t i =0; i < nVars ; ++i)
   {
     HL_Branches.push_back( new TBranch);
     HL_tree->SetBranchAddress( HL_obs[i].c_str(), &vars[i], &HL_Branches[i] );

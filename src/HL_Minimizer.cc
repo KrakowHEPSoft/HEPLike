@@ -15,6 +15,8 @@ HL_Minimizer::HL_Minimizer(std::string type, size_t n)
     s = gsl_multimin_fdfminimizer_alloc(gsl_multimin_fdfminimizer_conjugate_fr, n);
   else if (type == "ConjugatePR")
     s = gsl_multimin_fdfminimizer_alloc(gsl_multimin_fdfminimizer_conjugate_pr, n);
+  else
+    throw std::runtime_error("Unkown minimizer algorithm");
 
   x = gsl_vector_alloc(ndim);
 }
@@ -40,6 +42,8 @@ void HL_Minimizer::SetFunction(HL_Function *f)
   my_func.n = ndim;
 
   my_func.f = (double (*) (const gsl_vector *, void *))(f);
+  my_func.df = 0;
+  my_func.fdf = 0;
 
 }
 
