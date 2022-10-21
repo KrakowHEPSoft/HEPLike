@@ -31,6 +31,8 @@
 
 namespace HL_Stats
 {
+  /// Minimum finite result returnable from log(double x);
+  const double logmin = log(std::numeric_limits<double>::min());
 
   /// Use a detection to compute a simple chi-square-like log likelihood, for the case when obs is Gaussian distributed.
   double gauss(double obs, double theory, double theoryerr)
@@ -129,7 +131,7 @@ namespace HL_Stats
       double like = exp(-0.5*pow(diff,2)/errsq)/sqrt(errsq);
       like *= erfc(obserr * diff / (theoryerr * sqrt(2.0*errsq)));
       like += erfc(-diff/(sqrt(2.0)*theoryerr))/obserr;
-      //loglike = prefactor + (like == 0 ? logmin : log(like));
+      loglike = prefactor + (like == 0 ? logmin : log(like));
     }
 
     return loglike;

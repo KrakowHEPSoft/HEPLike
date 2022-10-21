@@ -18,8 +18,8 @@ class HL_Minimizer
 {
   private:
 
-    int ndim;
-    int maxiters;
+    size_t ndim;
+    size_t maxiters;
     double step_size;
     double tolerance;
 
@@ -33,7 +33,7 @@ class HL_Minimizer
 
     ~HL_Minimizer();
 
-    void SetMaxIterations(const int);
+    void SetMaxIterations(const size_t);
     void SetTolerance(const double);
 
     void SetFunction(HL_Function*);

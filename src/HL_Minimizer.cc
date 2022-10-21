@@ -25,7 +25,7 @@ HL_Minimizer::~HL_Minimizer()
   gsl_vector_free (x);
 }
 
-void HL_Minimizer::SetMaxIterations(const int iters)
+void HL_Minimizer::SetMaxIterations(const size_t iters)
 {
   maxiters = iters;
 }

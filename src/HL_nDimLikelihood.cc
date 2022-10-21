@@ -184,7 +184,7 @@ double HL_nDimLikelihood::GetChi2(std::vector<double> theory)  //, double theory
 
 double HL_nDimLikelihood::GetChi2(std::vector<double> theory,  boost::numeric::ublas::matrix<double> theory_cov)
 {
-  double log_likelihood=GetLogLikelihood(theory);
+  double log_likelihood=GetLogLikelihood(theory, theory_cov);
   return -2.*log_likelihood;
 
 }

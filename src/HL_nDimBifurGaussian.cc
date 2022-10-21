@@ -176,7 +176,7 @@ double HL_nDimBifurGaussian::GetChi2(std::vector<double> theory)  //, double the
     throw std::runtime_error("Error in HL_nDimBifurGaussian::GetChi2, you had different dimensions in theory and experiment");
     return -1e10;
   }
-  for(int i=0;i<central_restricted.size(); i++) { diff.push_back(central_restricted[i] - theory[i] );}
+  for(size_t i=0;i<central_restricted.size(); i++) { diff.push_back(central_restricted[i] - theory[i] );}
 
 
   HL_cov_restricted=  boost::numeric::ublas::matrix<double>(size_restricted, size_restricted);
@@ -194,9 +194,9 @@ double HL_nDimBifurGaussian::GetChi2(std::vector<double> theory)  //, double the
   }
 
   HL_Stats::InvertMatrix(HL_cov_restricted,HL_cov_inv_restricted);
-  for (int i=0; i < HL_cov_inv_restricted.size1(); ++i)
+  for (size_t i=0; i < HL_cov_inv_restricted.size1(); ++i)
   {
-    for (int j=0; j<HL_cov_inv_restricted.size2(); ++j)
+    for (size_t j=0; j<HL_cov_inv_restricted.size2(); ++j)
     {
       chi2+= diff[i] * HL_cov_inv_restricted(i,j)*diff[j] ;
     }
@@ -248,7 +248,7 @@ double HL_nDimBifurGaussian::GetChi2(std::vector<double> theory,  boost::numeric
     throw std::runtime_error("Error in HL_nDimBifurGaussian::GetChi2, you had different dimensions in theory and experiment");
     return -1e10;
   }
-  for(int i=0;i<central_restricted.size(); i++) { diff.push_back(central_restricted[i] - theory[i] );}
+  for(size_t i=0;i<central_restricted.size(); i++) { diff.push_back(central_restricted[i] - theory[i] );}
 
 
   HL_cov_restricted=  boost::numeric::ublas::matrix<double>(size_restricted, size_restricted);
@@ -270,9 +270,9 @@ double HL_nDimBifurGaussian::GetChi2(std::vector<double> theory,  boost::numeric
 
   HL_Stats::InvertMatrix(HL_cov_restricted,HL_cov_inv_restricted);
 
-  for (int i=0; i < HL_cov_inv_restricted.size1(); ++i)
+  for (size_t i=0; i < HL_cov_inv_restricted.size1(); ++i)
   {
-    for (int j=0; j<HL_cov_inv_restricted.size2(); ++j)
+    for (size_t j=0; j<HL_cov_inv_restricted.size2(); ++j)
     {
       chi2+= diff[i] * HL_cov_inv_restricted(i,j)*diff[j] ;
     }
