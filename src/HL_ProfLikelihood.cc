@@ -35,7 +35,7 @@ void HL_ProfLikelihood::Read()
   // Note: amended to allow text file input
   if(! initialized)
    {
-    throw std::runtime_error("HL_ProfLikelihood Warning, TRYING TO READ WITHOUT GIVING ANY FILE!")
+    throw std::runtime_error("HL_ProfLikelihood Warning, TRYING TO READ WITHOUT GIVING ANY FILE!");
   }
 
   read_standard();

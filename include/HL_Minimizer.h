@@ -23,8 +23,10 @@ class HL_Minimizer
     double step_size;
     double tolerance;
 
-    gsl_multimin_fdfminimizer *s;
-    gsl_multimin_function_fdf my_func;
+    //gsl_multimin_fdfminimizer *s;
+    //gsl_multimin_function_fdf my_func;
+    gsl_multimin_fminimizer *s;
+    gsl_multimin_function my_func;
     gsl_vector *x;
 
   public:

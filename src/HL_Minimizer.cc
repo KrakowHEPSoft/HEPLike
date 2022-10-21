@@ -11,19 +11,21 @@ HL_Minimizer::HL_Minimizer(std::string type, size_t n)
 {
   ndim = n;
 
-  if(type == "ConjugateFR")
-    s = gsl_multimin_fdfminimizer_alloc(gsl_multimin_fdfminimizer_conjugate_fr, n);
-  else if (type == "ConjugatePR")
-    s = gsl_multimin_fdfminimizer_alloc(gsl_multimin_fdfminimizer_conjugate_pr, n);
-  else
-    throw std::runtime_error("Unkown minimizer algorithm");
+//  if(type == "ConjugateFR")
+//    s = gsl_multimin_fdfminimizer_alloc(gsl_multimin_fdfminimizer_conjugate_fr, n);
+//  else if (type == "ConjugatePR")
+//    s = gsl_multimin_fdfminimizer_alloc(gsl_multimin_fdfminimizer_conjugate_pr, n);
+//  else
+//    throw std::runtime_error("Unkown minimizer algorithm");
+  s = gsl_multimin_fminimizer_alloc(gsl_multimin_fminimizer_nmsimplex2, n);
 
   x = gsl_vector_alloc(ndim);
 }
 
 HL_Minimizer::~HL_Minimizer()
 {
-  gsl_multimin_fdfminimizer_free(s);
+  //gsl_multimin_fdfminimizer_free(s);
+  gsl_multimin_fminimizer_free(s);
   gsl_vector_free (x);
 }
 
@@ -42,8 +44,8 @@ void HL_Minimizer::SetFunction(HL_Function *f)
   my_func.n = ndim;
 
   my_func.f = (double (*) (const gsl_vector *, void *))(f);
-  my_func.df = 0;
-  my_func.fdf = 0;
+//  my_func.df = 0;
+//  my_func.fdf = 0;
 
 }
 
@@ -57,18 +59,26 @@ void HL_Minimizer::Minimize()
 {
   size_t iter = 0;
   int status;
+  double size;
+  gsl_vector *stepsize;
+  gsl_vector_set(stepsize, 0, step_size);
 
-  gsl_multimin_fdfminimizer_set (s, &my_func, x, step_size, tolerance);
+
+//  gsl_multimin_fdfminimizer_set (s, &my_func, x, step_size, tolerance);
+  gsl_multimin_fminimizer_set (s, &my_func, x, stepsize);
 
   do
   {
     iter++;
-    status = gsl_multimin_fdfminimizer_iterate (s);
+    //status = gsl_multimin_fdfminimizer_iterate (s);
+    status = gsl_multimin_fminimizer_iterate (s);
 
     if (status)
       break;
 
-    status = gsl_multimin_test_gradient (s->gradient, tolerance);
+    size = gsl_multimin_fminimizer_size(s);
+    status = gsl_multimin_test_size(size, tolerance);
+    //status = gsl_multimin_test_gradient (s->gradient, tolerance);
   }
   while (status == GSL_CONTINUE && iter < maxiters);
 }
