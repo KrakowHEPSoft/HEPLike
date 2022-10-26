@@ -239,7 +239,7 @@ double HL_nDimLikelihood::GetLogLikelihood(std::vector<double> theory, boost::nu
     gmin->SetMaxIterations(1000000);  // for GSL
     gmin->SetTolerance(0.000001);
 
-    gmin->SetFunction(fun);
+    gmin->SetFunction(*fun);
 
     double step[2] = {0.05*sqrt(theory_cov(0,0)), 0.05*sqrt(theory_cov(1,1)) };
     double variable[2] = { theory[0], theory[1]};

@@ -8,8 +8,9 @@
 #include "HL_Interpolator.h"
 
 
-HL_Interpolator1D::HL_Interpolator1D(int npoints, double *x, double *y)
+HL_Interpolator1D::HL_Interpolator1D(size_t npoints, double *x, double *y)
 {
+  nx = npoints;
   x_accel = gsl_interp_accel_alloc();
   spline = gsl_spline_alloc(gsl_interp_cspline, npoints);
   gsl_spline_init(spline, x, y, npoints);
@@ -34,6 +35,9 @@ HL_Interpolator1D::~HL_Interpolator1D()
 
 double HL_Interpolator1D::Eval(double x) const
 {
+  if(x < x_min or x > x_max)
+    throw std::runtime_error("Variable outside of interpolation range.");
+
   #ifdef USE_ROOT
     return TG->Eval(x, 0);
   #else
@@ -51,6 +55,11 @@ void HL_Interpolator1D::SetLimits(double xmin, double xmax)
   #endif
 }
 
+size_t HL_Interpolator1D::nX() const
+{
+  return nx;
+}
+
 double HL_Interpolator1D::GetXmin() const
 {
   return x_min;
@@ -61,7 +70,7 @@ double HL_Interpolator1D::GetXmax() const
   return x_max;
 }
 
-HL_Interpolator2D::HL_Interpolator2D(int npointsx, int npointsy, double *x, double *y, double *z)
+HL_Interpolator2D::HL_Interpolator2D(size_t npointsx, size_t npointsy, double *x, double *y, double *z)
 : nx(npointsx)
 , ny(npointsy)
 , x_data(x)
@@ -95,6 +104,9 @@ HL_Interpolator2D::~HL_Interpolator2D()
 
 double HL_Interpolator2D::Eval(double x, double y) const
 {
+  if(x < x_min or x > x_max or y < y_min or y > y_max)
+    throw std::runtime_error("Variable outside of interpolation range.");
+
   #ifdef USE_ROOT
     return TH->Interpolate(x, y);
   #else
@@ -108,6 +120,16 @@ void HL_Interpolator2D::SetLimits(double xmin, double xmax, double ymin, double 
   x_max = xmax;
   y_min = ymin;
   y_max = ymax;
+}
+
+size_t HL_Interpolator2D::nX() const
+{
+  return nx;
+}
+
+size_t HL_Interpolator2D::nY() const
+{
+  return ny;
 }
 
 double HL_Interpolator2D::GetXmin() const

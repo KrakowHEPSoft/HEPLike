@@ -132,23 +132,11 @@ double HL_ProfLikelihood::GetLogLikelihood(double theory, double theory_variance
 
   if(theory < xmin || theory > xmax) return -1.e10;
   fun->SetTheory(theory,theory_err);
-  //ROOT::Math::Functor  f1(fun,1);
 
-  //gmin->SetFunction(f1);
-  //double step[1] = {0.01*theory_err};
-  //double variable[1]={theory-5.*theory_err};
-  //gmin->SetVariable(0,"x",variable[0], step[0]);
-  //gmin->SetVariableInitialRange(0,theory-5*theory_err, theory+5.*theory_err);
-  //gmin->SetVariableLimits(0,theory-5.*theory_err, theory+5.*theory_err);
-  //gmin->Minimize();
-  //const double *theory_nuisance = gmin->X();
-
-  //double loglikelihood=likelihood->Eval(theory_nuisance[0],0);
-
-  gmin->SetFunction(fun);
-  double step[1] = {0.01*theory_err};
-  double variable[1]={theory-5.*theory_err};
-  gmin->SetVariable(0, variable[0], step[0]);
+  gmin->SetFunction(*fun);
+  double step = 0.01*theory_err;
+  double variable = theory-5.*theory_err;
+  gmin->SetVariable(0, variable, step]);
   gmin->Minimize();
   std::vector<double> theory_nuisance = gmin->X();
 

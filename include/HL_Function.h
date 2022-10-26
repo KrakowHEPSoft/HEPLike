@@ -14,9 +14,48 @@
 
 class HL_Function
 {
+  protected:
+    size_t ndim;
+
   public:
     virtual ~HL_Function() {}
-    virtual double operator()(const gsl_vector *, void *) { throw std::runtime_error("Not implemented"); }
+    virtual double operator()(const gsl_vecto&) { throw std::runtime_error("Not implemented"); }
+
+    static double F(const gsl_vector *x, void *p)
+    {
+      HL_Function *func = reinterpret_cast<HL_Function*> (p);
+      return (*func)(*x);
+    }
+
+    static void DF(const gsl_vector *x, void *p, gsl_vector *g)
+    {
+      HL_Function *func = reinterpret_cast<HL_Function*> (p);
+      gsl_vector *x2 = gsl_vector_alloc(func->ndim);
+      gsl_vector_memcpy(x2, x);
+      double epsilon = 1e-4;
+      for(size_t i=0; i<func->ndim; i++)
+      {
+        gsl_vector_set(x2, i, gsl_vector_get(x2, i) + epsilon);
+        gsl_vector_set(g, i, ((*func)(*x2) - (*func)(*x)) / epsilon);
+        gsl_vector_set(x2, i, gsl_vector_get(x, i));
+      }
+    }
+
+    static void FDF(const gsl_vector *x, void *p, double *f, gsl_vector *g)
+    {
+      HL_Function *func = reinterpret_cast<HL_Function*> (p);
+      *f = (*func)(*x);
+      gsl_vector *x2 = gsl_vector_alloc(func->ndim);
+      gsl_vector_memcpy(x2, x);
+      const double epsilon = 1e-4;
+      for(size_t i=0; i<func->ndim; i++)
+      {
+        gsl_vector_set(x2, i, gsl_vector_get(x2, i) + epsilon);
+        gsl_vector_set(g, i, ((*func)(*x2) - *f) / epsilon);
+        gsl_vector_set(x2, i, gsl_vector_get(x, i));
+      }
+    }
+
 };
 
 class HL_Function1D : public HL_Function
@@ -34,15 +73,14 @@ class HL_Function1D : public HL_Function
     HL_Function1D(HL_Interpolator1D *l)
     {
       likelihood = l;
+      ndim = 1;
     };
 
-    double operator()(const gsl_vector *x, void *)
+    double operator()(const gsl_vector &x)
     {
-      double theory_nuisance = gsl_vector_get(x, 0);
+      double theory_nuisance = gsl_vector_get(&x, 0);
 
       double loglike = likelihood->Eval(theory_nuisance);
-      //double like = exp(loglike);
-
 
       double gauss_systematic=HL_Stats::gauss(theory_nuisance, theory_mean, theory_err);
 
@@ -73,11 +111,12 @@ class HL_Function2D : public HL_Function
     HL_Function2D(HL_Interpolator2D *l)
     {
       likelihood = l;
+      ndim = 2;
     };
 
-    double operator()(const gsl_vector *x, void *)
+    double operator()(const gsl_vector &x)
     {
-      std::vector<double> theory_nuisance = {gsl_vector_get(x, 0), gsl_vector_get(x,1)};
+      std::vector<double> theory_nuisance = {gsl_vector_get(&x, 0), gsl_vector_get(&x,1)};
 
       double loglikelihood_penalty=1e10;
 

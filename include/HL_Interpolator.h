@@ -24,12 +24,13 @@ class HL_Interpolator1D
     gsl_spline* spline;
     gsl_interp_accel* x_accel;
 
+    size_t nx;
     double x_min, x_max;
 
   public:
 
     // Constructor
-    HL_Interpolator1D(int, double*, double*);
+    HL_Interpolator1D(size_t, double*, double*);
 
     // Destructor
     ~HL_Interpolator1D();
@@ -39,6 +40,9 @@ class HL_Interpolator1D
 
     // Set limits
     void SetLimits(double, double);
+
+    // Get number of points
+    size_t nX() const;
 
     // Get limits
     double GetXmin() const;
@@ -59,7 +63,7 @@ class HL_Interpolator2D
     gsl_interp_accel* x_accel;
     gsl_interp_accel* y_accel;
 
-    int nx, ny;
+    size_t nx, ny;
     double x_min, x_max;
     double y_min, y_max;
 
@@ -68,7 +72,7 @@ class HL_Interpolator2D
     double *x_data, *y_data, *z_data;
 
     // Constructor
-    HL_Interpolator2D(int, int, double*, double*, double*);
+    HL_Interpolator2D(size_t, size_t, double*, double*, double*);
 
     // Destructor
     ~HL_Interpolator2D();
@@ -78,6 +82,10 @@ class HL_Interpolator2D
 
     // Set limits
     void SetLimits(double, double, double, double);
+
+    // Get number of points
+    size_t nX() const;
+    size_t nY() const;
 
     // Get limits
     double GetXmin() const;
