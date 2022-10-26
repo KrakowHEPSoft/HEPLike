@@ -62,7 +62,6 @@ void HL_Minimizer::Minimize()
 {
   size_t iter = 0;
   int status;
-  double size;
 
   gsl_multimin_fdfminimizer_set (s, &my_func, x, step_size, tolerance);
 

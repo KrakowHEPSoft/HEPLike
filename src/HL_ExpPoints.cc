@@ -71,7 +71,7 @@ void HL_ExpPoints::Read()
 bool HL_ExpPoints::InitData()
 {
   //initializing tree:
-  int entries=HL_tree->GetEntries();
+  size_t entries=HL_tree->GetEntries();
   size_t nVars=HL_obs.size();
   vector<TBranch> branches(nVars);
   double vars[nVars];
@@ -85,12 +85,12 @@ bool HL_ExpPoints::InitData()
 
 
   // storing data points in memory:
-  for(unsigned i=0; i < entries; ++i)
+  for(size_t i=0; i < entries; ++i)
   {
     HL_tree->GetEntry(i);
     weights.push_back(weight_tmp);
     vector<double> tmp;
-    for(int j=0; j < nVars ; ++j)
+    for(size_t j=0; j < nVars ; ++j)
     {
       tmp.push_back(vars[j]);
     }
