@@ -5,6 +5,8 @@
 //   author: Tomas Gonzalo
 //////////////////////////////////////////////////
 
+#include <stdexcept>
+
 #include "HL_Interpolator.h"
 
 
