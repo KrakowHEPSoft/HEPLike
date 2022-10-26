@@ -19,7 +19,7 @@ class HL_Function
 
   public:
     virtual ~HL_Function() {}
-    virtual double operator()(const gsl_vecto&) { throw std::runtime_error("Not implemented"); }
+    virtual double operator()(const gsl_vector&) { throw std::runtime_error("Not implemented"); }
 
     static double F(const gsl_vector *x, void *p)
     {
