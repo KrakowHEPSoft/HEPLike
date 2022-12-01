@@ -56,25 +56,39 @@ void HL_nDimLikelihood::Read()
     // TODO: This assumes it is always 2D, need to change this to make it work with 3D too
     dim=2;
     in >> n_binsX >> xmin >> xmax >> n_binsY >> ymin >> ymax;
-    // Data has entries from 0 to nxbins, so a total of nxbins+1
-    n_binsX++;
-    n_binsY++;
+
+    // Bin widths
+    double dx = (xmax-xmin)/n_binsX;
+    double dy = (ymax-ymin)/n_binsY;
+
     double x[n_binsX];
     double y[n_binsY];
     double c[n_binsX*n_binsY];
 
-    for(int i=0; i<n_binsX; i++)
+    for(int i=0; i<=n_binsX; i++)
     {
-      for(int j=0; j<n_binsY; j++)
+      for(int j=0; j<=n_binsY; j++)
       {
         double bx,by,binc;
         in >> bx >> by >> binc;
-        x[i] = xmin + bx*(xmax-xmin)/(n_binsX-1);
-        y[j] = ymin + by*(ymax-ymin)/(n_binsY-1);
-        c[j*n_binsX+i] = binc;
+
+        //Ignore the underflow bin
+        if(!bx or !by) continue;
+
+        // Root histograms store the centre value of the bin, so compute that for each bin
+        x[i-1] = xmin + (bx-0.5)*dx;
+        y[j-1] = ymin + (by-0.5)*dy;
+        c[(j-1)*n_binsX + i-1] = binc;
       }
     }
     in.close();
+
+    // Sometimes the last bin is actually overflow, so remove it
+    if(c[-1] == 0)
+    {
+      n_binsX--;
+      n_binsY--;
+    }
 
     hist2D = new HL_Interpolator2D(n_binsX, n_binsY, x, y, c);
     hist2D->SetLimits(xmin,xmax,ymin,ymax);

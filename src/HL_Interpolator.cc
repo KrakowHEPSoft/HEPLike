@@ -6,6 +6,7 @@
 //////////////////////////////////////////////////
 
 #include <stdexcept>
+#include <iostream>
 
 #include "HL_Interpolator.h"
 
@@ -81,7 +82,7 @@ HL_Interpolator2D::HL_Interpolator2D(size_t npointsx, size_t npointsy, double *x
 {
   x_accel = gsl_interp_accel_alloc();
   y_accel = gsl_interp_accel_alloc();
-  spline2d = gsl_spline2d_alloc(gsl_interp2d_bicubic, npointsx, npointsy);
+  spline2d = gsl_spline2d_alloc(gsl_interp2d_bilinear, npointsx, npointsy);
   gsl_spline2d_init(spline2d, x, y, z, npointsx, npointsy);
 
 }
