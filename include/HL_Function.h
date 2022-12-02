@@ -65,16 +65,35 @@ class HL_Function1D : public HL_Function
 
     double theory_mean;
     double theory_err;
-    HL_Interpolator1D *likelihood;
 
 
   public:
 
+    HL_Interpolator1D *likelihood;
+
     HL_Function1D(HL_Interpolator1D *l)
     {
-      likelihood = l;
+      likelihood = new HL_Interpolator1D(*l);
       ndim = 1;
     };
+
+    HL_Function1D(const HL_Function1D &func)
+     : HL_Function(func)
+     , theory_mean(func.GetTheoryMean())
+     , theory_err(func.GetTheoryErr())
+    {
+      likelihood = new HL_Interpolator1D(*func.likelihood);
+    }
+
+    HL_Function1D &operator=(HL_Function1D &func)
+    {
+      HL_Function::operator=(func);
+      theory_mean = func.GetTheoryMean();
+      theory_err = func.GetTheoryErr();
+      likelihood = new HL_Interpolator1D(*func.likelihood);
+
+      return *this;
+    }
 
     double operator()(const gsl_vector &x)
     {
@@ -94,6 +113,16 @@ class HL_Function1D : public HL_Function
       theory_err=err;
     };
 
+    double GetTheoryMean() const
+    {
+      return theory_mean;
+    }
+
+    double GetTheoryErr() const
+    {
+      return theory_err;
+    }
+
 };
 
 class HL_Function2D : public HL_Function
@@ -104,15 +133,33 @@ class HL_Function2D : public HL_Function
 
     vector <double> theory_mean;
     boost::numeric::ublas::matrix<double> theory_cov;
-    HL_Interpolator2D *likelihood;
 
   public:
+
+    HL_Interpolator2D *likelihood;
 
     HL_Function2D(HL_Interpolator2D *l)
     {
       likelihood = l;
       ndim = 2;
     };
+
+    HL_Function2D(const HL_Function2D &func)
+     : HL_Function(func)
+     , theory_mean(func.GetTheoryMean())
+     , theory_cov(func.GetTheoryCov())
+     , likelihood(new HL_Interpolator2D(*func.likelihood))
+    {}
+
+    HL_Function2D &operator=(HL_Function2D &func)
+    {
+      HL_Function::operator=(func);
+      theory_mean = func.GetTheoryMean();
+      theory_cov = func.GetTheoryCov();
+      likelihood = new HL_Interpolator2D(*func.likelihood);
+
+      return *this;
+    }
 
     double operator()(const gsl_vector &x)
     {
@@ -160,6 +207,18 @@ class HL_Function2D : public HL_Function
       theory_mean=mean;
       theory_cov=cov;
     }
+
+    std::vector<double> GetTheoryMean() const
+    {
+      return theory_mean;
+    }
+
+    boost::numeric::ublas::matrix<double> GetTheoryCov() const
+    {
+      return theory_cov;
+    }
+
+
 };
 
 #endif

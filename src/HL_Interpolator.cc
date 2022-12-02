@@ -7,17 +7,50 @@
 
 #include <stdexcept>
 #include <iostream>
+#include <algorithm>
 
 #include "HL_Interpolator.h"
 
 
-HL_Interpolator1D::HL_Interpolator1D(size_t npoints, double *x, double *y)
+HL_Interpolator1D::HL_Interpolator1D(size_t npoints, double x[], double y[])
 {
   nx = npoints;
+  x_data = new double[nx]; std::copy(x,x+nx,x_data);
+  y_data = new double[nx]; std::copy(y,y+nx,y_data);
   x_accel = gsl_interp_accel_alloc();
-  spline = gsl_spline_alloc(gsl_interp_cspline, npoints);
+  spline = gsl_spline_alloc(gsl_interp_linear, npoints);
   gsl_spline_init(spline, x, y, npoints);
 }
+
+HL_Interpolator1D::HL_Interpolator1D(const HL_Interpolator1D &interp)
+ : nx(interp.nX())
+ , x_min(interp.GetXmin())
+ , x_max(interp.GetXmax())
+{
+  x_data = new double[nx]; std::copy(interp.x_data,interp.x_data+nx,x_data);
+  y_data = new double[nx]; std::copy(interp.y_data,interp.y_data+nx,y_data);
+
+  x_accel = gsl_interp_accel_alloc();
+  spline = gsl_spline_alloc(gsl_interp_linear, nx);
+  gsl_spline_init(spline, x_data, y_data, nx);
+}
+
+HL_Interpolator1D &HL_Interpolator1D::operator=(const HL_Interpolator1D &interp)
+{
+  nx = interp.nX();
+  x_min = interp.GetXmin();
+  x_max = interp.GetXmax();
+
+  x_data = new double[nx]; std::copy(interp.x_data,interp.x_data+nx,x_data);
+  y_data = new double[nx]; std::copy(interp.y_data,interp.y_data+nx,y_data);
+
+  x_accel = gsl_interp_accel_alloc();
+  spline = gsl_spline_alloc(gsl_interp_linear, nx);
+  gsl_spline_init(spline, x_data, y_data, nx);
+
+  return *this;
+}
+
 
 #ifdef USE_ROOT
  HL_Interpolator1D::HL_Interpolator1D(TGraph *tgraph)
@@ -28,8 +61,11 @@ HL_Interpolator1D::HL_Interpolator1D(size_t npoints, double *x, double *y)
 
 HL_Interpolator1D::~HL_Interpolator1D()
 {
-  gsl_spline_free(spline);
-  gsl_interp_accel_free(x_accel);
+  if(spline) gsl_spline_free(spline);
+  if(x_accel) gsl_interp_accel_free(x_accel);
+
+  delete[] x_data;
+  delete[] y_data;
 
   #ifdef USE_ROOT
     delete TG;
@@ -73,18 +109,58 @@ double HL_Interpolator1D::GetXmax() const
   return x_max;
 }
 
-HL_Interpolator2D::HL_Interpolator2D(size_t npointsx, size_t npointsy, double *x, double *y, double *z)
+HL_Interpolator2D::HL_Interpolator2D(size_t npointsx, size_t npointsy, double x[], double y[], double z[])
 : nx(npointsx)
 , ny(npointsy)
-, x_data(x)
-, y_data(y)
-, z_data(z)
 {
+  x_data = new double[nx]; std::copy(x,x+nx,x_data);
+  y_data = new double[ny]; std::copy(y,y+ny,y_data);
+  z_data = new double[nx*ny]; std::copy(z,z+nx*ny,z_data);
+
   x_accel = gsl_interp_accel_alloc();
   y_accel = gsl_interp_accel_alloc();
   spline2d = gsl_spline2d_alloc(gsl_interp2d_bilinear, npointsx, npointsy);
   gsl_spline2d_init(spline2d, x, y, z, npointsx, npointsy);
 
+}
+
+HL_Interpolator2D::HL_Interpolator2D(const HL_Interpolator2D &interp)
+ : nx(interp.nX())
+ , ny(interp.nY())
+ , x_min(interp.GetXmin())
+ , x_max(interp.GetXmax())
+ , y_min(interp.GetYmin())
+ , y_max(interp.GetYmax())
+{
+  x_data = new double[nx]; std::copy(interp.x_data,interp.x_data+nx,x_data);
+  y_data = new double[ny]; std::copy(interp.y_data,interp.y_data+ny,y_data);
+  z_data = new double[nx*ny]; std::copy(interp.z_data,interp.z_data+nx*ny,z_data);
+
+  x_accel = gsl_interp_accel_alloc();
+  y_accel = gsl_interp_accel_alloc();
+  spline2d = gsl_spline2d_alloc(gsl_interp2d_bilinear, nx, ny);
+  gsl_spline2d_init(spline2d, x_data, y_data, z_data, nx, ny);
+}
+
+HL_Interpolator2D &HL_Interpolator2D::operator=(const HL_Interpolator2D &interp)
+{
+  nx = interp.nX();
+  ny = interp.nY();
+  x_min = interp.GetXmin();
+  x_max = interp.GetXmax();
+  y_min = interp.GetYmin();
+  y_max = interp.GetYmax();
+
+  x_data = new double[nx]; std::copy(interp.x_data,interp.x_data+nx,x_data);
+  y_data = new double[ny]; std::copy(interp.y_data,interp.y_data+ny,y_data);
+  z_data = new double[nx*ny]; std::copy(interp.z_data,interp.z_data+nx*ny,z_data);
+
+  x_accel = gsl_interp_accel_alloc();
+  y_accel = gsl_interp_accel_alloc();
+  spline2d = gsl_spline2d_alloc(gsl_interp2d_bilinear, nx, ny);
+  gsl_spline2d_init(spline2d, x_data, y_data, z_data, nx, ny);
+
+  return *this;
 }
 
 #ifdef USE_ROOT
@@ -96,9 +172,13 @@ HL_Interpolator2D::HL_Interpolator2D(size_t npointsx, size_t npointsy, double *x
 
 HL_Interpolator2D::~HL_Interpolator2D()
 {
-  gsl_spline2d_free(spline2d);
-  gsl_interp_accel_free(x_accel);
-  gsl_interp_accel_free(y_accel);
+  if(spline2d) gsl_spline2d_free(spline2d);
+  if(x_accel) gsl_interp_accel_free(x_accel);
+  if(y_accel) gsl_interp_accel_free(y_accel);
+
+  delete[] x_data;
+  delete[] y_data;
+  delete[] z_data;
 
   #ifdef USE_ROOT
     delete TH;

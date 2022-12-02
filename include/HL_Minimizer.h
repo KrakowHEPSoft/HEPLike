@@ -23,13 +23,15 @@ class HL_Minimizer
     double step_size;
     double tolerance;
 
+  public:
+
     gsl_multimin_fdfminimizer *s;
     gsl_multimin_function_fdf my_func;
     gsl_vector *x;
 
-  public:
-
     HL_Minimizer(std::string, size_t);
+    HL_Minimizer(const HL_Minimizer&);
+    HL_Minimizer &operator=(const HL_Minimizer&);
 
     ~HL_Minimizer();
 
@@ -39,6 +41,11 @@ class HL_Minimizer
     void SetFunction(HL_Function&);
 
     void SetVariable(int, double, double);
+
+    size_t GetNDim() const;
+    size_t GetMaxIters() const;
+    double GetStepSize() const;
+    double GetTolerance() const;
 
     void Minimize();
 

@@ -39,8 +39,11 @@ class HL_nDimLikelihood: public HL_Data
 
   public:
 
-    explicit HL_nDimLikelihood() :  HL_Data() {};
-    explicit HL_nDimLikelihood(std::string s) :  HL_Data(s) { };
+    explicit HL_nDimLikelihood() : HL_Data(), hist2D(nullptr), hist_profileX(nullptr), hist_profileY(nullptr), gmin(nullptr), fun(nullptr) {};
+    explicit HL_nDimLikelihood(std::string s) :  HL_Data(s), hist2D(nullptr), hist_profileX(nullptr), hist_profileY(nullptr), gmin(nullptr), fun(nullptr) {};
+    HL_nDimLikelihood(const HL_nDimLikelihood &);
+    HL_nDimLikelihood &operator=(const HL_nDimLikelihood &);
+
 
     ~HL_nDimLikelihood();
 
@@ -62,8 +65,6 @@ class HL_nDimLikelihood: public HL_Data
     std::vector<std::string> GetObservables(){ return Observables;};
 
     double loglikelihood_penalty;
-
-  private:
 
     std::string HL_RootFile;
     std::string HL_PATH;

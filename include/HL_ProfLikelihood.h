@@ -35,8 +35,11 @@ class HL_ProfLikelihood: public HL_Data
 
  public:
 
-  explicit HL_ProfLikelihood() :  HL_Data() {};
-  explicit HL_ProfLikelihood(std::string s) :  HL_Data(s) { };
+  explicit HL_ProfLikelihood() : HL_Data(), likelihood(nullptr), gmin(nullptr), fun(nullptr) {};
+  explicit HL_ProfLikelihood(std::string s) :  HL_Data(s), likelihood(nullptr), gmin(nullptr), fun(nullptr){};
+
+  HL_ProfLikelihood(const HL_ProfLikelihood &);
+  HL_ProfLikelihood &operator=(const HL_ProfLikelihood &);
 
   ~HL_ProfLikelihood();
 
@@ -49,9 +52,6 @@ class HL_ProfLikelihood: public HL_Data
 
   double GetLikelihood(double theory);
   double GetLikelihood(double theory, double theory_err);
-
-
- private:
 
   int nxbins;
   double xmin;

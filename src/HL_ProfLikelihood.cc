@@ -22,11 +22,46 @@ using namespace std;
 
 static bool prof_debug = false;
 
+HL_ProfLikelihood::HL_ProfLikelihood(const HL_ProfLikelihood &prof)
+ : HL_Data(prof)
+ , nxbins(prof.nxbins)
+ , xmin(prof.xmin)
+ , xmax(prof.xmax)
+ , central_mes_val(prof.central_mes_val)
+ , ObsName(prof.ObsName)
+ , HL_RootFile(prof.HL_RootFile)
+ , HL_PATH(prof.HL_PATH)
+{
+  if(prof.likelihood) likelihood = new HL_Interpolator1D(*prof.likelihood);
+  if(prof.gmin) gmin = new HL_Minimizer(*prof.gmin);
+  if(prof.fun) fun = new HL_Function1D(*prof.fun);
+
+}
+
+
+HL_ProfLikelihood &HL_ProfLikelihood::operator=(const HL_ProfLikelihood &prof)
+{
+  HL_Data::operator=(prof);
+
+  nxbins = prof.nxbins;
+  xmin = prof.xmin;
+  xmax = prof.xmax;
+  central_mes_val = prof.central_mes_val;
+  ObsName = prof.ObsName;
+  HL_RootFile = prof.HL_RootFile;
+  HL_PATH = prof.HL_PATH;
+  if(prof.likelihood) likelihood = new HL_Interpolator1D(*prof.likelihood);
+  if(prof.gmin) gmin = new HL_Minimizer(*prof.gmin);
+  if(prof.fun) fun = new HL_Function1D(*prof.fun);
+
+  return *this;
+}
+
 HL_ProfLikelihood::~HL_ProfLikelihood()
 {
-  delete likelihood;
-  delete gmin;
-  delete fun;
+  if(likelihood) delete likelihood;
+  if(gmin) delete gmin;
+  if(fun) delete fun;
 }
 
 void HL_ProfLikelihood::Read()
@@ -48,8 +83,6 @@ void HL_ProfLikelihood::Read()
     if(prof_debug) std::cout << "Opening file " << filename << std::endl;
     std::ifstream in(filename.c_str());
     in >> nxbins >> xmin >> xmax;
-    // Data has entries from 0 to nxbins, so a total of nxbins+1
-    nxbins++;
 
     double x[nxbins];
     double y[nxbins];
@@ -128,6 +161,9 @@ double HL_ProfLikelihood::GetLogLikelihood(double theory)
 
 double HL_ProfLikelihood::GetLogLikelihood(double theory, double theory_variance)
 {
+  if(theory_variance == 0)
+    return GetLogLikelihood(theory);
+
   double theory_err=sqrt(theory_variance);
 
   if(theory < xmin || theory > xmax) return -1.e10;

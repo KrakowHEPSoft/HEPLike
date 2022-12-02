@@ -22,10 +22,34 @@ HL_Minimizer::HL_Minimizer(std::string type, size_t n)
   x = gsl_vector_alloc(ndim);
 }
 
+HL_Minimizer::HL_Minimizer(const HL_Minimizer &min)
+ : ndim(min.GetNDim())
+ , maxiters(min.GetMaxIters())
+ , step_size(min.GetStepSize())
+ , tolerance(min.GetTolerance())
+ , my_func(min.my_func)
+{
+  s = gsl_multimin_fdfminimizer_alloc(gsl_multimin_fdfminimizer_conjugate_fr, ndim);
+  x = gsl_vector_alloc(ndim);
+}
+
+HL_Minimizer &HL_Minimizer::operator=(const HL_Minimizer &min)
+{
+  ndim = min.GetNDim();
+  maxiters = min.GetMaxIters();
+  step_size = min.GetStepSize();
+  tolerance = min.GetTolerance();
+  my_func = min.my_func;
+
+  s = gsl_multimin_fdfminimizer_alloc(gsl_multimin_fdfminimizer_conjugate_fr, ndim);
+  x = gsl_vector_alloc(ndim);
+
+  return *this;
+}
+
 HL_Minimizer::~HL_Minimizer()
 {
-  if(s!=0) gsl_multimin_fdfminimizer_free(s);
-  gsl_multimin_fdfminimizer_free(s);
+  if(s) gsl_multimin_fdfminimizer_free(s);
   gsl_vector_free(x);
 }
 
@@ -56,6 +80,26 @@ void HL_Minimizer::SetVariable(int i, double value, double step)
 {
   gsl_vector_set (x, i, value);
   if(!step_size or step_size > step) step_size = step;
+}
+
+size_t HL_Minimizer::GetNDim() const
+{
+  return ndim;
+}
+
+size_t HL_Minimizer::GetMaxIters() const
+{
+  return maxiters;
+}
+
+double HL_Minimizer::GetStepSize() const
+{
+  return step_size;
+}
+
+double HL_Minimizer::GetTolerance() const
+{
+  return tolerance;
 }
 
 void HL_Minimizer::Minimize()

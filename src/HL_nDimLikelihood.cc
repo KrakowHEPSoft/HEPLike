@@ -21,15 +21,73 @@ using namespace std;
 
 static bool ndim_debug = false;
 
+HL_nDimLikelihood::HL_nDimLikelihood(const HL_nDimLikelihood &ndimlike)
+ : HL_Data(ndimlike)
+ , dim(ndimlike.dim)
+ , n_binsX(ndimlike.n_binsX)
+ , n_binsY(ndimlike.n_binsY)
+ , n_binsZ(ndimlike.n_binsZ)
+ , xmin(ndimlike.xmin)
+ , xmax(ndimlike.xmax)
+ , ymin(ndimlike.ymin)
+ , ymax(ndimlike.ymax)
+ , zmin(ndimlike.zmin)
+ , zmax(ndimlike.zmax)
+ , NoOfObservables(ndimlike.NoOfObservables)
+ , size_restricted(ndimlike.size_restricted)
+ , central_mes_val(ndimlike.central_mes_val)
+ , Observables(ndimlike.Observables)
+ , profiled(ndimlike.profiled)
+ , HL_RootFile(ndimlike.HL_RootFile)
+ , HL_PATH(ndimlike.HL_PATH)
+{
+  if(ndimlike.hist2D) hist2D = new HL_Interpolator2D(*ndimlike.hist2D);
+  if(ndimlike.hist_profileX) hist_profileX = new HL_Interpolator1D(*ndimlike.hist_profileX);
+  if(ndimlike.hist_profileY) hist_profileY = new HL_Interpolator1D(*ndimlike.hist_profileY);
+  if(ndimlike.gmin) gmin = new HL_Minimizer(*ndimlike.gmin);
+  if(ndimlike.fun) fun = new HL_Function2D(*ndimlike.fun);
+}
+
+
+HL_nDimLikelihood &HL_nDimLikelihood::operator=(const HL_nDimLikelihood &ndimlike)
+{
+  HL_Data::operator=(ndimlike);
+
+  dim = ndimlike.dim;
+  n_binsX = ndimlike.n_binsX;
+  n_binsY = ndimlike.n_binsY;
+  n_binsZ = ndimlike.n_binsZ;
+  xmin = ndimlike.xmin;
+  xmax = ndimlike.xmax;
+  ymin = ndimlike.ymin;
+  ymax = ndimlike.ymax;
+  zmin = ndimlike.zmin;
+  zmax = ndimlike.zmax;
+  NoOfObservables = ndimlike.NoOfObservables;
+  size_restricted = ndimlike.size_restricted;
+  central_mes_val = ndimlike.central_mes_val;
+  Observables = ndimlike.Observables;
+  profiled = ndimlike.profiled;
+  HL_RootFile = ndimlike.HL_RootFile;
+  HL_PATH = ndimlike.HL_PATH;
+  if(ndimlike.hist2D) hist2D = new HL_Interpolator2D(*ndimlike.hist2D);
+  if(ndimlike.hist_profileX) hist_profileX = new HL_Interpolator1D(*ndimlike.hist_profileX);
+  if(ndimlike.hist_profileY) hist_profileY = new HL_Interpolator1D(*ndimlike.hist_profileY);
+  if(ndimlike.gmin) gmin = new HL_Minimizer(*ndimlike.gmin);
+  if(ndimlike.fun) fun = new HL_Function2D(*ndimlike.fun);
+
+  return *this;
+}
+
 HL_nDimLikelihood::~HL_nDimLikelihood()
 {
-  delete hist2D;
+  if(hist2D) delete hist2D;
   // delete hist3D;
-  delete hist_profileX;
-  delete hist_profileY;
+  if(hist_profileX) delete hist_profileX;
+  if(hist_profileY) delete hist_profileY;
   // delete hist_profileZ;
-  delete gmin;
-  delete fun;
+  if(gmin) delete gmin;
+  if(fun) delete fun;
 }
 
 void HL_nDimLikelihood::Read()
@@ -39,8 +97,7 @@ void HL_nDimLikelihood::Read()
 
   if(! initialized)
   {
-    std::cout << "HL_nDimLikelihood Warning, TRYING TO READ WITHOUT GIVING ANY FILE!" << std::endl;
-    return;
+    throw std::runtime_error("HL_nDimLikelihood Warning, TRYING TO READ WITHOUT GIVING ANY FILE!");
   }
   read_standard();
   loglikelihood_penalty=-1.e6;

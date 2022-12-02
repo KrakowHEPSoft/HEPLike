@@ -21,16 +21,20 @@ class HL_Interpolator1D
   private:
 
     // Member variables
-    gsl_spline* spline;
-    gsl_interp_accel* x_accel;
-
     size_t nx;
     double x_min, x_max;
 
   public:
 
-    // Constructor
-    HL_Interpolator1D(size_t, double*, double*);
+    double *x_data, *y_data;
+
+    gsl_spline* spline;
+    gsl_interp_accel* x_accel;
+
+    // Constructors
+    HL_Interpolator1D(size_t, double[], double[]);
+    HL_Interpolator1D(const HL_Interpolator1D&);
+    HL_Interpolator1D &operator=(const HL_Interpolator1D&);
 
     // Destructor
     ~HL_Interpolator1D();
@@ -59,10 +63,6 @@ class HL_Interpolator2D
   private:
 
     // Member variables
-    gsl_spline2d* spline2d;
-    gsl_interp_accel* x_accel;
-    gsl_interp_accel* y_accel;
-
     size_t nx, ny;
     double x_min, x_max;
     double y_min, y_max;
@@ -71,8 +71,14 @@ class HL_Interpolator2D
 
     double *x_data, *y_data, *z_data;
 
-    // Constructor
-    HL_Interpolator2D(size_t, size_t, double*, double*, double*);
+    gsl_spline2d* spline2d;
+    gsl_interp_accel* x_accel;
+    gsl_interp_accel* y_accel;
+
+    // Constructors
+    HL_Interpolator2D(size_t, size_t, double[], double[], double[]);
+    HL_Interpolator2D(const HL_Interpolator2D&);
+    HL_Interpolator2D &operator=(const HL_Interpolator2D&);
 
     // Destructor
     ~HL_Interpolator2D();
