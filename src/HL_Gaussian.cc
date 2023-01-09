@@ -3,6 +3,7 @@
 //   Module to construck likelihoods for gaussian distribution
 //
 //   author: Jihyun Bhom, Marcin Chrzaszcz
+//   author: Tomas Gonzalo
 //////////////////////////////////////////////////
 
 
@@ -21,35 +22,36 @@ using namespace std;
 void HL_Gaussian::Read()
 {
   if(! initialized)
-    {
-      std::cout << "TRYING TO READ WITHOUT GIVING ANY FILE!" << std::endl;
-      return;
-    }
+  {
+    throw std::runtime_error("TRYING TO READ WITHOUT GIVING ANY FILE!");
+    return;
+  }
 
   read_standard();
 
   if(config["Observables"])
+  {
+    YAML::Node node  = config["Observables"];
+    ObsName=node[0][0].as<std::string>();
+    HL_Central=node[0][1].as<double>();
+    HL_Sigma_stat=node[0][2].as<double>();
+    if(node[0].size()>3)
     {
-      YAML::Node node  = config["Observables"];
-      ObsName=node[0][0].as<std::string>();
-      HL_Central=node[0][1].as<double>();
-      HL_Sigma_stat=node[0][2].as<double>();
-      if(node[0].size()>3)
-        {
-          HL_Sigma_syst=node[0][3].as<double>(); 
-        }
-      else
-        {
-          HL_Sigma_syst=0.;
-        }
+      HL_Sigma_syst=node[0][3].as<double>();
+    }
+    else
+    {
+      HL_Sigma_syst=0.;
+    }
 
-    }
+  }
   else
-    {
-      std::cout<<"Error in the HL_Gaussian class, your yaml file has missing Observables"<<std::endl;
-    }
-      
+  {
+    throw std::runtime_error("Error in the HL_Gaussian class, your yaml file has missing Observables");
+  }
+
 }
+
 double HL_Gaussian::GetChi2(double theory, double theory_var)
 {
   double theory_err=sqrt(theory_var);
@@ -60,19 +62,16 @@ double HL_Gaussian::GetChi2(double theory, double theory_var)
 }
 
 
-double HL_Gaussian::GetLogLikelihood(double theory, double theory_err)  
+double HL_Gaussian::GetLogLikelihood(double theory, double theory_err)
 {
 
   double chi2=GetChi2(theory,theory_err);
-  
+
   return -0.5*chi2;
 }
-double HL_Gaussian::GetLikelihood(double theory, double theory_err) 
+
+double HL_Gaussian::GetLikelihood(double theory, double theory_err)
 {
   double log_likelihood=GetLogLikelihood(theory,theory_err);
-  return gsl_sf_exp(log_likelihood);  
+  return gsl_sf_exp(log_likelihood);
 }
-
-
-
-

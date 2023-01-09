@@ -3,6 +3,7 @@
 //   Module to construck likelihoods for ndim likelihood
 //
 //   author: Jihyun Bhom, Marcin Chrzaszcz
+//   author: Tomas Gonzalo
 //////////////////////////////////////////////////
 
 
@@ -16,10 +17,78 @@
 #include "HL_Constants.h"
 #include "HL_nDimLikelihood.h"
 
-
 using namespace std;
 
+static bool ndim_debug = false;
 
+HL_nDimLikelihood::HL_nDimLikelihood(const HL_nDimLikelihood &ndimlike)
+ : HL_Data(ndimlike)
+ , dim(ndimlike.dim)
+ , n_binsX(ndimlike.n_binsX)
+ , n_binsY(ndimlike.n_binsY)
+ , n_binsZ(ndimlike.n_binsZ)
+ , xmin(ndimlike.xmin)
+ , xmax(ndimlike.xmax)
+ , ymin(ndimlike.ymin)
+ , ymax(ndimlike.ymax)
+ , zmin(ndimlike.zmin)
+ , zmax(ndimlike.zmax)
+ , NoOfObservables(ndimlike.NoOfObservables)
+ , size_restricted(ndimlike.size_restricted)
+ , central_mes_val(ndimlike.central_mes_val)
+ , Observables(ndimlike.Observables)
+ , profiled(ndimlike.profiled)
+ , HL_RootFile(ndimlike.HL_RootFile)
+ , HL_PATH(ndimlike.HL_PATH)
+{
+  if(ndimlike.hist2D) hist2D = new HL_Interpolator2D(*ndimlike.hist2D);
+  if(ndimlike.hist_profileX) hist_profileX = new HL_Interpolator1D(*ndimlike.hist_profileX);
+  if(ndimlike.hist_profileY) hist_profileY = new HL_Interpolator1D(*ndimlike.hist_profileY);
+  if(ndimlike.gmin) gmin = new HL_Minimizer(*ndimlike.gmin);
+  if(ndimlike.fun) fun = new HL_Function2D(*ndimlike.fun);
+}
+
+
+HL_nDimLikelihood &HL_nDimLikelihood::operator=(const HL_nDimLikelihood &ndimlike)
+{
+  HL_Data::operator=(ndimlike);
+
+  dim = ndimlike.dim;
+  n_binsX = ndimlike.n_binsX;
+  n_binsY = ndimlike.n_binsY;
+  n_binsZ = ndimlike.n_binsZ;
+  xmin = ndimlike.xmin;
+  xmax = ndimlike.xmax;
+  ymin = ndimlike.ymin;
+  ymax = ndimlike.ymax;
+  zmin = ndimlike.zmin;
+  zmax = ndimlike.zmax;
+  NoOfObservables = ndimlike.NoOfObservables;
+  size_restricted = ndimlike.size_restricted;
+  central_mes_val = ndimlike.central_mes_val;
+  Observables = ndimlike.Observables;
+  profiled = ndimlike.profiled;
+  HL_RootFile = ndimlike.HL_RootFile;
+  HL_PATH = ndimlike.HL_PATH;
+  if(ndimlike.hist2D) hist2D = new HL_Interpolator2D(*ndimlike.hist2D);
+  if(ndimlike.hist_profileX) hist_profileX = new HL_Interpolator1D(*ndimlike.hist_profileX);
+  if(ndimlike.hist_profileY) hist_profileY = new HL_Interpolator1D(*ndimlike.hist_profileY);
+  if(ndimlike.gmin) gmin = new HL_Minimizer(*ndimlike.gmin);
+  if(ndimlike.fun) fun = new HL_Function2D(*ndimlike.fun);
+
+  return *this;
+}
+
+HL_nDimLikelihood::~HL_nDimLikelihood()
+{
+  if(hist2D) delete hist2D;
+  // delete hist3D;
+  if(hist_profileX) delete hist_profileX;
+  if(hist_profileY) delete hist_profileY;
+  // delete hist_profileZ;
+  if(gmin) delete gmin;
+  if(fun) delete fun;
+}
 
 void HL_nDimLikelihood::Read()
 {
@@ -27,143 +96,138 @@ void HL_nDimLikelihood::Read()
   // Note: amended to allow text file input for 2D arrays
 
   if(! initialized)
-    {
-      std::cout << "HL_nDimLikelihood Warning, TRYING TO READ WITHOUT GIVING ANY FILE!" << std::endl;
-      return;
-    }
+  {
+    throw std::runtime_error("HL_nDimLikelihood Warning, TRYING TO READ WITHOUT GIVING ANY FILE!");
+  }
   read_standard();
   loglikelihood_penalty=-1.e6;
 
   //Always use text input if it is available (avoids potential mem issues)
 
   if( config["TextData"])
+  {
+    if (ndim_debug) std::cout << "HL_nDimLikelihood is using text input" << std::endl;
+    std::string filename = find_path(config["TextData"].as<std::string>());
+    if (ndim_debug) std::cout << "Opening file " << filename << std::endl;
+    std::ifstream in(filename.c_str());
+    // TODO: This assumes it is always 2D, need to change this to make it work with 3D too
+    dim=2;
+    in >> n_binsX >> xmin >> xmax >> n_binsY >> ymin >> ymax;
+
+    // Bin widths
+    double dx = (xmax-xmin)/n_binsX;
+    double dy = (ymax-ymin)/n_binsY;
+
+    double x[n_binsX];
+    double y[n_binsY];
+    double c[n_binsX*n_binsY];
+
+    for(int i=0; i<=n_binsX; i++)
     {
-    std::cout << "HL_nDimLikelihood is using text input" << std::endl;
-    int pos=HFile.find("/data/");
-	//string path=HFile.substr (0, pos);
-	if(pos<0) std::cout<<"Error in HL_nDimLikelihood, didn't find 'data'"<<std::endl;
-	while(true)
-	  {
-	    int pos_new=HFile.find("/data/", pos+1);
-	    if(pos_new>0)
-	      {
-		pos=pos_new;
-	      }
-	    else break;
-	  }
-	string path=HFile.substr (0, pos);
+      for(int j=0; j<=n_binsY; j++)
+      {
+        double bx,by,binc;
+        in >> bx >> by >> binc;
 
-	std::string filename=path+"/"+config["TextData"].as<std::string>();
-	std::cout << "Opening file " << filename << std::endl;
-	std::ifstream in(filename.c_str());
-	in >> n_binsX >> xmin >> xmax >> n_binsY >> ymin >> ymax;
-	hist2D = new TH2D("HLhist","HLhist",n_binsX,xmin,xmax,n_binsY,ymin,ymax);
+        //Ignore the underflow bin
+        if(!bx or !by) continue;
 
-	for(int x=0;x<n_binsX+1;x++){
-	  for(int y=0;y<n_binsY+1;y++){
-	    double bx,by,binc;
-	    in >> bx >> by>> binc;
-	    hist2D->SetBinContent(bx,by,binc);
-	  }
-	}
-	in.close();
-	hist=hist2D;
-
+        // Root histograms store the centre value of the bin, so compute that for each bin
+        x[i-1] = xmin + (bx-0.5)*dx;
+        y[j-1] = ymin + (by-0.5)*dy;
+        c[(j-1)*n_binsX + i-1] = binc;
+      }
     }
-  else {
+    in.close();
 
-    if( config["ROOTData"])
-      {
-	HL_RootFile=config["ROOTData"].as<std::string>();
-	// the HL_RootFile is something like data/RD/... but we need the absolute path:
-	int pos=HFile.find("/data/");
-	//string path=HFile.substr (0, pos);
-	if(pos<0) std::cout<<"Error in HL_nDimLikelihood, didn't find 'data'"<<std::endl;
-	while(true)
-	  {
-	    int pos_new=HFile.find("/data/", pos+1);
-	    if(pos_new>0)
-	      {
-		pos=pos_new;
-	      }
-	    else break;
-	  }
-	string path=HFile.substr (0, pos);
+    // Sometimes the last bin is actually overflow, so remove it
+    if(c[-1] == 0)
+    {
+      n_binsX--;
+      n_binsY--;
+    }
 
-	path=path+"/"+HL_RootFile;
-	HL_RootFile=path;
-      }
-    else
-      {
-
-	std::cout<<"You didn't provide a root file for a text file!!! HL_nDimLikelihood class is protesting!"<<std::endl;
-      }
-
-
-    if(config["TH2Path"])
-      {
-	HL_PATH=config["TH2Path"].as<std::string>();
-	dim=2;
-      }
-    else if(config["TH3Path"])
-      {
-	HL_PATH=config["TH3Path"].as<std::string>();
-	dim=3;
-      }
-    cout<<"here"<<endl;
-    TFile *f= new TFile(HL_RootFile.c_str(), "READ");
-    if(dim==2)
-      {
-	TH2D *hist2D_tmp=dynamic_cast<TH2D*>(f->Get(HL_PATH.c_str()));
-	hist2D=dynamic_cast<TH2D*>(hist2D_tmp->Clone());
-	hist2D->SetDirectory(0);
-	hist2D_tmp->Delete();
-
-	//delete hist2D_tmp;
-
-	n_binsX=hist2D->GetNbinsX();
-	n_binsY=hist2D->GetNbinsY();
-	n_binsZ=hist2D->GetNbinsZ();
-	hist=hist2D;
-
-      }
-    else if(dim==3)
-      {
-	TH3D *hist3D_tmp=dynamic_cast<TH3D*>(f->Get(HL_PATH.c_str()));
-	hist3D=dynamic_cast<TH3D*>(hist3D_tmp->Clone());
-	hist3D->SetDirectory(0) ;
-	hist3D_tmp->Delete();
-	//delete hist3D_tmp;
-
-	n_binsX=hist3D->GetNbinsX();
-	n_binsY=hist3D->GetNbinsY();
-	n_binsZ=hist3D->GetNbinsZ();
-	hist=hist3D;
-
-      }
-    xmin=hist->GetXaxis()->GetXmin();
-    xmax=hist->GetXaxis()->GetXmax();
-    ymin=hist->GetYaxis()->GetXmin();
-    ymax=hist->GetYaxis()->GetXmax();
-    zmin=0.;
-    zmax=0.;
-    if(dim==3)
-      {
-	zmin=hist->GetZaxis()->GetXmin();
-	zmax=hist->GetZaxis()->GetXmax();
-      }
-    f->Close();
-    delete f;
+    hist2D = new HL_Interpolator2D(n_binsX, n_binsY, x, y, c);
+    hist2D->SetLimits(xmin,xmax,ymin,ymax);
   }
+  else if( config["ROOTData"])
+  {
+    #ifdef USE_ROOT
+      HL_RootFile = find_path(config["ROOTData"].as<std::string>());
+      if(config["TH2Path"])
+      {
+        HL_PATH=config["TH2Path"].as<std::string>();
+        dim=2;
+      }
+      else if(config["TH3Path"])
+      {
+        HL_PATH=config["TH3Path"].as<std::string>();
+        dim=3;
+      }
+
+      TFile *f= new TFile(HL_RootFile.c_str(), "READ");
+      if(dim==2)
+      {
+        TH2D *hist2D_tmp=dynamic_cast<TH2D*>(f->Get(HL_PATH.c_str()));
+        hist2D_tmp->SetDirectory(0);
+        hist2D = new HL_Interpolator2D(hist2D_tmp->Clone());
+        hist2D_tmp->Delete();
+        f->Close();
+        delete f;
+
+        n_binsX = hist2D->TH->GetNbinsX();
+        n_binsY = hist2D->TH->GetNbinsY();
+
+        xmin=hist->TH->GetXaxis()->GetXmin();
+        xmax=hist->TH->GetXaxis()->GetXmax();
+        ymin=hist->TH->GetYaxis()->GetXmin();
+        ymax=hist->TH->GetYaxis()->GetXmax();
+
+        hist2D->SetLimits(xmin,xmax,ymin,ymax);
+      }
+      else if(dim==3)
+      {
+        throw std::runtime_error("Dimensions greater than 2 are not implemented");
+        // TODO: Implement Interpolator3D
+        //TH3D *hist3D_tmp=dynamic_cast<TH3D*>(f->Get(HL_PATH.c_str()));
+        //hist3D_tmp->SetDirectory(0) ;
+        //hist3D = new HL_Interpolator3D(hist3D_tmp->Clone());
+        //hist3D_tmp->Delete();
+
+        //n_binsX=hist3D->TH->GetNbinsX();
+        //n_binsY=hist3D->TH->GetNbinsY();
+        //n_binsZ=hist3D->TH->GetNbinsZ();
+
+        //xmin=hist->TH->GetXaxis()->GetXmin();
+        //xmax=hist->TH->GetXaxis()->GetXmax();
+        //ymin=hist->TH->GetYaxis()->GetXmin();
+        //ymax=hist->TH->GetYaxis()->GetXmax();
+        //zmin=hist->TH->GetZaxis()->GetXmin();
+        //zmax=hist->TH->GetZaxis()->GetXmax();
+
+        //hist3D->SetLimits(xmin,xmax,ymin,ymax,zmin,zmax);
+
+      }
+    #else
+      throw std::runtime_error("Requested ROOT file but ROOT is not enabled. Please enable ROOT or provide data in text format.");
+    #endif
+
+  }
+  else
+  {
+    throw std::runtime_error("You didn't provide neither a text file nor a ROOT file!!! HL_nDimLikelihood class is protesting!");
+  }
+
+
   if(config["Observables"])
+  {
+    YAML::Node node  = config["Observables"];
+    for(YAML::const_iterator it = node.begin(); it != node.end();  ++it )
     {
-      YAML::Node node  = config["Observables"];
-      for(YAML::const_iterator it = node.begin(); it != node.end();  ++it )
-        {
-          Observables.push_back( ((*it)[0]).as<std::string>()  );
-          central_mes_val.push_back( ((*it)[1]).as<double>()  );
-        }
-    }
+      Observables.push_back( ((*it)[0]).as<std::string>()  );
+      central_mes_val.push_back( ((*it)[1]).as<double>()  );
+     }
+  }
 
   //profiled=false;
   /*gmin=ROOT::Math::Factory::CreateMinimizer("GSLMultiMin", "ConjugatePR");
@@ -173,115 +237,109 @@ void HL_nDimLikelihood::Read()
   gmin->SetTolerance(0.000001);
   gmin->SetPrintLevel(3);*/
 
-  fun=MyFunction2D();
-  fun.SetLikelihood(hist2D);
-
-  //cout<<central_mes_val[0]<<" "<<central_mes_val[1]<<endl;
-
-  cout<<"Finished"<<endl;
+  if(dim == 2)
+    fun = new HL_Function2D(hist2D);
+  else if(dim == 3)
+  {
+    throw std::runtime_error("Dimensions greater than 2 are not implemented");
+    //fun = new HL_Function3D(hist3D);
+  }
 }
+
 double HL_nDimLikelihood::GetChi2(std::vector<double> theory)  //, double theory_err)
 {
   double log_likelihood=GetLogLikelihood(theory);
   return -2.*log_likelihood;
 
 }
+
 double HL_nDimLikelihood::GetChi2(std::vector<double> theory,  boost::numeric::ublas::matrix<double> theory_cov)
 {
-  double log_likelihood=GetLogLikelihood(theory);
+  double log_likelihood=GetLogLikelihood(theory, theory_cov);
   return -2.*log_likelihood;
 
 }
 
 double HL_nDimLikelihood::GetLogLikelihood(std::vector<double> theory)
 {
-  int bin;
   double delta = 1e-2;
-  double xlim = theory[0], ylim = theory[1];
-  if(theory[0]>xmax) xlim = xmax*(1-delta);
-  if(theory[0]<xmin) xlim = xmin*(1+delta);
-  if(theory[1]>ymax) ylim = ymax*(1-delta);
-  if(theory[1]<ymin) ylim = ymin*(1+delta);
-  /*
-  if(theory.size() ==2)
-    {
-      bin=hist2D->FindBin(theory[0], theory[1]);
 
-    }
-    double log_likelihood=hist2D->GetBinContent(bin);
-  */
-  if(theory[0]>xmax or theory[0]<xmin or theory[1]>ymax or theory[1]<ymin)
+  if(dim == 2)
   {
-    double sigma[] = {delta*(theory[0]+xlim) , delta*(theory[1]+ylim)};
-    return -1. * hist2D->Interpolate(xlim,ylim) - pow((theory[0] - xlim)/sigma[0],2) - pow((theory[1] - ylim)/sigma[1],2);
+    double xlim = theory[0], ylim = theory[1];
+    if(theory[0]>xmax) xlim = xmax*(1-delta);
+    if(theory[0]<xmin) xlim = xmin*(1+delta);
+    if(theory[1]>ymax) ylim = ymax*(1-delta);
+    if(theory[1]<ymin) ylim = ymin*(1+delta);
+    if(theory[0]>xmax or theory[0]<xmin or theory[1]>ymax or theory[1]<ymin)
+    {
+      double sigma[] = {delta*(theory[0]+xlim) , delta*(theory[1]+ylim)};
+      return -1. * hist2D->Eval(xlim,ylim) - pow((theory[0] - xlim)/sigma[0],2) - pow((theory[1] - ylim)/sigma[1],2);
+    }
+    else
+    {
+      double log_likelihood=hist2D->Eval(theory[0], theory[1]);
+      return (-1.)*log_likelihood;
+    }
   }
   else
-  {
-    double log_likelihood=hist2D->Interpolate (theory[0], theory[1]);
-    return (-1.)*log_likelihood;
-  }
+    throw std::runtime_error("Dimensions greater than 2 are not implemented");
 }
 
 double HL_nDimLikelihood::GetLogLikelihood(std::vector<double> theory, boost::numeric::ublas::matrix<double> theory_cov)
 {
   if(theory_cov.size1() != theory.size() )
-    {
-      std::cout<<"Error in HL_nDimLikelihood::GetLogLikelihood  you had different dimensions in theory and cov matrix"<<std::endl;
-    }
+  {
+    throw std::runtime_error("Error in HL_nDimLikelihood::GetLogLikelihood  you had different dimensions in theory and cov matrix");
+  }
   if(theory_cov.size2() != theory_cov.size1() )
-    {
-      std::cout<<"Error in HL_nDimLikelihood::GetLogLikelihood, your theory cov matrix is not square!"<<std::endl ;
+  {
+    throw std::runtime_error("Error in HL_nDimLikelihood::GetLogLikelihood, your theory cov matrix is not square!");
+  }
 
-    }
+  if(dim == 2)
+  {
+    if(theory[0]>xmax) return loglikelihood_penalty;
+    if(theory[0]<xmin) return loglikelihood_penalty;
+    if(theory[1]>ymax) return loglikelihood_penalty;
+    if(theory[1]<ymin) return loglikelihood_penalty;
 
-  int bin;
-  if(theory[0]>xmax) return loglikelihood_penalty;
-  if(theory[0]<xmin) return loglikelihood_penalty;
-  if(theory[1]>ymax) return loglikelihood_penalty;
-  if(theory[1]<ymin) return loglikelihood_penalty;
+    fun->SetTheory(theory,theory_cov);
 
-  fun.SetTheory(theory,theory_cov);
-  ROOT::Math::Functor  f1(fun, 2);
+    gmin = new HL_Minimizer("ConjugatePR", 2);
+    gmin->SetMaxIterations(1000000);  // for GSL
+    gmin->SetTolerance(0.000001);
 
+    gmin->SetFunction(*fun);
 
-  ROOT::Math::Minimizer* gmin=ROOT::Math::Factory::CreateMinimizer("GSLMultiMin", "ConjugatePR");
-  //gmin=ROOT::Math::Factory::CreateMinimizer("Minuit2");
-  gmin->SetMaxFunctionCalls(10000000); // for Minuit/Minuit2
-  gmin->SetMaxIterations(1000000);  // for GSL
-  gmin->SetTolerance(0.000001);
-  gmin->SetPrintLevel(3);
-  gmin->SetFunction(f1);
+    double step[2] = {0.05*sqrt(theory_cov(0,0)), 0.05*sqrt(theory_cov(1,1)) };
+    double variable[2] = { theory[0], theory[1]};
 
-  double step[2] = {0.05*sqrt(theory_cov(0,0)), 0.05*sqrt(theory_cov(1,1)) };
-  double variable[2] = { theory[0], theory[1]};
+    gmin->SetVariable(0,variable[0]+0.5*sqrt(theory_cov(0,0)), step[0]);
+    gmin->SetVariable(1,variable[1]+0.5*sqrt(theory_cov(1,1)), step[1]);
 
+    //gmin->SetVariableInitialRange(0,theory[0]-5.*sqrt(theory_cov(0,0)), theory[0]+5.*sqrt(theory_cov(0,0)));
+    //gmin->SetVariableInitialRange(1,theory[1]-5.*sqrt(theory_cov(1,1)), theory[1]+5.*sqrt(theory_cov(1,1)));
 
-  gmin->SetVariable(0,"x",variable[0]+0.5*sqrt(theory_cov(0,0)), step[0]);
-  gmin->SetVariable(1,"y",variable[1]+0.5*sqrt(theory_cov(1,1)), step[1]);
-
-  gmin->SetVariableInitialRange(0,theory[0]-5.*sqrt(theory_cov(0,0)), theory[0]+5.*sqrt(theory_cov(0,0)));
-  gmin->SetVariableInitialRange(1,theory[1]-5.*sqrt(theory_cov(1,1)), theory[1]+5.*sqrt(theory_cov(1,1)));
-
-  gmin->SetVariableLimits(0,theory[0]-5.*sqrt(theory_cov(0,0)), theory[0]+5.*sqrt(theory_cov(0,0)));
-  gmin->SetVariableLimits(1,theory[1]-5.*sqrt(theory_cov(1,1)), theory[1]+5.*sqrt(theory_cov(1,1)));
+    //gmin->SetVariableLimits(0,theory[0]-5.*sqrt(theory_cov(0,0)), theory[0]+5.*sqrt(theory_cov(0,0)));
+    //gmin->SetVariableLimits(1,theory[1]-5.*sqrt(theory_cov(1,1)), theory[1]+5.*sqrt(theory_cov(1,1)));
 
 
-  gmin->Minimize();
-  const double *theory_nuisance = gmin->X();
+    gmin->Minimize();
+    //const double *theory_nuisance = gmin->X();
+    std::vector<double> theory_nuisance = gmin->X();
 
-  if(theory_nuisance[0]>xmax) return loglikelihood_penalty;
-  if(theory_nuisance[0]<xmin) return loglikelihood_penalty;
-  if(theory_nuisance[1]>ymax) return loglikelihood_penalty;
-  if(theory_nuisance[1]<ymin) return loglikelihood_penalty;
-  /*
-  bin=hist2D->FindBin(theory_nuisance[0], theory_nuisance[1]);
+    if(theory_nuisance[0]>xmax) return loglikelihood_penalty;
+    if(theory_nuisance[0]<xmin) return loglikelihood_penalty;
+    if(theory_nuisance[1]>ymax) return loglikelihood_penalty;
+    if(theory_nuisance[1]<ymin) return loglikelihood_penalty;
 
-  double log_likelihood=hist2D->GetBinContent(bin);
-  */
-  double log_likelihood=hist2D->Interpolate(theory_nuisance[0], theory_nuisance[1]);
+    double log_likelihood=hist2D->Eval(theory_nuisance[0], theory_nuisance[1]);
 
-
-  return (-1.)*log_likelihood;
+    return (-1.)*log_likelihood;
+  }
+  else
+    throw std::runtime_error("Dimensions greater than 2 are not implemented");
 }
 
 
@@ -298,139 +356,177 @@ double HL_nDimLikelihood::GetLikelihood(std::vector<double> theory, boost::numer
 }
 
 
-
-
-void HL_nDimLikelihood::Profile()
+void HL_nDimLikelihood::Profile(std::string mode)
 {
-  //profiling over X:
-  hist_profileX=new TH1D("profX", "profX", n_binsX,xmin, xmax);
-
   profiled=true;
 
-  if(dim==2){
-    for(int ix=1 ; ix < n_binsX ; ++ix)
+  double newX[n_binsX];
+  double newY[n_binsY];
+
+  auto compare = [&](double val, double min, double max)
+  {
+    if(mode == "min") return val < min;
+    else if(mode == "max") return val > max;
+    else throw std::runtime_error("Unknown mode");
+  };
+
+  // Profile over X
+  if(dim==2)
+  {
+    for(int ix=0 ; ix < n_binsX ; ++ix)
+    {
+      double min = 1.e10;
+      double max = 0;
+
+      for(int iy=0 ; iy < n_binsY ; ++iy)
       {
-        double min=1.e10;
-
-        for(int iy=1 ; iy < n_binsY ; ++iy)
-          {
-            if(hist->GetBinContent(ix,iy)<min) min=hist->GetBinContent(ix,iy);
-
-          }//
-        hist_profileX->SetBinContent(ix, min);
+        double val = hist2D->z_data[ix*n_binsX+iy];
+        if(compare(val, min, max))
+        {
+          min = val;
+          max = val;
+          newX[ix] = hist2D->x_data[ix];
+          newY[ix] = val;
+        }
       }
+    }
+    hist_profileX = new HL_Interpolator1D(n_binsX, newX, newY);
   }
   else if(dim==3)
+  {
+    throw std::runtime_error("Dimensions greater than 2 are not implemented");
+    // TODO: Implement 3D
+    //for(int ix=1 ; ix < n_binsX ; ++ix)
+    //{
+    //  double min=1.e10;
+    //  double max = 0;
+    //
+    //  for(int iy=1 ; iy < n_binsY ; ++iy)
+    //  {
+    //    for(int iz=1 ; iz< n_binsZ ; ++iz)
+    //    {
+    //      double val = hist3D->w_data[ix*n_binsX*n_binsX+iy*n_binsY+iz]);
+    //      if(compare(val, min, max)
+    //      {
+    //        min = val;
+    //        max = val;
+    //        newX[ix] = hist->x_data[ix];
+    //        newY[ix] = val;
+    //      }
+    //    }
+    //  }
+    //}
+    //hist_profileX = new HL_Interpolator1D(n_binsX, newX, newY);
+  }
+
+  // Profile over Y
+  if(dim==2)
+  {
+    for(int iy=0 ; iy < n_binsY ; ++iy)
     {
-      for(int ix=1 ; ix < n_binsX ; ++ix)
-        {
-          double min=1.e10;
+      double min = 1.e10;
+      double max = 0;
 
-          for(int iy=1 ; iy < n_binsY ; ++iy)
-            {
-              for(int iz=1 ; iz< n_binsZ ; ++iz)
-                {
-                  if(hist->GetBinContent(ix,iy,iz)<min) min=hist->GetBinContent(ix,iy,iz);
-                }
-            }
-          hist_profileX->SetBinContent(ix, min);
-        }
-    }
-  // profile Y:
-  hist_profileY=new TH1D("profY", "profY", n_binsY,ymin, ymax);
-
-  if(dim==2){
-    for(int iy=1 ; iy < n_binsY ; ++iy)
+      for(int ix=0 ; ix < n_binsX ; ++ix)
       {
-        double min=1.e10;
-
-        for(int ix=1 ; ix < n_binsX ; ++ix)
-          {
-            if(hist->GetBinContent(ix,iy)<min) min=hist->GetBinContent(ix,iy);
-
-          }//
-        hist_profileY->SetBinContent(iy, min);
+        double val = hist2D->z_data[ix*n_binsX+iy];
+        if(compare(val, min, max))
+        {
+          min = val;
+          max = val;
+          newX[iy] = hist2D->y_data[iy];
+          newY[iy] = val;
+        }
       }
+    }
+    hist_profileY = new HL_Interpolator1D(n_binsY, newX, newY);
   }
   else if(dim==3)
-    {
-      for(int iy=1 ; iy < n_binsY ; ++iy)
-        {
-          double min=1.e10;
+  {
+    throw std::runtime_error("Dimensions greater than 2 are not implemented");
+    // TODO: Implement 3D
+    //for(int iy=0 ; iy < n_binsY ; ++iy)
+    //{
+    //  double min=1.e10;
+    //  double max = 0;
+    //
+    //  for(int ix=0 ; ix < n_binsX ; ++ix)
+    //  {
+    //    for(int iz=0 ; iz< n_binsZ ; ++iz)
+    //    {
+    //      double val = hist3D->w_data[ix*n_binsX*n_binsX+iy*n_binsY+iz];
+    //      if(compare(val, min, max)
+    //      {
+    //        min = val;
+    //        max = val;
+    //        newX[iy] = hist3D->y_data[iy];
+    //        newY[iy] = val;
+    //      }
+    //    }
+    //  }
+    //}
+    //hist_profileY = new HL_Interpolator1D(n_binsY, newX, newY);
+  }
 
-          for(int ix=1 ; ix < n_binsX ; ++ix)
-            {
-              for(int iz=1 ; iz< n_binsZ ; ++iz)
-                {
-                  if(hist->GetBinContent(ix,iy,iz)<min) min=hist->GetBinContent(ix,iy,iz);
-                }
-            }
-          hist_profileY->SetBinContent(iy, min);
-        }
-    }
+  // Profile over Z
+  if(dim ==3)
+  {
+    throw std::runtime_error("Dimensions greater than 2 are not implemented");
+    // TODO: Implement 3D
+    //for(int iz=0 ; iz < n_binsZ ; ++iz)
+    //{
+    //  double min=1.e10;
+    //  double max = 0;
+    //
+    //  for(int ix=0 ; ix < n_binsX ; ++ix)
+    //  {
+    //    for(int iy=0 ; iy< n_binsY ; ++iy)
+    //    {
+    //      double val = hist3D->w_data[ix*n_binsX*n_binsX+iy*n_binsY+iz];
+    //      if(compare(val, min, max)
+    //      {
+    //        min = val;
+    //        max = val;
+    //        newX[iz] = hist3D->z_data[iz];
+    //        newY[iz] = val;
+    //      }
+    //    }
+    //  }
+    //}
+    //hist_profileZ = new HL_Interpolator1D(n_binsZ, newX, newY);
+  }
 
-  TFile *ftmp=new TFile("tmp.root", "RECREATE");
-  hist_profileY->Write();
-  hist_profileX->Write();
-  //hist_profileY->Delete();
-  //hist_profileX->Delete();
-
-
-  if(dim==2) return;
-
-  hist_profileZ=new TH1D("profZ", "profZ", n_binsZ,zmin, zmax);
-  for(int iz=1 ; iz < n_binsZ ; ++iz)
-    {
-      double min=1.e10;
-
-      for(int iy=1 ; iy < n_binsY ; ++iy)
-        {
-          for(int ix=1 ; ix< n_binsX ; ++ix)
-            {
-              if(hist->GetBinContent(ix,iy,iz)<min) min=hist->GetBinContent(ix,iy,iz);
-            }
-        }
-      hist_profileZ->SetBinContent(iz, min);
-    }
-  hist_profileZ->Write();
-  //  hist_profileZ->Delete();
-  ftmp->Close();
-  ftmp->Delete();
 }
-double HL_nDimLikelihood::GetLogLikelihood_profile(  double theory, std::string X)
+
+double HL_nDimLikelihood::GetLogLikelihood_profile(double theory, std::string X)
 {
-
   if(X==Observables[0])
-    {
-      int bin= hist_profileX->FindBin(theory);
-      double log_likelihood=hist_profileX->GetBinContent(bin);
-      return -log_likelihood;
-    }
+  {
+    double log_likelihood = hist_profileX->Eval(theory);
+    return -log_likelihood;
+  }
   else if(X==Observables[1])
-
-    {
-      int  bin= hist_profileY->FindBin(theory);
-      double log_likelihood=hist_profileY->GetBinContent(bin);
-      return -log_likelihood;
-    }
+  {
+    double log_likelihood = hist_profileY->Eval(theory);
+    return -log_likelihood;
+  }
   else if(X==Observables[2])
-    {
-      int bin= hist_profileZ->FindBin(theory);
-      double log_likelihood=hist_profileZ->GetBinContent(bin);
-      return -log_likelihood;
-    }
+  {
+    throw std::runtime_error("Dimensions greater than 2 are not implemented");
+    // TODO: Implement 3D
+    //double log_likelihood = hist_profileZ->Eval(theory);
+    //return -log_likelihood;
+  }
   else
-    {
-      std::cout<<"WRONG observable NAME!! in HL_nDimLikelihood profiling"<<std::endl;
-      return 1.e20;
-    }
-
+    throw std::runtime_error("WRONG observable NAME in HL_nDimLikelihood profiling");
 }
+
 double HL_nDimLikelihood::GetLikelihood_profile(double theory, std::string X)
 {
   double log_likelihood=GetLogLikelihood_profile(theory, X);
   return gsl_sf_exp(log_likelihood);
 }
+
 double HL_nDimLikelihood::GetChi2_profile(double theory, std::string X)
 {
   double log_likelihood=GetLogLikelihood_profile(theory, X);
