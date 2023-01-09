@@ -5,8 +5,8 @@
 //   author: Jihyun Bhom, Marcin Chrzaszcz
 //   author: Tomas Gonzalo
 //////////////////////////////////////////////////
-#ifndef STATS_H
-#define STATS_H
+#ifndef HL_STATS_H
+#define HL_STATS_H
 
 #include <cmath>
 #include <limits>
@@ -14,6 +14,9 @@
 #include <iomanip>
 #include <boost/numeric/ublas/lu.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
+
+#include "GAMBIT_Stats.h"
+
 using namespace std;
 
 namespace HL_Stats
@@ -22,7 +25,6 @@ namespace HL_Stats
 
   double gauss(double obs, double theory, double theoryerr);
   double gaussian_loglikelihood_theory_syst(double obs, double theory, double theoryerr);
-  double gaussian_loglikelihood(double theory, double obs, double theoryerr, double obserr, bool profile_systematics);
   double gauss(double x, double mean, double sigma);
 
   double get_sigma_from_pval(double p);
@@ -52,8 +54,6 @@ namespace HL_Stats
 
     return true;
   }
-
-  double gaussian_upper_limit(double theory, double obs, double theoryerr, double obserr, bool profile_systematics);
 
 }
 
