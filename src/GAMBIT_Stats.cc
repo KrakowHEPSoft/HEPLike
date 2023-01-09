@@ -19,10 +19,16 @@
 */
 
 
+#include <iostream>
+
+#include "HL_Constants.h"
 #include "GAMBIT_Stats.h"
 
 namespace HL_Stats
 {
+
+  /// Minimum finite result returnable from log(double x);
+  const double logmin = log(std::numeric_limits<double>::min());
 
   double gaussian_loglikelihood(double theory, double obs, double theoryerr, double obserr, bool profile_systematics)
   {
