@@ -1,7 +1,7 @@
-# HEPLike 
-## Authors: Jihyun Bhom, Marcin Chrząszcz, jihyun.bhom@cern.ch, marcin.chrzaszcz@cern.ch 
+# HEPLike
+## Authors: Jihyun Bhom (jihyun.bhom@cern.ch), Marcin Chrząszcz (marcin.chrzaszcz@cern.ch), Tomas Gonzalo (tomas.gonzalo@kit.edu)
 ### Free software, GPL 3
-#### Computer framework to store and evaluate likelihoods coming from High Energy Physics experiments. Due to its flexibility it can be interfaced with existing fitting codes and allows to uniform the interpretation of the experimental results among the users. The code is provided with large open database, which contains the experimental measurements. The code is of use for users who perform phenomenological studies, global fits or experimental averages. 
+#### Computer framework to store and evaluate likelihoods coming from High Energy Physics experiments. Due to its flexibility it can be interfaced with existing fitting codes and allows to uniform the interpretation of the experimental results among the users. The code is provided with large open database, which contains the experimental measurements. The code is of use for users who perform phenomenological studies, global fits or experimental averages.
 
 #### Prerequirements:
 git
@@ -18,7 +18,7 @@ To install ROOT see:
 https://root.cern.ch/building-root
 
 #### Instalation
-git clone  https://github.com/mchrzasz/HEPLike.git
+git clone  https://github.com/KrakowHEPSoft/HEPLike.git
 
 cd HEPLike
 
@@ -26,7 +26,11 @@ mkdir build
 
 cd build
 
-cmake ..
+# Build with ROOT
+cmake -DUSE_ROOT=ON ..
+
+# Build without ROOT
+cmake -DUSE_ROOT=OFF ..
 
 make -jN
 
@@ -53,12 +57,12 @@ or equivalent
 make test
 
 
-##### Measurments repository:
-https://github.com/mchrzasz/HEPLikeData
+##### Measurements repository:
+https://github.com/KrakowHEPSoft/HEPLikeData
 
 
 ##### Notes for integrating with Gambit
-To integrate HepLike with Gambit you need to boss it:
-./boss.py heplike_1_0 --include=$ROOTSYS/include
-the configs/heplike_1_0.py is included in Gambit
+To integrate HepLike with Gambit you need to BOSS it:
+./boss.py heplike_X_Y [--include=$ROOTSYS/include]
+the config file heplike_X_Y.py is included in Gambit
 
